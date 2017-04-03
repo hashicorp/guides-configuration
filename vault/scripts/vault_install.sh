@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 VAULT=0.6.5
-VAULT_URL=${1:-https://releases.hashicorp.com/vault/${VAULT}/vault_${VAULT}_linux_amd64.zip}
+VAULT_URL=${VAULT_ENT:-https://releases.hashicorp.com/vault/${VAULT}/vault_${VAULT}_linux_amd64.zip}
 VAULT_ZIP=/tmp/vault_${VAULT}_linux_amd64.zip
 VAULT_USER="vault"
 VAULT_COMMENT="Vault Server"

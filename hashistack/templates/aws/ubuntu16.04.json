@@ -4,7 +4,8 @@
     "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
     "region": "{{ env `AWS_REGION` }}",
     "environment": "{{ env `PACKER_ENVIRONMENT` }}",
-    "vcsname": "{{ env `VCSNAME` }}"
+    "vcsname": "{{ env `VCSNAME` }}",
+    "vault_ent_url": "{{ env `VAULT_DOWNLOAD_URL` }}"
   },
   "builders": [{
     "type": "amazon-ebs",
@@ -12,7 +13,7 @@
     "secret_key": "{{ user `aws_secret_access_key` }}",
     "region": "{{user `region`}}",
     "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
-    "ami_groups": "all",
+    "ami_groups": "",
     "ssh_pty": true,
     "instance_type": "t2.medium",
     "associate_public_ip_address": true,
@@ -59,6 +60,9 @@
     },
     {
       "type": "shell",
+      "environment_vars": [
+        "VAULT_ENT={{user `vault_ent_url`}}"
+      ],
       "scripts": [
         "../../../shared/base.sh",
         "../../../consul/scripts/consul_install.sh",
