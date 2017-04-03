@@ -1,0 +1,91 @@
+{
+  "variables": {
+    "aws_access_key_id": "{{ env `AWS_ACCESS_KEY_ID` }}",
+    "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
+    "region": "{{ env `AWS_REGION` }}",
+    "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+    "vcsname": "{{ env `VCSNAME` }}"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{ user `aws_access_key_id` }}",
+    "secret_key": "{{ user `aws_secret_access_key` }}",
+    "region": "{{user `region`}}",
+    "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
+    "ami_groups": "all",
+    "ssh_pty": true,
+    "instance_type": "t2.medium",
+    "associate_public_ip_address": true,
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "name": "*RHEL-7.3_HVM_GA-*",
+        "root-device-type": "ebs"
+      },
+      "owners": ["309956199498"],
+      "most_recent": true
+    },
+    "ssh_username": "ec2-user",
+    "ssh_timeout": "5m",
+    "ami_virtualization_type": "hvm",
+    "ami_description": "HashiStack",
+    "ami_name": "se-hashistack-RHEL7.3-{{isotime \"2006-01-02-1504\"}}",
+    "tags": {
+      "Name": "{{user `environment`}} HashiStack",
+      "System": "HashiStack",
+      "Product": "HashiStack",
+      "Environment": "{{user `environment`}}",
+      "Built-By": "{{user `vcsname`}}",
+      "Product-Version": "null",
+      "OS": "RHEL",
+      "OS-Version": "7.3"
+    }
+  }],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../../../consul",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../../../nomad",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../../../vault",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "../../../shared/base.sh",
+        "../../../consul/scripts/consul_install.sh",
+        "../../../nomad/scripts/nomad_install.sh",
+        "../../../vault/scripts/vault_install.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "echo \"Installing systemd services for RHEL/CentOS\"",
+        "sudo cp /tmp/consul/files/consul.service /etc/systemd/system/consul.service",
+        "sudo cp /tmp/vault/files/vault.service /etc/systemd/system/vault.service",
+        "sudo cp /tmp/nomad/files/nomad.service /etc/systemd/system/nomad.service",
+        "sudo chmod 664 /etc/systemd/system/{vault.*,consul.*,nomad.*}"
+      ]
+    },
+    {
+      "type": "shell",
+      "start_retry_timeout": "5m",
+      "inline": [
+        "echo \"Cleanup Stage\"",
+        "sudo rm -rf /var/lib/cloud/instances/*",
+        "sudo rm -f /root/.ssh/authorized_keys",
+        "sudo rm -rf /tmp/*",
+        "history -cw"
+      ]
+    }
+  ]
+}
