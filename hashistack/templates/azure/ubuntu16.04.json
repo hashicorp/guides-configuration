@@ -31,54 +31,53 @@
     }],
     "provisioners": [
       {
+        "type": "file",
+        "source": "../../../consul",
+        "destination": "/tmp"
+      },
+      {
+        "type": "file",
+        "source": "../../../nomad",
+        "destination": "/tmp"
+      },
+      {
+        "type": "file",
+        "source": "../../../vault",
+        "destination": "/tmp"
+      },
+      {
         "type": "shell",
+        "environment_vars": [
+          "VAULT_ENT={{user `vault_ent_url`}}"
+        ],
         "scripts": [
-          "../../shared/base.sh",
-          "../../consul/scripts/consul_install.sh",
-          "../../vault/scripts/vault_install.sh",
-          "../../nomad/scripts/nomad_install.sh",
+          "../../../shared/base.sh",
+          "../../../consul/scripts/consul_install.sh",
+          "../../../nomad/scripts/nomad_install.sh",
+          "../../../vault/scripts/vault_install.sh"
         ]
       },
       {
-        "type": "file",
-        "source": "../../consul/files/consul.service",
-        "destination": "/etc/systemd/system/consul.service"
-      },
-      {
-        "type": "file",
-        "source": "../../vault/files/vault.service",
-        "destination": "/etc/systemd/system/consul.service"
-      },
-      {
-        "type": "file",
-        "source": "../../nomad/files/nomad.service",
-        "destination": "/etc/systemd/system/nomad.service"
-      },
-      {
-        "type": "file",
-        "source": "../../consul/files/config.json",
-        "destination": "/etc/consul.d/config.json"
-      },
-      {
-        "type": "file",
-        "source": "../../vault/files/config.hcl",
-        "destination": "/etc/vault/config.hcl"
-      },
-      {
-        "type": "file",
-        "source": "../../nomad/files/server.hcl",
-        "destination": "/etc/nomad.d/server.hcl"
-      },
-  {
+        "type": "shell",
+        "inline": [
+          "echo \"Installing systemd services for Ubuntu\"",
+          "sudo cp /tmp/consul/files/consul.service /lib/systemd/system/consul.service",
+          "sudo cp /tmp/vault/files/vault.service /lib/systemd/system/vault.service",
+          "sudo cp /tmp/nomad/files/nomad.service /lib/systemd/system/nomad.service",
+          "sudo chmod 664 /lib/systemd/system/consul*",
+          "sudo chmod 664 /lib/systemd/system/vault*",
+          "sudo chmod 664 /lib/systemd/system/nomad*"
+        ]
+      },  
+     {
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
       "inline": [
         "apt-get update",
         "apt-get upgrade -y",
-
         "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
       ],
       "inline_shebang": "/bin/sh -x",
       "type": "shell"
-  }
-]
+    }
+  ]
 }
