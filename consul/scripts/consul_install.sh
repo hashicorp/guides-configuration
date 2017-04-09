@@ -96,6 +96,7 @@ else
 fi
 
 echo "Setup Consul configuration and data directories"
-sudo mkdir -pm 0600 /etc/consul.d /opt/consul/data
+sudo mkdir -pm 0755 /etc/consul.d /opt/consul/data
 sudo cp /tmp/consul/files/config.json /etc/consul.d/config.json
-sudo chown -R consul.consul /etc/consul.d /opt/consul
+sudo chmod 0755 /etc/consul.d/config.json
+sudo chown -R consul.consul /opt/consul
