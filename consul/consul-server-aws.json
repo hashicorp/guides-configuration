@@ -1,0 +1,127 @@
+{
+  "variables": {
+    "aws_access_key_id": "{{ env `AWS_ACCESS_KEY_ID` }}",
+    "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
+    "aws_region": "{{ env `AWS_REGION` }}",
+    "aws_owner": "{{ env `AWS_OWNER` }}",
+    "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+    "vcs_name": "{{ env `VCS_NAME` }}",
+    "consul_version": "{{ env `CONSUL_VERSION` }}",
+    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{ user `aws_access_key_id` }}",
+      "secret_key": "{{ user `aws_secret_access_key` }}",
+      "region": "{{user `aws_region`}}",
+      "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
+      "ami_groups": "all",
+      "ssh_pty": true,
+      "instance_type": "t2.medium",
+      "associate_public_ip_address": true,
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "*RHEL-7.3_HVM_GA-*",
+          "root-device-type": "ebs"
+        },
+        "owners": ["{{user `aws_owner`}}"],
+        "most_recent": true
+      },
+      "ssh_username": "ec2-user",
+      "ssh_timeout": "5m",
+      "ami_virtualization_type": "hvm",
+      "ami_description": "Consul Server",
+      "ami_name": "consul-server-{{ user `consul_version` }}-RHEL_7.3-{{isotime \"2006-01-02-1504\"}}",
+      "tags": {
+        "Name": "{{user `environment`}} Consul Server {{ user `consul_version` }}",
+        "System": "Consul",
+        "Product": "Consul",
+        "Environment": "{{user `environment`}}",
+        "Built-By": "{{user `vcs_name`}}",
+        "Product-Version": "{{user `consul_version`}}",
+        "OS": "RHEL",
+        "OS-Version": "7.3"
+      },
+      {
+        "type": "amazon-ebs",
+        "access_key": "{{ user `aws_access_key_id` }}",
+        "secret_key": "{{ user `aws_secret_access_key` }}",
+        "region": "{{user `aws_region`}}",
+        "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
+        "ami_groups": "all",
+        "ssh_pty": true,
+        "instance_type": "t2.medium",
+        "associate_public_ip_address": true,
+        "source_ami_filter": {
+          "filters": {
+            "virtualization-type": "hvm",
+            "name": "*ubuntu-xenial-16.04-amd64-server-*",
+            "root-device-type": "ebs"
+          },
+          "owners": ["{{user `aws_owner`}}"],
+          "most_recent": true
+        },
+        "ssh_username": "ubuntu",
+        "ssh_timeout": "10m",
+        "ami_virtualization_type": "hvm",
+        "ami_description": "Consul Server",
+        "ami_name": "consul-server-{{ user `consul_version` }}-Ubuntu_16.04-{{isotime \"2006-01-02-1504\"}}",
+        "tags": {
+          "Name": "{{user `environment`}} Consul Server {{ user `consul_version` }}",
+          "System": "Consul",
+          "Product": "Consul",
+          "Environment": "{{user `environment`}}",
+          "Built-By": "{{user `vcs_name`}}",
+          "Product-Version": "{{user `consul_version`}}",
+          "OS": "Ubuntu",
+          "OS-Version": "16.04"
+        }
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../consul",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=consul",
+        "GROUP=consul",
+        "COMMENT=Consul Server",
+        "HOME=/srv/consul"
+      ],
+      "scripts": [
+        "echo \"Setup for Consul Server install\"",
+        "../shared/scripts/base.sh",
+        "../shared/scripts/base-aws.sh",
+        "../shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{user `consul_version`}}",
+        "URL={{user `consul_ent_url`}}",
+        "SERVER=true"
+      ],
+      "scripts": [
+        "echo \"Install & configure Consul Server with systemd\"",
+        "scripts/install-consul.sh",
+        "scripts/install-consul-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "start_retry_timeout": "5m",
+      "scripts": [
+        "../shared/scripts/cleanup.sh",
+        "../shared/scripts/cleanup-aws.sh"
+      ]
+    }
+  ]
+}
