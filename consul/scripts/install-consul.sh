@@ -3,62 +3,62 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT consul-install.sh: $1"
+  FILENAME="install-consul.sh"
+  echo "$DT $FILENAME: $1"
 }
 
-CONSUL_VERSION=${VERSION:-0.8.0}
-CONSUL_URL=${URL:-https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip}
-CONSUL_ZIP=/tmp/consul_${CONSUL_VERSION}_linux_amd64.zip
+logger "Running"
+
+CONSUL_VERSION=${VERSION:-"0.8.0"}
+CONSUL_ZIP="consul_${CONSUL_VERSION}_linux_amd64.zip"
+CONSUL_URL=${URL:-"https://releases.hashicorp.com/consul/${CONSUL_VERSION}/${CONSUL_ZIP}"}
 CONSUL_SERVER=${SERVER:-}
-CONSUL_USER=${USER:-}
-CONSUL_GROUP=${GROUP:-}
-cd /tmp
+CONSUL_USER=${USER:-"consul"}
+CONSUL_GROUP=${GROUP:-"consul"}
+CONFIG_DIR="/etc/consul.d"
+DATA_DIR="/opt/consul/data"
+DOWNLOAD_DIR="/tmp"
 
-logger "Downloading Consul"
-curl -L -o $CONSUL_ZIP $CONSUL_URL
+logger "Downloading consul ${CONSUL_VERSION}"
+curl --silent --output ${DOWNLOAD_DIR}/${CONSUL_ZIP} ${CONSUL_URL}
 
-logger "Unpacking Consul"
-unzip -p $CONSUL_ZIP > consul.bin
-rm -f $CONSUL_ZIP
-
-logger "Installing Consul"
-sudo chmod +x consul.bin
-sudo mv consul.bin /usr/local/bin/consul
+logger "Installing consul"
+sudo unzip -o ${DOWNLOAD_DIR}/${CONSUL_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/consul
-sudo chown root:root /usr/local/bin/consul
+sudo chown ${CONSUL_USER}:${CONSUL_GROUP} /usr/local/bin/consul
 
-logger "Installed Consul version is $(/usr/local/bin/consul --version)"
+logger "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
+
+logger "Configuring consul"
+sudo mkdir -pm 0755 ${CONFIG_DIR} ${DATA_DIR}
+sudo cp /tmp/consul/config/consul-default.json ${CONFIG_DIR}
+if [[ ! -z ${CONSUL_SERVER} ]]; then
+  logger "Configuring consul as a server"
+  sudo cp /tmp/consul/config/consul-server.json ${CONFIG_DIR}
+fi
+sudo chown -R ${CONSUL_USER}:${CONSUL_GROUP} ${CONFIG_DIR} ${DATA_DIR}
+sudo chmod -R 0644 ${CONFIG_DIR}/*
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
 
-logger "Installing dnsmasq"
 if [[ ! -z ${YUM} ]]; then
+  logger "Installing dnsmasq"
   sudo yum install -q -y dnsmasq
 elif [[ ! -z ${APT_GET} ]]; then
+  logger "Installing dnsmasq"
   sudo apt-get -qq -y update
   sudo apt-get install -qq -y dnsmasq-base dnsmasq
 else
-  logger "OS Detection failed, Dnsmasq not installed."
+  logger "Dnsmasq not installed due to OS detection failure"
   exit 1;
 fi
 
-logger "Configuring dnsmasq to forward .consul requests to Consul port 8600"
+logger "Configuring dnsmasq to forward .consul requests to consul port 8600"
 sudo sh -c 'echo "server=/consul/127.0.0.1#8600" >> /etc/dnsmasq.d/consul'
 sudo sh -c 'echo "listen-address=127.0.0.1" >> /etc/dnsmasq.d/consul'
 sudo sh -c 'echo "bind-interfaces" >> /etc/dnsmasq.d/consul'
 sudo service dnsmasq restart
-
-logger "Setup Consul default configuration and data directories"
-sudo mkdir -pm 0600 /etc/consul.d /opt/consul/data
-sudo cp /tmp/consul/config/consul-default.json /etc/consul.d/consul-default.json
-sudo chown -R ${CONSUL_USER}.${CONSUL_GROUP} /etc/consul.d /opt/consul
-sudo chmod -R 0755 /etc/consul.d
-
-if [[ ! -z ${CONSUL_SERVER} ]]; then
-  logger "Setup Consul server configuration"
-  sudo cp /tmp/consul/config/consul-server.json /etc/consul.d/consul-server.json
-fi
 
 logger "Complete"

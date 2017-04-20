@@ -3,25 +3,33 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT install-consul-systemd.sh: $1"
+  FILENAME="install-consul-systemd.sh"
+  echo "$DT $FILENAME: $1"
 }
 
-logger "Installing Consul systemd services"
-sudo cp /tmp/consul/init/systemd/consul.service /etc/systemd/system/consul.service
+logger "Running"
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
 
 if [[ ! -z ${YUM} ]]; then
-  logger "Installing systemd services for RHEL/CentOS"
-  sudo chmod 664 /etc/systemd/system/{consul.*}
+  SYSTEMD_DIR="/etc/systemd/system"
+  logger "Installing consul systemd service for RHEL/CentOS"
+  sudo cp /tmp/consul/init/systemd/consul.service ${SYSTEMD_DIR}
+  sudo chmod 0664 ${SYSTEMD_DIR}/consul.service
 elif [[ ! -z ${APT_GET} ]]; then
-  logger "Installing systemd services for Ubuntu/Debian"
-  sudo chmod 664 /lib/systemd/system/consul*
+  SYSTEMD_DIR="/lib/systemd/system"
+  logger "Installing consul systemd service for Debian/Ubuntu"
+  sudo cp /tmp/consul/init/systemd/consul.service ${SYSTEMD_DIR}
+  sudo chmod 0664 ${SYSTEMD_DIR}/consul.service
 else
-  logger "OS Detection failed, ${USER} user not created."
+  logger "Service not installed due to OS detection failure"
   exit 1;
 fi
+
+#logger "Enabling and starting consul"
+#sudo systemctl enable consul
+#sudo systemctl start consul
 
 logger "Complete"
