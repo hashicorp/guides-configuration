@@ -1,0 +1,47 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # use vagrant insecure public key
+  # important: comment this out to restrict access
+  config.ssh.insert_key = false
+
+  # use ubuntu or centos
+  #config.vm.box = "bento/ubuntu-16.04"
+  config.vm.box = "bento/centos-7.3"
+
+  # allocate more memory
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+
+  # copy the consul directory to the vm
+  config.vm.provision "file", source: "../consul", destination: "/tmp"
+
+  # configure some environment variables for the scripts to use
+  # todo: check if this can be read from an external file at runtime
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "export USER=consul" >> /etc/profile.d/consul_env.sh
+    echo "export GROUP=consul" >> /etc/profile.d/consul_env.sh
+    echo "export COMMENT=consul-server" >> /etc/profile.d/consul_env.sh
+    echo "export HOME=/srv/consul" >> /etc/profile.d/consul_env.sh
+    echo "export SERVER=true" >> /etc/profile.d/consul_env.sh
+  SHELL
+
+  # bootstrap the vm
+  config.vm.provision "shell", path: "../shared/scripts/base.sh"
+  config.vm.provision "shell", path: "../shared/scripts/base-aws.sh"
+  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh"
+
+  # install the service
+  config.vm.provision "shell", path: "scripts/install-consul.sh"
+  config.vm.provision "shell", path: "scripts/install-consul-systemd.sh"
+
+  # cleanup on the way out
+  config.vm.provision "shell", path: "../shared/scripts/cleanup.sh"
+  config.vm.provision "shell", path: "../shared/scripts/cleanup-aws.sh"
+  config.vm.provision "shell", inline: <<-SHELL
+    rm -f /etc/profile.d/consul_env.sh
+  SHELL
+
+end
