@@ -1,14 +1,25 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# variables for Vagrantfile
+base_box = "bento/ubuntu-16.04"
+#base_box = "bento/centos-7.3"
+consul_user = "consul"
+consul_comment = ""
+consul_group = "consul"
+consul_home = "/srv/consul"
+consul_version = "0.8.0"
+consul_download_url = "https://releases.hashicorp.com/consul/#{consul_version}/consul_#{consul_version}_linux_amd64.zip"
+consul_server = "true"
+
+
 Vagrant.configure("2") do |config|
   # use vagrant insecure public key
   # important: comment this out to restrict access
   config.ssh.insert_key = false
 
-  # use ubuntu or centos
-  #config.vm.box = "bento/ubuntu-16.04"
-  config.vm.box = "bento/centos-7.3"
+  # use base_box set at the top of this file
+  config.vm.box = base_box
 
   # allocate more memory
   config.vm.provider :virtualbox do |vb|
@@ -18,30 +29,19 @@ Vagrant.configure("2") do |config|
   # copy the consul directory to the vm
   config.vm.provision "file", source: "../consul", destination: "/tmp"
 
-  # configure some environment variables for the scripts to use
-  # todo: check if this can be read from an external file at runtime
-  config.vm.provision "shell", inline: <<-SHELL
-    echo "export USER=consul" >> /etc/profile.d/consul_env.sh
-    echo "export GROUP=consul" >> /etc/profile.d/consul_env.sh
-    echo "export COMMENT=consul-server" >> /etc/profile.d/consul_env.sh
-    echo "export HOME=/srv/consul" >> /etc/profile.d/consul_env.sh
-    echo "export SERVER=true" >> /etc/profile.d/consul_env.sh
-  SHELL
-
   # bootstrap the vm
   config.vm.provision "shell", path: "../shared/scripts/base.sh"
   config.vm.provision "shell", path: "../shared/scripts/base-aws.sh"
-  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh"
+  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
+    env: { "USER" => consul_user, "COMMENT" => consul_comment, "GROUP" => consul_group, "HOME" => consul_home }
 
   # install the service
-  config.vm.provision "shell", path: "scripts/install-consul.sh"
+  config.vm.provision "shell", path: "scripts/install-consul.sh",
+    env: { "USER" => consul_user, "GROUP" => consul_group, "VERSION" => consul_version, "URL" => consul_download_url, "SERVER" => consul_server }
   config.vm.provision "shell", path: "scripts/install-consul-systemd.sh"
 
   # cleanup on the way out
   config.vm.provision "shell", path: "../shared/scripts/cleanup.sh"
   config.vm.provision "shell", path: "../shared/scripts/cleanup-aws.sh"
-  config.vm.provision "shell", inline: <<-SHELL
-    rm -f /etc/profile.d/consul_env.sh
-  SHELL
 
 end
