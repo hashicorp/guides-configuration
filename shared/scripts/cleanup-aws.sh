@@ -3,8 +3,11 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT cleanup-aws.sh: $1"
+  FILENAME="cleanup-aws.sh"
+  echo "$DT $FILENAME: $1"
 }
+
+logger "Running"
 
 logger "Cleanup AWS install artifacts"
 sudo rm -rf /var/lib/cloud/instances/*

@@ -3,8 +3,11 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT setup-user.sh: $1"
+  FILENAME="setup-user.sh"
+  echo "$DT $FILENAME: $1"
 }
+
+logger "Running"
 
 USER="${USER:-}"
 COMMENT="${COMMENT:-}"
@@ -56,10 +59,10 @@ if [[ ! -z ${YUM} ]]; then
   logger "Setting up user ${USER} for RHEL/CentOS"
   user_rhel
 elif [[ ! -z ${APT_GET} ]]; then
-  logger "Setting up user ${USER} for Ubuntu/Debian"
+  logger "Setting up user ${USER} for Debian/Ubuntu"
   user_ubuntu
 else
-  logger "OS Detection failed, ${USER} user not created."
+  logger "${USER} user not created due to OS detection failure"
   exit 1;
 fi
 

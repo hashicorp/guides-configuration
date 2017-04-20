@@ -3,8 +3,11 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT cleanup.sh: $1"
+  FILENAME="cleanup.sh"
+  echo "$DT $FILENAME: $1"
 }
+
+logger "Running"
 
 logger "Cleanup install artifacts"
 sudo rm -rf /tmp/*
@@ -14,14 +17,15 @@ YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
 
 if [[ ! -z ${YUM} ]]; then
-  logger "RHEL or CentOS system detected"
+  logger "RHEL/CentOS system detected"
   logger "Performing cleanup"
   history -cw
 elif [[ ! -z ${APT_GET} ]]; then
-  logger "Debian or Ubuntu system detected"
-  logger "No cleanup necessary"
+  logger "Debian/Ubuntu system detected"
+  logger "Performing cleanup"
+  history -c
 else
-  logger "OS Detection failed, prerequisites not installed."
+  logger "Cleanup aborted due to OS detection failure"
   exit 1;
 fi
 
