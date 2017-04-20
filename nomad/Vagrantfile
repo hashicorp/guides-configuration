@@ -1,0 +1,93 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# base box selection
+base_box = "bento/ubuntu-16.04"
+#base_box = "bento/centos-7.3"
+
+# consul variable defaults
+consul_user = "consul"
+consul_comment = ""
+consul_group = "consul"
+consul_home = "/srv/consul"
+consul_version = "0.8.0"
+consul_download_url = "https://releases.hashicorp.com/consul/#{consul_version}/consul_#{consul_version}_linux_amd64.zip"
+consul_server = "true"
+
+# nomad variable defaults
+nomad_user = "nomad"
+nomad_comment = ""
+nomad_group = "nomad"
+nomad_home = "/srv/nomad"
+nomad_version = "0.5.6"
+nomad_download_url = "https://releases.hashicorp.com/consul/#{nomad_version}/nomad_#{nomad_version}_linux_amd64.zip"
+nomad_client = "true"
+nomad_server = "true"
+nomad_consul = "true"
+
+
+Vagrant.configure("2") do |config|
+  # use vagrant insecure public key
+  # important: comment this out to restrict access
+  config.ssh.insert_key = false
+
+  # use ubuntu or centos
+  config.vm.box = "bento/ubuntu-16.04"
+  #config.vm.box = "bento/centos-7.3"
+
+  # allocate more memory
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+
+  # copy the consul and nomad directories to the vm
+  config.vm.provision "file", source: "../consul", destination: "/tmp"
+  config.vm.provision "file", source: "../nomad", destination: "/tmp"
+
+  # bootstrap the vm
+  config.vm.provision "shell", path: "../shared/scripts/base.sh"
+  config.vm.provision "shell", path: "../shared/scripts/base-aws.sh"
+  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
+    env: {
+      "USER" => consul_user,
+      "COMMENT" => consul_comment,
+      "GROUP" => consul_group,
+      "HOME" => consul_home
+    }
+  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
+    env: {
+      "USER" => nomad_user,
+      "COMMENT" => nomad_comment,
+      "GROUP" => nomad_group,
+      "HOME" => nomad_home
+    }
+
+  # install consul
+  config.vm.provision "shell", path: "../consul/scripts/install-consul.sh",
+    env: {
+      "USER" => consul_user,
+      "GROUP" => consul_group,
+      "VERSION" => consul_version,
+      "URL" => consul_download_url,
+      "SERVER" => consul_server
+    }
+  config.vm.provision "shell", path: "../consul/scripts/install-consul-systemd.sh"
+
+  # install nomad
+  config.vm.provision "shell", path: "scripts/install-nomad.sh",
+    env: {
+      "USER" => nomad_user,
+      "GROUP" => nomad_group,
+      "VERSION" => nomad_version,
+      "URL" => nomad_download_url,
+      "CLIENT" => nomad_client,
+      "SERVER" => nomad_server,
+      "CONSUL" => nomad_consul
+    }
+  config.vm.provision "shell", path: "scripts/install-nomad-systemd.sh"
+
+  # cleanup on the way out
+  config.vm.provision "shell", path: "../shared/scripts/cleanup.sh"
+  config.vm.provision "shell", path: "../shared/scripts/cleanup-aws.sh"
+
+end
