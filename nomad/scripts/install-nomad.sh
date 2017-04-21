@@ -33,18 +33,18 @@ logger "/usr/local/bin/nomad --version: $(/usr/local/bin/nomad --version)"
 
 logger "Configuring nomad"
 sudo mkdir -pm 0755 ${CONFIG_DIR} ${DATA_DIR}
-sudo cp /tmp/nomad/config/nomad-default.hcl /etc/nomad.d/nomad-default.hcl
+sudo cp /tmp/nomad/config/nomad-default.hcl ${CONFIG_DIR}
 if [[ ! -z ${NOMAD_CLIENT} ]]; then
   logger "Configuring nomad as a client"
-  sudo cp /tmp/nomad/config/nomad-client.hcl /etc/nomad.d/nomad-client.hcl
+  sudo cp /tmp/nomad/config/nomad-client.hcl ${CONFIG_DIR}
 fi
 if [[ ! -z ${NOMAD_SERVER} ]]; then
   logger "Configuring nomad as a server"
-  sudo cp /tmp/nomad/config/nomad-server.hcl /etc/nomad.d/nomad-server.hcl
+  sudo cp /tmp/nomad/config/nomad-server.hcl ${CONFIG_DIR}
 fi
 if [[ ! -z ${NOMAD_CONSUL} ]]; then
   logger "Configuring nomad/consul"
-  sudo cp /tmp/nomad/config/nomad-consul.hcl /etc/nomad.d/nomad-consul.hcl
+  sudo cp /tmp/nomad/config/nomad-consul.hcl ${CONFIG_DIR}
 fi
 sudo chown -R ${NOMAD_USER}:${NOMAD_GROUP} ${CONFIG_DIR} ${DATA_DIR}
 sudo chmod -R 0644 ${CONFIG_DIR}/*

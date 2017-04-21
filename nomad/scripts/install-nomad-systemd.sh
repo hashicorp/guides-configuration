@@ -3,7 +3,7 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  FILENAME="install-consul-systemd.sh"
+  FILENAME="install-nomad-systemd.sh"
   echo "$DT $FILENAME: $1"
 }
 
