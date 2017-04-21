@@ -3,7 +3,7 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT envconsul-install.sh: $1"
+  echo "$DT install-envconsul.sh: $1"
 }
 
 ENVCONSUL_VERSION=${VERSION:-0.6.2}

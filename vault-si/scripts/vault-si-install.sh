@@ -3,7 +3,7 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT vault-si-install.sh: $1"
+  echo "$DT install-vault-si.sh: $1"
 }
 
 VAULT_SI_URL=${VAULT_SI_ENT}

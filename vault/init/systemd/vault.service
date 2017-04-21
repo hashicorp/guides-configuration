@@ -1,5 +1,5 @@
 [Unit]
-Description=Vault
+Description=Vault Agent
 Requires=consul-online.target
 After=consul-online.target
 

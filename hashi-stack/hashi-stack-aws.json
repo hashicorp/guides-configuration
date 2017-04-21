@@ -81,7 +81,10 @@
         "Built-By": "{{user `vcs_name`}}",
         "Product-Version": "{{user `hashi_stack_version`}}",
         "OS": "Ubuntu",
-        "OS-Version": "16.04"
+        "OS-Version": "16.04",
+        "Consul-Version": "{{user `consul_version`}}",
+        "Vault-Version": "{{user `vault_version`}}",
+        "Nomad-Version": "{{user `nomad_version`}}"
       }
     }
   ],

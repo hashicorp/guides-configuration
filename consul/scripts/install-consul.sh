@@ -32,10 +32,12 @@ logger "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
 logger "Configuring consul"
 sudo mkdir -pm 0755 ${CONFIG_DIR} ${DATA_DIR}
 sudo cp /tmp/consul/config/consul-default.json ${CONFIG_DIR}
+
 if [[ ${CONSUL_SERVER} = "true" ]]; then
   logger "Configuring consul as a server"
   sudo cp /tmp/consul/config/consul-server.json ${CONFIG_DIR}
 fi
+
 sudo chown -R ${CONSUL_USER}:${CONSUL_GROUP} ${CONFIG_DIR} ${DATA_DIR}
 sudo chmod -R 0644 ${CONFIG_DIR}/*
 

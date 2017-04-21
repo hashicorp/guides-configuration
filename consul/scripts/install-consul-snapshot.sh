@@ -3,7 +3,8 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT consul-snapshot-install.sh: $1"
+  FILENAME="install-consul-snapshot.sh"
+  echo "$DT $FILENAME: $1"
 }
 
 CONSUL_SNAPSHOT_USER=${USER:-}

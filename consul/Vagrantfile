@@ -14,7 +14,6 @@ consul_version = "0.8.0"
 consul_download_url = "https://releases.hashicorp.com/consul/#{consul_version}/consul_#{consul_version}_linux_amd64.zip"
 consul_server = "true"
 
-
 Vagrant.configure("2") do |config|
   # use vagrant insecure public key
   # important: comment this out to restrict access
@@ -36,25 +35,24 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "../shared/scripts/base-aws.sh"
   config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
     env: {
-      "USER" => consul_user, 
-      "COMMENT" => consul_comment, 
-      "GROUP" => consul_group, 
-      "HOME" => consul_home 
+      "USER" => consul_user,
+      "COMMENT" => consul_comment,
+      "GROUP" => consul_group,
+      "HOME" => consul_home
     }
 
   # install consul
   config.vm.provision "shell", path: "scripts/install-consul.sh",
     env: {
-      "USER" => consul_user, 
-      "GROUP" => consul_group, 
-      "VERSION" => consul_version, 
-      "URL" => consul_download_url, 
-      "SERVER" => consul_server 
+      "USER" => consul_user,
+      "GROUP" => consul_group,
+      "VERSION" => consul_version,
+      "URL" => consul_download_url,
+      "SERVER" => consul_server
     }
   config.vm.provision "shell", path: "scripts/install-consul-systemd.sh"
 
   # cleanup on the way out
   config.vm.provision "shell", path: "../shared/scripts/cleanup.sh"
   config.vm.provision "shell", path: "../shared/scripts/cleanup-aws.sh"
-
 end
