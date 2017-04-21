@@ -1,0 +1,87 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# base box selection
+base_box = "bento/ubuntu-16.04"
+#base_box = "bento/centos-7.3"
+
+# consul variable defaults
+consul_user = "consul"
+consul_comment = ""
+consul_group = "consul"
+consul_home = "/srv/consul"
+consul_version = "0.8.0"
+consul_download_url = "https://releases.hashicorp.com/consul/#{consul_version}/consul_#{consul_version}_linux_amd64.zip"
+consul_server = "true"
+
+# vault variable defaults
+vault_user = "vault"
+vault_comment = ""
+vault_group = "vault"
+vault_home = "/srv/vault"
+vault_version = "0.7.0"
+vault_download_url = "https://releases.hashicorp.com/vault/#{vault_version}/vault_#{vault_version}_linux_amd64.zip"
+
+
+Vagrant.configure("2") do |config|
+  # use vagrant insecure public key
+  # important: comment this out to restrict access
+  config.ssh.insert_key = false
+
+  # use ubuntu or centos
+  config.vm.box = "bento/ubuntu-16.04"
+  #config.vm.box = "bento/centos-7.3"
+
+  # allocate more memory
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+
+  # copy the consul and vault directories to the vm
+  config.vm.provision "file", source: "../consul", destination: "/tmp"
+  config.vm.provision "file", source: "../vault", destination: "/tmp"
+
+  # bootstrap the vm
+  config.vm.provision "shell", path: "../shared/scripts/base.sh"
+  config.vm.provision "shell", path: "../shared/scripts/base-aws.sh"
+  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
+    env: {
+      "USER" => consul_user,
+      "COMMENT" => consul_comment,
+      "GROUP" => consul_group,
+      "HOME" => consul_home
+    }
+  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
+    env: {
+      "USER" => vault_user,
+      "COMMENT" => vault_comment,
+      "GROUP" => vault_group,
+      "HOME" => vault_home
+    }
+
+  # install consul
+  config.vm.provision "shell", path: "../consul/scripts/install-consul.sh",
+    env: {
+      "USER" => consul_user,
+      "GROUP" => consul_group,
+      "VERSION" => consul_version,
+      "URL" => consul_download_url,
+      "SERVER" => consul_server
+    }
+  config.vm.provision "shell", path: "../consul/scripts/install-consul-systemd.sh"
+
+  # install vault
+  config.vm.provision "shell", path: "scripts/install-vault.sh",
+    env: {
+      "USER" => vault_user,
+      "GROUP" => vault_group,
+      "VERSION" => vault_version,
+      "URL" => vault_download_url
+    }
+  config.vm.provision "shell", path: "scripts/install-vault-systemd.sh"
+
+  # cleanup on the way out
+  config.vm.provision "shell", path: "../shared/scripts/cleanup.sh"
+  config.vm.provision "shell", path: "../shared/scripts/cleanup-aws.sh"
+
+end

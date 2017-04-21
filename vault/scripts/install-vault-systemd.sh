@@ -3,33 +3,43 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT install-vault-systemd.sh: $1"
+  FILENAME="install-vault-systemd.sh"
+  echo "$DT $FILENAME: $1"
 }
 
-logger "Installing Vault systemd services"
-
-echo "Installing systemd services for RHEL/CentOS"
-sudo cp /tmp/vault/init/systemd/vault.service /etc/systemd/system/vault.service
-sudo cp /tmp/consul/init/systemd/consul.service /etc/systemd/system/consul.service
-sudo cp /tmp/consul/init/systemd/consul-online.sh /usr/bin/consul-online.sh
-sudo cp /tmp/consul/init/systemd/consul-online.service /etc/systemd/system/consul-online.service
-sudo cp /tmp/consul/init/systemd/consul-online.target /etc/systemd/system/consul-online.target
-sudo chmod 664 /etc/systemd/system/{vault.*,consul.*}
+logger "Running"
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
 
 if [[ ! -z ${YUM} ]]; then
+  SYSTEMD_DIR="/etc/systemd/system"
   logger "Installing systemd services for RHEL/CentOS"
-  sudo chmod 664 /etc/systemd/system/{vault.*,consul.*}
+  sudo cp /tmp/vault/init/systemd/vault.service ${SYSTEMD_DIR}
+  sudo cp /tmp/consul/init/systemd/consul-online.service ${SYSTEMD_DIR}
+  sudo cp /tmp/consul/init/systemd/consul-online.target ${SYSTEMD_DIR}
+  sudo cp /tmp/consul/init/systemd/consul-online.sh /usr/bin/consul-online.sh
+  sudo chmod 0664 ${SYSTEMD_DIR}/{vault*,consul*}
 elif [[ ! -z ${APT_GET} ]]; then
-  logger "Installing systemd services for Ubuntu/Debian"
-  sudo chmod 664 /lib/systemd/system/vault*
-  sudo chmod 664 /lib/systemd/system/consul*
+  SYSTEMD_DIR="/lib/systemd/system"
+  logger "Installing systemd services for Debian/Ubuntu"
+  sudo cp /tmp/vault/init/systemd/vault.service ${SYSTEMD_DIR}
+  sudo cp /tmp/consul/init/systemd/consul-online.service ${SYSTEMD_DIR}
+  sudo cp /tmp/consul/init/systemd/consul-online.target ${SYSTEMD_DIR}
+  sudo cp /tmp/consul/init/systemd/consul-online.sh /usr/bin/consul-online.sh
+  sudo chmod 0664 ${SYSTEMD_DIR}/{vault*,consul*}
 else
   logger "OS Detection failed, ${USER} user not created."
   exit 1;
 fi
+
+#logger "Enabling and starting consul"
+#sudo systemctl enable consul
+#sudo systemctl start consul
+
+#logger "Enabling and starting vault"
+#sudo systemctl enable vault
+#sudo systemctl start vault
 
 logger "Complete"

@@ -5,7 +5,7 @@ After=consul-online.target
 
 [Service]
 Restart=on-failure
-ExecStart=/usr/bin/vault server -config /etc/vault.d
+ExecStart=/usr/local/bin/vault server -config /etc/vault.d
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=vault
