@@ -20,7 +20,7 @@ APT_GET=$(which apt-get 2>/dev/null)
 if [[ ! -z ${YUM} ]]; then
   logger "RHEL/CentOS system detected"
   logger "Performing updates and installing prerequisites"
-  sudo yum -y update
+  sudo yum -y check-update
   sudo yum install -q -y wget unzip
 elif [[ ! -z ${APT_GET} ]]; then
   logger "Debian/Ubuntu system detected"
