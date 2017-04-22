@@ -11,6 +11,7 @@
   },
   "builders": [
     {
+      "name": "amazon-ebs-rhel-7.3-systemd",
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
@@ -45,6 +46,7 @@
         "OS-Version": "7.3"
       },
       {
+        "name": "amazon-ebs-ubuntu-16.04-systemd",
         "type": "amazon-ebs",
         "access_key": "{{ user `aws_access_key_id` }}",
         "secret_key": "{{ user `aws_secret_access_key` }}",
@@ -110,8 +112,15 @@
         "SERVER=true"
       ],
       "scripts": [
-        "echo \"Install & configure Consul Server with systemd\"",
-        "scripts/install-consul.sh",
+        "echo \"Install Consul Server\"",
+        "scripts/install-consul.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "scripts": [
+        "echo \"Configure Consul Server with systemd\"",
         "scripts/install-consul-systemd.sh"
       ]
     },

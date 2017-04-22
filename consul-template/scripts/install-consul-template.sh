@@ -3,34 +3,34 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT install-consul-template.sh: $1"
+  FILENAME="install-consul-template.sh"
+  echo "$DT $FILENAME: $1"
 }
 
-CONSUL_TEMPLATE_VERSION=${VERSION:-0.18.2}
-CONSUL_TEMPLATE_ZIP=/tmp/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
-CONSUL_TEMPLATE_URL="https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip"
-CONSUL_TEMPLATE_USER=${USER:-}
-CONSUL_TEMPLATE_GROUP=${GROUP:-}
+logger "Running"
 
-cd /tmp
-logger "Downloading consul-template"
-wget $CONSUL_TEMPLATE_URL --quiet -O $CONSUL_TEMPLATE_ZIP
+CONSUL_TEMPLATE_VERSION=${VERSION:-"0.18.2"}
+CONSUL_TEMPLATE_ZIP="consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip"
+CONSUL_TEMPLATE_URL=${URL:-"https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/${CONSUL_TEMPLATE_ZIP}"}
+CONSUL_TEMPLATE_USER=${USER:-"consul-template"}
+CONSUL_TEMPLATE_GROUP=${GROUP:-"consul-template"}
+CONFIG_DIR="/etc/consul-template.d"
+DATA_DIR="/opt/consul-template/data"
+DOWNLOAD_DIR="/tmp"
 
-logger "Unpacking consul-template"
-unzip -q $CONSUL_TEMPLATE_ZIP >/dev/null
-rm -f $CONSUL_TEMPLATE_ZIP
+logger "Downloading consul-template ${CONSUL_TEMPLATE_VERSION}"
+curl --silent --output ${DOWNLOAD_DIR}/${CONSUL_TEMPLATE_ZIP} ${CONSUL_TEMPLATE_URL}
 
 logger "Installing consul-template"
-sudo chmod +x consul-template
-sudo mv consul-template /usr/local/bin
+sudo unzip -o ${DOWNLOAD_DIR}/${CONSUL_TEMPLATE_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/consul-template
-sudo chown root:root /usr/local/bin/consul-template
+sudo chown ${CONSUL_TEMPLATE_USER}:${CONSUL_TEMPLATE_GROUP} /usr/local/bin/consul-template
 
-logger "Installed consul-template version is $(consul-template --version 2>&1)"
+logger "/usr/local/bin/consul-template --version: $(/usr/local/bin/consul-template --version)"
 
-logger "Setup consul-template configuration directory"
-sudo mkdir -pm 0600 /etc/consul-template.d /opt/consul-template
-sudo chmod -R 0755 /etc/consul-template.d
-sudo chown -R ${CONSUL_TEMPLATE_USER}.${CONSUL_TEMPLATE_GROUP} /etc/consul-template.d /opt/consul-template
+logger "Configuring consul-template"
+sudo mkdir -pm 0755 ${CONFIG_DIR} ${DATA_DIR}
+sudo chown -R ${CONSUL_TEMPLATE_USER}:${CONSUL_TEMPLATE_GROUP} ${CONFIG_DIR} ${DATA_DIR}
+sudo chmod -R 0644 ${CONFIG_DIR}/*
 
 logger "Complete"

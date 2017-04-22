@@ -10,8 +10,16 @@ consul_comment = ENV['CONSUL_COMMENT'] || ""
 consul_group = ENV['CONSUL_GROUP'] || "consul"
 consul_home = ENV['CONSUL_HOME'] || "/srv/consul"
 consul_version = ENV['CONSUL_VERSION'] || "0.8.0"
-consul_download_url = ENV['CONSUL_ENT_URL'] || "https://releases.hashicorp.com/consul/#{consul_version}/consul_#{consul_version}_linux_amd64.zip"
+consul_download_url = ENV['CONSUL_DOWNLOAD_URL'] || "https://releases.hashicorp.com/consul/#{consul_version}/consul_#{consul_version}_linux_amd64.zip"
 consul_server = ENV['CONSUL_SERVER'] || "true"
+
+# vault variable defaults
+vault_user = ENV['VAULT_USER'] || "vault"
+vault_comment = ENV['VAULT_COMMENT'] || ""
+vault_group = ENV['VAULT_GROUP'] || "vault"
+vault_home = ENV['VAULT_HOME'] || "/srv/vault"
+vault_version = ENV['VAULT_VERSION'] || "0.7.0"
+vault_download_url = ENV['VAULT_ENT_URL'] || "https://releases.hashicorp.com/vault/#{vault_version}/vault_#{vault_version}_linux_amd64.zip"
 
 # nomad variable defaults
 nomad_user = ENV['NOMAD_USER'] || "nomad"
@@ -19,7 +27,7 @@ nomad_comment = ENV['NOMAD_COMMENT'] || ""
 nomad_group = ENV['NOMAD_GROUP'] || "nomad"
 nomad_home = ENV['NOMAD_HOME'] || "/srv/nomad"
 nomad_version = ENV['NOMAD_VERSION'] || "0.5.6"
-nomad_download_url = ENV['NOMAD_ENT_URL'] || "https://releases.hashicorp.com/nomad/#{nomad_version}/nomad_#{nomad_version}_linux_amd64.zip"
+nomad_download_url = ENV['NOMAD_DOWNLOAD_URL'] || "https://releases.hashicorp.com/nomad/#{nomad_version}/nomad_#{nomad_version}_linux_amd64.zip"
 nomad_client = ENV['NOMAD_CLIENT'] || "true"
 nomad_server = ENV['NOMAD_SERVER'] || "true"
 nomad_consul = ENV['NOMAD_CONSUL'] || "true"
@@ -36,11 +44,12 @@ Vagrant.configure("2") do |config|
 
   # use base_box set at the top of this file
   config.vm.box = base_box
-  config.vm.hostname = "nomad"
+  config.vm.hostname = "hashi-stack"
   config.vm.provision "shell", inline: $script, privileged: false
 
   # copy the consul and nomad directories to the vm
   config.vm.provision "file", source: "../consul", destination: "/tmp"
+  config.vm.provision "file", source: "../vault", destination: "/tmp"
   config.vm.provision "file", source: "../nomad", destination: "/tmp"
 
   # bootstrap the vm
@@ -52,6 +61,13 @@ Vagrant.configure("2") do |config|
       "COMMENT" => consul_comment,
       "GROUP" => consul_group,
       "HOME" => consul_home
+    }
+  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
+    env: {
+      "USER" => vault_user,
+      "COMMENT" => vault_comment,
+      "GROUP" => vault_group,
+      "HOME" => vault_home
     }
   config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
     env: {
@@ -72,8 +88,18 @@ Vagrant.configure("2") do |config|
     }
   config.vm.provision "shell", path: "../consul/scripts/install-consul-systemd.sh"
 
+  # install vault
+  config.vm.provision "shell", path: "../vault/scripts/install-vault.sh",
+    env: {
+      "USER" => vault_user,
+      "GROUP" => vault_group,
+      "VERSION" => vault_version,
+      "URL" => vault_download_url
+    }
+  config.vm.provision "shell", path: "../vault/scripts/install-vault-systemd.sh"
+
   # install nomad
-  config.vm.provision "shell", path: "scripts/install-nomad.sh",
+  config.vm.provision "shell", path: "../nomad/scripts/install-nomad.sh",
     env: {
       "USER" => nomad_user,
       "GROUP" => nomad_group,
@@ -83,7 +109,7 @@ Vagrant.configure("2") do |config|
       "SERVER" => nomad_server,
       "CONSUL" => nomad_consul
     }
-  config.vm.provision "shell", path: "scripts/install-nomad-systemd.sh"
+  config.vm.provision "shell", path: "../nomad/scripts/install-nomad-systemd.sh"
 
   # cleanup on the way out
   config.vm.provision "shell", path: "../shared/scripts/cleanup.sh"

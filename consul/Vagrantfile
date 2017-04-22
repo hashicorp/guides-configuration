@@ -2,17 +2,16 @@
 # vi: set ft=ruby :
 
 # base box selection
-base_box = "bento/ubuntu-16.04"
-#base_box = "bento/centos-7.3"
+base_box = ENV['BASE_BOX'] || "bento/ubuntu-16.04"
 
 # consul variable defaults
-consul_user = "consul"
-consul_comment = ""
-consul_group = "consul"
-consul_home = "/srv/consul"
-consul_version = "0.8.0"
-consul_download_url = "https://releases.hashicorp.com/consul/#{consul_version}/consul_#{consul_version}_linux_amd64.zip"
-consul_server = "true"
+consul_user = ENV['CONSUL_USER'] || "consul"
+consul_comment = ENV['CONSUL_COMMENT'] || ""
+consul_group = ENV['CONSUL_GROUP'] || "consul"
+consul_home = ENV['CONSUL_HOME'] || "/srv/consul"
+consul_version = ENV['CONSUL_VERSION'] || "0.8.0"
+consul_download_url = ENV['CONSUL_ENT_URL'] || "https://releases.hashicorp.com/consul/#{consul_version}/consul_#{consul_version}_linux_amd64.zip"
+consul_server = ENV['CONSUL_SERVER'] || "true"
 
 Vagrant.configure("2") do |config|
   # use vagrant insecure public key
@@ -21,11 +20,7 @@ Vagrant.configure("2") do |config|
 
   # use base_box set at the top of this file
   config.vm.box = base_box
-
-  # allocate more memory
-  config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
-  end
+  config.vm.hostname = "consul"
 
   # copy the consul directory to the vm
   config.vm.provision "file", source: "../consul", destination: "/tmp"
@@ -55,4 +50,21 @@ Vagrant.configure("2") do |config|
   # cleanup on the way out
   config.vm.provision "shell", path: "../shared/scripts/cleanup.sh"
   config.vm.provision "shell", path: "../shared/scripts/cleanup-aws.sh"
+
+  # Increase memory for Parallels Desktop
+  config.vm.provider "parallels" do |p, o|
+    p.memory = "1024"
+  end
+
+  # Increase memory for Virtualbox
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+  end
+
+  # Increase memory for VMware
+  ["vmware_fusion", "vmware_workstation"].each do |p|
+    config.vm.provider p do |v|
+      v.vmx["memsize"] = "1024"
+    end
+  end
 end

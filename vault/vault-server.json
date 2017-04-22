@@ -6,11 +6,12 @@
     "aws_owner": "{{ env `AWS_OWNER` }}",
     "environment": "{{ env `PACKER_ENVIRONMENT` }}",
     "vcs_name": "{{ env `VCS_NAME` }}",
-    "nomad_version": "{{ env `NOMAD_VERSION` }}",
-    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}"
+    "vault_version": "{{ env `VAULT_VERSION` }}",
+    "vault_ent_url": "{{ env `VAULT_ENT_URL` }}"
   },
   "builders": [
     {
+      "name": "amazon-ebs-rhel-7.3-systemd",
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
@@ -32,20 +33,21 @@
       "ssh_username": "ec2-user",
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "Nomad Server",
-      "ami_name": "nomad-server-{{ user `nomad_version` }}-RHEL_7.3-{{isotime \"2006-01-02-1504\"}}",
+      "ami_description": "Vault Server",
+      "ami_name": "vault-server-{{ user `vault_version` }}-RHEL_7.3-{{isotime \"2006-01-02-1504\"}}",
       "tags": {
-        "Name": "{{user `environment`}} Nomad Server {{ user `nomad_version` }}",
-        "System": "Nomad",
-        "Product": "Nomad",
+        "Name": "{{user `environment`}} Vault Server {{ user `vault_version` }}",
+        "System": "Vault",
+        "Product": "Vault",
         "Environment": "{{user `environment`}}",
         "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `nomad_version`}}",
+        "Product-Version": "{{user `vault_version`}}",
         "OS": "RHEL",
         "OS-Version": "7.3"
       }
     },
     {
+      "name": "amazon-ebs-ubuntu-16.04-systemd",
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
@@ -67,15 +69,15 @@
       "ssh_username": "ubuntu",
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "Nomad Server",
-      "ami_name": "nomad-server-{{ user `nomad_version` }}-Ubuntu_16.04-{{isotime \"2006-01-02-1504\"}}",
+      "ami_description": "Vault Server",
+      "ami_name": "vault-server-{{ user `vault_version` }}-Ubuntu_16.04-{{isotime \"2006-01-02-1504\"}}",
       "tags": {
-        "Name": "{{user `environment`}} Nomad Server {{ user `nomad_version` }}",
-        "System": "Nomad",
-        "Product": "Nomad",
+        "Name": "{{user `environment`}} Vault Server {{ user `vault_version` }}",
+        "System": "Vault",
+        "Product": "Vault",
         "Environment": "{{user `environment`}}",
         "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `nomad_version`}}",
+        "Product-Version": "{{user `vault_version`}}",
         "OS": "Ubuntu",
         "OS-Version": "16.04"
       }
@@ -84,7 +86,7 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "../nomad",
+      "source": "../vault",
       "destination": "/tmp"
     },
     {
@@ -95,13 +97,13 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=nomad",
-        "GROUP=nomad",
-        "COMMENT=Nomad Server",
-        "HOME=/srv/nomad"
+        "USER=vault",
+        "GROUP=vault",
+        "COMMENT=Vault Server",
+        "HOME=/srv/vault"
       ],
       "scripts": [
-        "echo \"Setup for Nomad Server install\"",
+        "echo \"Setup for Vault Server install\"",
         "../shared/scripts/base.sh",
         "../shared/scripts/base-aws.sh",
         "../shared/scripts/setup-user.sh"
@@ -110,14 +112,20 @@
     {
       "type": "shell",
       "environment_vars": [
-        "VERSION={{user `nomad_version`}}",
-        "URL={{user `nomad_ent_url`}}",
-        "SERVER=true"
+        "VERSION={{user `vault_version`}}",
+        "URL={{user `vault_ent_url`}}"
       ],
       "scripts": [
-        "echo \"Install & configure Nomad Server with systemd\"",
-        "scripts/install-nomad.sh",
-        "scripts/install-nomad-systemd.sh"
+        "echo \"Install Vault Server\"",
+        "scripts/install-vault.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "scripts": [
+        "echo \"Configure Vault Server with systemd\"",
+        "scripts/install-vault-systemd.sh"
       ]
     },
     {
