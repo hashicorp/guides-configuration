@@ -85,7 +85,13 @@
     {
       "type": "shell",
       "scripts": [
-        "../shared/scripts/base.sh",
+        "../shared/scripts/base.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "scripts": [
         "../shared/scripts/base-aws.sh"
       ]
     },
@@ -126,9 +132,14 @@
     },
     {
       "type": "shell",
-      "start_retry_timeout": "5m",
       "scripts": [
-        "../shared/scripts/cleanup.sh",
+        "../shared/scripts/cleanup.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "scripts": [
         "../shared/scripts/cleanup-aws.sh"
       ]
     }
