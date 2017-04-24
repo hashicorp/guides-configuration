@@ -6,9 +6,4 @@ client {
     "docker.cleanup.image"   = "0"
     "driver.raw_exec.enable" = "1"
   }
-
-  meta {
-    region       = "{{ region }}"
-    machine_type = "{{ machine_type }}"
-  }
 }

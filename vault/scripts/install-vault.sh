@@ -32,6 +32,7 @@ logger "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 logger "Configuring vault"
 sudo mkdir -pm 0755 ${CONFIG_DIR} ${SSL_DIR}
 sudo cp /tmp/vault/config/vault-consul.hcl ${CONFIG_DIR}
+sudo cp /tmp/vault/config/vault-tls.hcl ${CONFIG_DIR}
 sudo chmod -R 0644 ${CONFIG_DIR}/*
 sudo chown -R ${VAULT_USER}:${VAULT_GROUP} ${CONFIG_DIR} ${SSL_DIR}
 

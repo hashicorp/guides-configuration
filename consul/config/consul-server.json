@@ -1,4 +1,4 @@
 {
   "server": true,
-  "bootstrap_expect": {{ bootstrap_expect }}
+  "bootstrap_expect": 1
 }

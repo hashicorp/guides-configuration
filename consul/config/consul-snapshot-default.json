@@ -13,7 +13,7 @@
       "path": "/opt/consul-snapshot/data"
     },
     "log": {
-      "level": "{{ log_level }}"
+      "level": "INFO"
     }
   }
 }

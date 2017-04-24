@@ -3,7 +3,7 @@ environment "aws" {
 }
 
 vault {
-  address = "https://vault.service.atlas:8200"
+  address = "https://vault.service.consul:8200"
   mount_path = "auth/aws-ec2"
 }
 
