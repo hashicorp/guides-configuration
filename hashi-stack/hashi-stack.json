@@ -15,6 +15,7 @@
   },
   "builders": [
     {
+      "name": "amazon-ebs-rhel-7.3-systemd",
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
@@ -30,14 +31,13 @@
           "name": "*RHEL-7.3_HVM_GA-*",
           "root-device-type": "ebs"
         },
-        "owners": ["{{user `aws_owner`}}"],
         "most_recent": true
       },
       "ssh_username": "ec2-user",
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
       "ami_description": "Hashi Stack",
-      "ami_name": "hashi-stack--RHEL_7.3-{{isotime \"2006-01-02-1504\"}}",
+      "ami_name": "hashi-stack-RHEL_7.3-{{isotime \"2006-01-02-1504\"}}",
       "tags": {
         "Name": "{{user `environment`}} Hashi Stack",
         "System": "Hashi Stack",
@@ -47,11 +47,12 @@
         "OS": "RHEL",
         "OS-Version": "7.3",
         "Consul-Version": "{{user `consul_version`}}",
-        "Vault-Version": "{{user `vault_version`}}",
-        "Nomad-Version": "{{user `nomad_version`}}"
+        "Nomad-Version": "{{user `nomad_version`}}",
+        "Vault-Version": "{{user `vault_version`}}"
       }
     },
     {
+      "name": "amazon-ebs-ubuntu-16.04-systemd",
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
@@ -67,7 +68,6 @@
           "name": "*ubuntu-xenial-16.04-amd64-server-*",
           "root-device-type": "ebs"
         },
-        "owners": ["{{user `aws_owner`}}"],
         "most_recent": true
       },
       "ssh_username": "ubuntu",
@@ -84,34 +84,23 @@
         "OS": "Ubuntu",
         "OS-Version": "16.04",
         "Consul-Version": "{{user `consul_version`}}",
-        "Vault-Version": "{{user `vault_version`}}",
-        "Nomad-Version": "{{user `nomad_version`}}"
+        "Nomad-Version": "{{user `nomad_version`}}",
+        "Vault-Version": "{{user `vault_version`}}"
       }
     }
   ],
   "provisioners": [
     {
-      "type": "file",
-      "source": "../consul",
-      "destination": "/tmp"
-    },
-    {
-      "type": "file",
-      "source": "../vault",
-      "destination": "/tmp"
-    },
-    {
-      "type": "file",
-      "source": "../nomad",
-      "destination": "/tmp"
-    },
-    {
       "type": "shell",
       "scripts": [
-        "echo \"Setup for Hashi Stack install\"",
         "../shared/scripts/base.sh",
         "../shared/scripts/base-aws.sh"
       ]
+    },
+    {
+      "type": "file",
+      "source": "../consul",
+      "destination": "/tmp"
     },
     {
       "type": "shell",
@@ -122,7 +111,6 @@
         "HOME=/srv/consul"
       ],
       "scripts": [
-        "echo \"Setup for Consul Server install\"",
         "../shared/scripts/setup-user.sh"
       ]
     },
@@ -134,35 +122,20 @@
         "SERVER=true"
       ],
       "scripts": [
-        "echo \"Install & configure Consul Server with systemd\"",
-        "scripts/install-consul.sh",
+        "scripts/install-consul.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "scripts": [
         "scripts/install-consul-systemd.sh"
       ]
     },
     {
-      "type": "shell",
-      "environment_vars": [
-        "USER=vault",
-        "GROUP=vault",
-        "COMMENT=Vault Server",
-        "HOME=/srv/vault"
-      ],
-      "scripts": [
-        "echo \"Setup for Vault Server install\"",
-        "../shared/scripts/setup-user.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "environment_vars": [
-        "VERSION={{user `vault_version`}}",
-        "URL={{user `vault_ent_url`}}"
-      ],
-      "scripts": [
-        "echo \"Install & configure Vault Server with systemd\"",
-        "scripts/install-vault.sh",
-        "scripts/install-vault-systemd.sh"
-      ]
+      "type": "file",
+      "source": "../nomad",
+      "destination": "/tmp"
     },
     {
       "type": "shell",
@@ -173,7 +146,6 @@
         "HOME=/srv/nomad"
       ],
       "scripts": [
-        "echo \"Setup for Nomad Server install\"",
         "../shared/scripts/setup-user.sh"
       ]
     },
@@ -185,9 +157,48 @@
         "SERVER=true"
       ],
       "scripts": [
-        "echo \"Install & configure Hashi Stack with systemd\"",
-        "scripts/install-nomad.sh",
+        "scripts/install-nomad.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "scripts": [
         "scripts/install-nomad-systemd.sh"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../vault",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=vault",
+        "GROUP=vault",
+        "COMMENT=Vault Server",
+        "HOME=/srv/vault"
+      ],
+      "scripts": [
+        "../shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{user `vault_version`}}",
+        "URL={{user `vault_ent_url`}}"
+      ],
+      "scripts": [
+        "scripts/install-vault.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "scripts": [
+        "scripts/install-vault-systemd.sh"
       ]
     },
     {

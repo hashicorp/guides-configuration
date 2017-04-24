@@ -27,7 +27,6 @@
           "name": "*RHEL-7.3_HVM_GA-*",
           "root-device-type": "ebs"
         },
-        "owners": ["{{user `aws_owner`}}"],
         "most_recent": true
       },
       "ssh_username": "ec2-user",
@@ -63,7 +62,6 @@
           "name": "*ubuntu-xenial-16.04-amd64-server-*",
           "root-device-type": "ebs"
         },
-        "owners": ["{{user `aws_owner`}}"],
         "most_recent": true
       },
       "ssh_username": "ubuntu",
@@ -85,13 +83,50 @@
   ],
   "provisioners": [
     {
-      "type": "file",
-      "source": "../vault",
-      "destination": "/tmp"
+      "type": "shell",
+      "scripts": [
+        "../shared/scripts/base.sh",
+        "../shared/scripts/base-aws.sh"
+      ]
     },
     {
       "type": "file",
       "source": "../consul",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=consul",
+        "GROUP=consul",
+        "COMMENT=Consul Server",
+        "HOME=/srv/consul"
+      ],
+      "scripts": [
+        "../shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{user `consul_version`}}",
+        "URL={{user `consul_ent_url`}}",
+        "SERVER=true"
+      ],
+      "scripts": [
+        "../consul/scripts/install-consul.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "scripts": [
+        "../consul/scripts/install-consul-systemd.sh"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../vault",
       "destination": "/tmp"
     },
     {
@@ -103,9 +138,6 @@
         "HOME=/srv/vault"
       ],
       "scripts": [
-        "echo \"Setup for Vault Server install\"",
-        "../shared/scripts/base.sh",
-        "../shared/scripts/base-aws.sh",
         "../shared/scripts/setup-user.sh"
       ]
     },
@@ -116,7 +148,6 @@
         "URL={{user `vault_ent_url`}}"
       ],
       "scripts": [
-        "echo \"Install Vault Server\"",
         "scripts/install-vault.sh"
       ]
     },
@@ -124,7 +155,6 @@
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "scripts": [
-        "echo \"Configure Vault Server with systemd\"",
         "scripts/install-vault-systemd.sh"
       ]
     },
