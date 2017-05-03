@@ -115,6 +115,8 @@
     {
       "type": "shell",
       "environment_vars": [
+        "USER=consul",
+        "GROUP=consul",
         "VERSION={{user `consul_version`}}",
         "URL={{user `consul_ent_url`}}",
         "SERVER=true"
@@ -150,6 +152,8 @@
     {
       "type": "shell",
       "environment_vars": [
+        "USER=vault",
+        "GROUP=vault",
         "VERSION={{user `vault_version`}}",
         "URL={{user `vault_ent_url`}}"
       ],
