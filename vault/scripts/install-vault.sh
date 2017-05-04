@@ -10,6 +10,8 @@ logger() {
 VAULT_VERSION=${VERSION:-"0.7.0"}
 VAULT_ZIP="vault_${VAULT_VERSION}_linux_amd64.zip"
 VAULT_URL=${URL:-"https://releases.hashicorp.com/vault/${VAULT_VERSION}/${VAULT_ZIP}"}
+VAULT_CONSUL=${CONSUL:-}
+VAULT_TLS=${TLS:-}
 VAULT_USER=${USER:-"vault"}
 VAULT_GROUP=${GROUP:-"vault"}
 CONFIG_DIR="/etc/vault.d"
@@ -31,9 +33,21 @@ logger "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 
 logger "Configuring vault"
 sudo mkdir -pm 0755 ${CONFIG_DIR} ${SSL_DIR}
-sudo cp /tmp/vault/config/vault-consul.hcl ${CONFIG_DIR}
-sudo cp /tmp/vault/config/vault-tls.hcl ${CONFIG_DIR}
-sudo chmod -R 0644 ${CONFIG_DIR}/*
+
+if [[ ${VAULT_TLS} = "true" ]]; then
+  logger "Configuring vault-tls"
+  sudo cp /tmp/vault/config/vault-tls.hcl ${CONFIG_DIR}
+else
+  logger "Configuring vault-no-tls"
+  sudo cp /tmp/vault/config/vault-no-tls.hcl ${CONFIG_DIR}
+fi
+
+if [[ ${VAULT_CONSUL} = "true" ]]; then
+  logger "Configuring vault/consul"
+  sudo cp /tmp/vault/config/vault-consul.hcl ${CONFIG_DIR}
+fi
+
 sudo chown -R ${VAULT_USER}:${VAULT_GROUP} ${CONFIG_DIR} ${SSL_DIR}
+sudo chmod -R 0644 ${CONFIG_DIR}/*
 
 logger "Complete"

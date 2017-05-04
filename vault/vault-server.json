@@ -155,7 +155,9 @@
         "USER=vault",
         "GROUP=vault",
         "VERSION={{user `vault_version`}}",
-        "URL={{user `vault_ent_url`}}"
+        "URL={{user `vault_ent_url`}}",
+        "CONSUL=true",
+        "TLS=false"
       ],
       "scripts": [
         "scripts/install-vault.sh"
