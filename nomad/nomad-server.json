@@ -156,7 +156,9 @@
         "GROUP=nomad",
         "VERSION={{user `nomad_version`}}",
         "URL={{user `nomad_ent_url`}}",
-        "SERVER=true"
+        "CLIENT=true",
+        "SERVER=true",
+        "CONSUL=true"
       ],
       "scripts": [
         "scripts/install-nomad.sh"
