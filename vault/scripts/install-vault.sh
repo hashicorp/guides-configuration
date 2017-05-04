@@ -34,7 +34,7 @@ logger "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 logger "Configuring vault"
 sudo mkdir -pm 0755 ${CONFIG_DIR} ${SSL_DIR}
 
-if [[ ${VAULT_TLS} = "true" ]]; then
+if [[ "${VAULT_TLS}" = "true" ]]; then
   logger "Configuring vault-tls"
   sudo cp /tmp/vault/config/vault-tls.hcl ${CONFIG_DIR}
 else
@@ -42,7 +42,7 @@ else
   sudo cp /tmp/vault/config/vault-no-tls.hcl ${CONFIG_DIR}
 fi
 
-if [[ ${VAULT_CONSUL} = "true" ]]; then
+if [[ "${VAULT_CONSUL}" = "true" ]]; then
   logger "Configuring vault/consul"
   sudo cp /tmp/vault/config/vault-consul.hcl ${CONFIG_DIR}
 fi

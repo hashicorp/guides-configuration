@@ -35,17 +35,17 @@ logger "Configuring nomad"
 sudo mkdir -pm 0755 ${CONFIG_DIR} ${DATA_DIR}
 sudo cp /tmp/nomad/config/nomad-default.hcl ${CONFIG_DIR}
 
-if [[ ${NOMAD_CLIENT} = "true" ]]; then
+if [[ "${NOMAD_CLIENT}" = "true" ]]; then
   logger "Configuring nomad as a client"
   sudo cp /tmp/nomad/config/nomad-client.hcl ${CONFIG_DIR}
 fi
 
-if [[ ${NOMAD_SERVER} = "true" ]]; then
+if [[ "${NOMAD_SERVER}" = "true" ]]; then
   logger "Configuring nomad as a server"
   sudo cp /tmp/nomad/config/nomad-server.hcl ${CONFIG_DIR}
 fi
 
-if [[ ${NOMAD_CONSUL} = "true" ]]; then
+if [[ "${NOMAD_CONSUL}" = "true" ]]; then
   logger "Configuring nomad/consul"
   sudo cp /tmp/nomad/config/nomad-consul.hcl ${CONFIG_DIR}
 fi
