@@ -7,7 +7,7 @@ logger() {
   echo "$DT $FILENAME: $1"
 }
 
-VAULT_VERSION=${VERSION:-"0.7.0"}
+VAULT_VERSION="${VERSION}"
 VAULT_ZIP="vault_${VAULT_VERSION}_linux_amd64.zip"
 VAULT_URL=${URL:-"https://releases.hashicorp.com/vault/${VAULT_VERSION}/${VAULT_ZIP}"}
 VAULT_CONSUL=${CONSUL:-}

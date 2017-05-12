@@ -9,7 +9,7 @@ logger() {
 
 logger "Running"
 
-NOMAD_VERSION=${VERSION:-"0.5.6"}
+NOMAD_VERSION="${VERSION}"
 NOMAD_ZIP="nomad_${NOMAD_VERSION}_linux_amd64.zip"
 NOMAD_URL=${URL:-"https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/${NOMAD_ZIP}"}
 NOMAD_CLIENT=${CLIENT:-}
