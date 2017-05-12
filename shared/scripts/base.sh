@@ -21,12 +21,12 @@ if [[ ! -z ${YUM} ]]; then
   logger "RHEL/CentOS system detected"
   logger "Performing updates and installing prerequisites"
   sudo yum -y check-update
-  sudo yum install -q -y wget unzip
+  sudo yum install -q -y wget unzip bind-utils
 elif [[ ! -z ${APT_GET} ]]; then
   logger "Debian/Ubuntu system detected"
   logger "Performing updates and installing prerequisites"
   sudo apt-get -qq -y update
-  sudo apt-get install -qq -y wget unzip
+  sudo apt-get install -qq -y wget unzip dnsutils
 else
   logger "Prerequisites not installed due to OS detection failure"
   exit 1;
