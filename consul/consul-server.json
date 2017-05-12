@@ -27,6 +27,7 @@
           "name": "*RHEL-7.3_HVM_GA-*",
           "root-device-type": "ebs"
         },
+        "owners": ["309956199498"],
         "most_recent": true
       },
       "ssh_username": "ec2-user",
@@ -62,6 +63,7 @@
           "name": "*ubuntu-xenial-16.04-amd64-server-*",
           "root-device-type": "ebs"
         },
+        "owners": ["099720109477"],
         "most_recent": true
       },
       "ssh_username": "ubuntu",
@@ -116,7 +118,7 @@
       "type": "shell",
       "environment_vars": [
         "USER=consul",
-        "GROUP=consul",        
+        "GROUP=consul",
         "VERSION={{user `consul_version`}}",
         "URL={{user `consul_ent_url`}}",
         "SERVER=true"
