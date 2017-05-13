@@ -122,14 +122,14 @@
         "SERVER=true"
       ],
       "scripts": [
-        "scripts/install-consul.sh"
+        "../consul/scripts/install-consul.sh"
       ]
     },
     {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "scripts": [
-        "scripts/install-consul-systemd.sh"
+        "../consul/scripts/install-consul-systemd.sh"
       ]
     },
     {
@@ -157,14 +157,14 @@
         "SERVER=true"
       ],
       "scripts": [
-        "scripts/install-nomad.sh"
+        "../nomad/scripts/install-nomad.sh"
       ]
     },
     {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "scripts": [
-        "scripts/install-nomad-systemd.sh"
+        "../nomad/scripts/install-nomad-systemd.sh"
       ]
     },
     {
@@ -191,14 +191,14 @@
         "URL={{user `vault_ent_url`}}"
       ],
       "scripts": [
-        "scripts/install-vault.sh"
+        "../vault/scripts/install-vault.sh"
       ]
     },
     {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "scripts": [
-        "scripts/install-vault-systemd.sh"
+        "../vault/scripts/install-vault-systemd.sh"
       ]
     },
     {
