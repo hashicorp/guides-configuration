@@ -6,6 +6,8 @@
     "aws_owner": "{{ env `AWS_OWNER` }}",
     "environment": "{{ env `PACKER_ENVIRONMENT` }}",
     "vcs_name": "{{ env `VCS_NAME` }}",
+    "consul_version": "{{ env `CONSUL_VERSION` }}",
+    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
     "vault_version": "{{ env `VAULT_VERSION` }}",
     "vault_ent_url": "{{ env `VAULT_ENT_URL` }}"
   },
