@@ -8,8 +8,8 @@ Restart=on-failure
 ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
-User=nomad
-Group=nomad
+User=root
+Group=root
 
 [Install]
 WantedBy=multi-user.target
