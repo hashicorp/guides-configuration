@@ -5,24 +5,20 @@
 base_box = ENV['BASE_BOX'] || "bento/ubuntu-16.04"
 
 # consul variable defaults
-consul_user = ENV['CONSUL_USER'] || "consul"
-consul_comment = ENV['CONSUL_COMMENT'] || ""
-consul_group = ENV['CONSUL_GROUP'] || "consul"
+consul_user = "consul"
+consul_group = "consul"
+consul_comment = "Consul"
 consul_home = ENV['CONSUL_HOME'] || "/srv/consul"
-consul_version = ENV['CONSUL_VERSION'] || "0.8.0"
+consul_version = ENV['CONSUL_VERSION'] || "0.8.3"
 consul_download_url = ENV['CONSUL_ENT_URL'] || "https://releases.hashicorp.com/consul/#{consul_version}/consul_#{consul_version}_linux_amd64.zip"
-consul_server = ENV['CONSUL_SERVER'] || "true"
 
 # nomad variable defaults
-nomad_user = ENV['NOMAD_USER'] || "nomad"
-nomad_comment = ENV['NOMAD_COMMENT'] || ""
-nomad_group = ENV['NOMAD_GROUP'] || "nomad"
+nomad_user = "root"
+nomad_group = "root"
+nomad_comment = "Nomad"
 nomad_home = ENV['NOMAD_HOME'] || "/srv/nomad"
 nomad_version = ENV['NOMAD_VERSION'] || "0.5.6"
 nomad_download_url = ENV['NOMAD_ENT_URL'] || "https://releases.hashicorp.com/nomad/#{nomad_version}/nomad_#{nomad_version}_linux_amd64.zip"
-nomad_client = ENV['NOMAD_CLIENT'] || "true"
-nomad_server = ENV['NOMAD_SERVER'] || "true"
-nomad_consul = ENV['NOMAD_CONSUL'] || "true"
 
 $script = <<SCRIPT
 # Set hostname's IP to make advertisement work
@@ -39,53 +35,50 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "nomad"
   config.vm.provision "shell", inline: $script, privileged: false
 
-  # copy the consul and nomad directories to the vm
-  config.vm.provision "file", source: "../consul", destination: "/tmp"
-  config.vm.provision "file", source: "../nomad", destination: "/tmp"
+  # copy the consul, nomad and shared directories to the vm
+  config.vm.provision "file", source: "../../packer-templates/consul", destination: "/tmp"
+  config.vm.provision "file", source: "../../packer-templates/nomad", destination: "/tmp"
+  config.vm.provision "file", source: "../../packer-templates/shared", destination: "/tmp"
 
   # bootstrap the vm
-  config.vm.provision "shell", path: "../shared/scripts/base.sh"
-  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
+  config.vm.provision "shell", inline: "bash /tmp/shared/scripts/base.sh"
+  config.vm.provision "shell", inline: "bash /tmp/shared/scripts/setup-user.sh",
     env: {
       "USER" => consul_user,
-      "COMMENT" => consul_comment,
       "GROUP" => consul_group,
+      "COMMENT" => consul_comment,
       "HOME" => consul_home
     }
-  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
+  config.vm.provision "shell", inline: "bash /tmp/shared/scripts/setup-user.sh",
     env: {
       "USER" => nomad_user,
-      "COMMENT" => nomad_comment,
       "GROUP" => nomad_group,
+      "COMMENT" => nomad_comment,
       "HOME" => nomad_home
     }
 
   # install consul
-  config.vm.provision "shell", path: "../consul/scripts/install-consul.sh",
+  config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-consul.sh",
     env: {
       "USER" => consul_user,
       "GROUP" => consul_group,
       "VERSION" => consul_version,
       "URL" => consul_download_url,
-      "SERVER" => consul_server
     }
-  config.vm.provision "shell", path: "../consul/scripts/install-consul-systemd.sh"
+  config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-consul-systemd.sh"
 
   # install nomad
-  config.vm.provision "shell", path: "scripts/install-nomad.sh",
+  config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-nomad.sh",
     env: {
       "USER" => nomad_user,
       "GROUP" => nomad_group,
       "VERSION" => nomad_version,
-      "URL" => nomad_download_url,
-      "CLIENT" => nomad_client,
-      "SERVER" => nomad_server,
-      "CONSUL" => nomad_consul
+      "URL" => nomad_download_url
     }
-  config.vm.provision "shell", path: "scripts/install-nomad-systemd.sh"
+  config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
 
   # cleanup on the way out
-  config.vm.provision "shell", path: "../shared/scripts/cleanup.sh"
+  config.vm.provision "shell", inline: "bash /tmp/shared/scripts/cleanup.sh"
 
   # Increase memory for Parallels Desktop
   config.vm.provider "parallels" do |p, o|
