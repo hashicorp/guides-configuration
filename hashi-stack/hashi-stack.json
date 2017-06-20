@@ -167,6 +167,13 @@
         "../nomad/scripts/install-nomad-systemd.sh"
       ]
     },
+     {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "scripts": [
+        "../nomad/scripts/install-docker.sh"
+      ]
+    },
     {
       "type": "file",
       "source": "../vault",
