@@ -3,8 +3,7 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  FILENAME="base.sh"
-  echo "$DT $FILENAME: $1"
+  echo "$DT $0: $1"
 }
 
 logger "Running"
@@ -12,6 +11,9 @@ logger "Running"
 logger "Installing jq"
 sudo curl --silent -Lo /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
 sudo chmod +x /bin/jq
+
+logger "Setting timezone to UTC"
+sudo timedatectl set-timezone UTC
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)

@@ -3,8 +3,7 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  FILENAME="setup-user.sh"
-  echo "$DT $FILENAME: $1"
+  echo "$DT $0: $1"
 }
 
 logger "Running"

@@ -3,8 +3,7 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  FILENAME="install-vault-systemd.sh"
-  echo "$DT $FILENAME: $1"
+  echo "$DT $0: $1"
 }
 
 logger "Running"
@@ -30,15 +29,15 @@ elif [[ ! -z ${APT_GET} ]]; then
   sudo cp /tmp/consul/init/systemd/consul-online.sh /usr/bin/consul-online.sh
   sudo chmod 0664 ${SYSTEMD_DIR}/{vault*,consul*}
 else
-  logger "OS Detection failed, ${USER} user not created."
+  logger "Service not installed due to OS detection failure"
   exit 1;
 fi
 
-#logger "Enabling and starting consul"
+# Don't enable or start the consul service as it's not configured until runtime
 #sudo systemctl enable consul
 #sudo systemctl start consul
 
-#logger "Enabling and starting vault"
+# Don't enable or start the vault service as it's not configured until runtime
 #sudo systemctl enable vault
 #sudo systemctl start vault
 

@@ -3,8 +3,7 @@ set -x
 
 logger() {
   DT=$(date '+%Y/%m/%d %H:%M:%S')
-  FILENAME="install-nomad-systemd.sh"
-  echo "$DT $FILENAME: $1"
+  echo "$DT $0: $1"
 }
 
 logger "Running"
@@ -34,11 +33,11 @@ else
   exit 1;
 fi
 
-#logger "Enabling and starting consul"
+# Don't enable or start the consul service as it's not configured until runtime
 #sudo systemctl enable consul
 #sudo systemctl start consul
 
-#logger "Enabling and starting nomad"
+# Don't enable or start the nomad service as it's not configured until runtime
 #sudo systemctl enable nomad
 #sudo systemctl start nomad
 

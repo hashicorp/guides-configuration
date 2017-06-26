@@ -85,33 +85,33 @@
   ],
   "provisioners": [
     {
+      "type": "file",
+      "source": "../../packer-templates/",
+      "destination": "/tmp"
+    },
+    {
       "type": "shell",
-      "scripts": [
-        "../shared/scripts/base.sh"
+      "inline": [
+        "bash /tmp/shared/scripts/base.sh"
       ]
     },
     {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
-      "scripts": [
-        "../shared/scripts/base-aws.sh"
+      "inline": [
+        "bash /tmp/shared/scripts/base-aws.sh"
       ]
-    },
-    {
-      "type": "file",
-      "source": "../consul",
-      "destination": "/tmp"
     },
     {
       "type": "shell",
       "environment_vars": [
         "USER=consul",
         "GROUP=consul",
-        "COMMENT=Consul Server",
+        "COMMENT=Consul",
         "HOME=/srv/consul"
       ],
-      "scripts": [
-        "../shared/scripts/setup-user.sh"
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
       ]
     },
     {
@@ -120,35 +120,29 @@
         "USER=consul",
         "GROUP=consul",
         "VERSION={{user `consul_version`}}",
-        "URL={{user `consul_ent_url`}}",
-        "SERVER=true"
+        "URL={{user `consul_ent_url`}}"
       ],
-      "scripts": [
-        "../consul/scripts/install-consul.sh"
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul.sh"
       ]
     },
     {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
-      "scripts": [
-        "../consul/scripts/install-consul-systemd.sh"
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul-systemd.sh"
       ]
-    },
-    {
-      "type": "file",
-      "source": "../vault",
-      "destination": "/tmp"
     },
     {
       "type": "shell",
       "environment_vars": [
         "USER=vault",
         "GROUP=vault",
-        "COMMENT=Vault Server",
+        "COMMENT=Vault",
         "HOME=/srv/vault"
       ],
-      "scripts": [
-        "../shared/scripts/setup-user.sh"
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
       ]
     },
     {
@@ -157,32 +151,30 @@
         "USER=vault",
         "GROUP=vault",
         "VERSION={{user `vault_version`}}",
-        "URL={{user `vault_ent_url`}}",
-        "CONSUL=true",
-        "TLS=false"
+        "URL={{user `vault_ent_url`}}"
       ],
-      "scripts": [
-        "scripts/install-vault.sh"
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault.sh"
       ]
     },
     {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
-      "scripts": [
-        "scripts/install-vault-systemd.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "scripts": [
-        "../shared/scripts/cleanup.sh"
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault-systemd.sh"
       ]
     },
     {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
-      "scripts": [
-        "../shared/scripts/cleanup-aws.sh"
+      "inline": [
+        "bash /tmp/shared/scripts/cleanup-aws.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/cleanup.sh"
       ]
     }
   ]
