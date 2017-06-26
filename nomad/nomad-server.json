@@ -88,7 +88,17 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "../../packer-templates/",
+      "source": "../shared",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../consul",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../nomad",
       "destination": "/tmp"
     },
     {
