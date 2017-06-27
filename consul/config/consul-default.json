@@ -1,4 +1,5 @@
 {
+  "advertise_addr": "127.0.0.1",
   "data_dir": "/opt/consul/data",
   "log_level": "INFO",
   "ui": true

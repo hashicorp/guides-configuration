@@ -11,25 +11,23 @@ logger "Running"
 CONSUL_VERSION="${VERSION}"
 CONSUL_ZIP="consul_${CONSUL_VERSION}_linux_amd64.zip"
 CONSUL_URL=${URL:-"https://releases.hashicorp.com/consul/${CONSUL_VERSION}/${CONSUL_ZIP}"}
-CONSUL_USER="consul"
-CONSUL_GROUP="consul"
-CONFIG_DIR="/etc/consul.d"
-DATA_DIR="/opt/consul/data"
-DOWNLOAD_DIR="/tmp"
 
 logger "Downloading consul ${CONSUL_VERSION}"
-curl --silent --output ${DOWNLOAD_DIR}/${CONSUL_ZIP} ${CONSUL_URL}
+curl --silent --output /tmp/${CONSUL_ZIP} ${CONSUL_URL}
 
 logger "Installing consul"
-sudo unzip -o ${DOWNLOAD_DIR}/${CONSUL_ZIP} -d /usr/local/bin/
+sudo unzip -o /tmp/${CONSUL_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/consul
-sudo chown ${CONSUL_USER}:${CONSUL_GROUP} /usr/local/bin/consul
-sudo mkdir -pm 0755 ${CONFIG_DIR} ${DATA_DIR}
-sudo cp /tmp/consul/config/*.example ${CONFIG_DIR}
-sudo chown -R ${CONSUL_USER}:${CONSUL_GROUP} ${CONFIG_DIR} ${DATA_DIR}
-sudo chmod -R 0644 ${CONFIG_DIR}/*
+sudo chown consul:consul /usr/local/bin/consul
+sudo mkdir -pm 0755 /etc/consul.d
+sudo mkdir -pm 0755 /opt/consul/data
 
 logger "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
+
+logger "Configuring consul ${CONSUL_VERSION}"
+sudo cp /tmp/consul/config/* /etc/consul.d/
+sudo chown -R consul:consul /etc/consul.d /opt/consul
+sudo chmod -R 0644 /etc/consul.d/*
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)

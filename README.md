@@ -14,7 +14,7 @@ Contains Consul specific installation scripts, configuration files.  Also has Pa
 Example Consul build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="Test" VCS_NAME="Dan Brown" CONSUL_VERSION="0.8.3" packer build consul-server.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="test" CONSUL_VERSION="0.8.4" packer build consul.json
 ```
 
 ---
@@ -26,7 +26,7 @@ Contains Nomad specific installation scripts, configuration files.  Also has Pac
 Example Nomad (including Consul) build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="Test" VCS_NAME="Dan Brown" NOMAD_VERSION="0.5.6" CONSUL_VERSION="0.8.3" packer build nomad-server.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="test" NOMAD_VERSION="0.5.6" CONSUL_VERSION="0.8.4" packer build nomad.json
 ```
 
 ---
@@ -37,5 +37,5 @@ Contains Vault specific installation scripts, configuration files.  Also has Pac
 Example Vault (including Consul) build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="Test" VCS_NAME="Dan Brown" VAULT_VERSION="0.7.2" CONSUL_VERSION="0.8.3" packer build vault-server.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="test" VAULT_VERSION="0.7.3" CONSUL_VERSION="0.8.4" packer build vault.json
 ```

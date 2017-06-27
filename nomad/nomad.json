@@ -9,7 +9,8 @@
     "consul_version": "{{ env `CONSUL_VERSION` }}",
     "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
     "nomad_version": "{{ env `NOMAD_VERSION` }}",
-    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}"
+    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
+    "nomad_agent_type": "{{ env `NOMAD_AGENT_TYPE` }}"
   },
   "builders": [
     {
@@ -18,9 +19,10 @@
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
       "region": "{{user `aws_region`}}",
-      "ami_regions": ["eu-west-2","us-east-1","us-west-1"],
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
+      "force_deregister": true,
+      "force_delete_snapshot": true,
       "ssh_pty": true,
       "instance_type": "t2.medium",
       "associate_public_ip_address": true,
@@ -30,15 +32,16 @@
           "name": "*RHEL-7.3_HVM_GA-*",
           "root-device-type": "ebs"
         },
+        "owners": ["309956199498"],
         "most_recent": true
       },
       "ssh_username": "ec2-user",
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "Nomad Server",
-      "ami_name": "nomad-server-{{ user `nomad_version` }}-RHEL_7.3-{{isotime \"2006-01-02-1504\"}}",
+      "ami_description": "HashiCorp Nomad Server {{ user `nomad_version` }}",
+      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_version` }}-RHEL_7.3",
       "tags": {
-        "Name": "{{user `environment`}} Nomad Server {{ user `nomad_version` }}",
+        "Name": "Nomad Server {{ user `nomad_version` }}",
         "System": "Nomad",
         "Product": "Nomad",
         "Environment": "{{user `environment`}}",
@@ -54,9 +57,10 @@
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
       "region": "{{user `aws_region`}}",
-      "ami_regions": ["eu-west-2","us-east-1","us-west-1"],
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
+      "force_deregister": true,
+      "force_delete_snapshot": true,
       "ssh_pty": true,
       "instance_type": "t2.medium",
       "associate_public_ip_address": true,
@@ -66,15 +70,16 @@
           "name": "*ubuntu-xenial-16.04-amd64-server-*",
           "root-device-type": "ebs"
         },
+        "owners": ["099720109477"],
         "most_recent": true
       },
       "ssh_username": "ubuntu",
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "Nomad Server",
-      "ami_name": "nomad-server-{{ user `nomad_version` }}-Ubuntu_16.04-{{isotime \"2006-01-02-1504\"}}",
+      "ami_description": "HashiCorp Nomad Server {{ user `nomad_version` }}",
+      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_version` }}-Ubuntu_16.04",
       "tags": {
-        "Name": "{{user `environment`}} Nomad Server {{ user `nomad_version` }}",
+        "Name": "Nomad Server {{ user `nomad_version` }}",
         "System": "Nomad",
         "Product": "Nomad",
         "Environment": "{{user `environment`}}",

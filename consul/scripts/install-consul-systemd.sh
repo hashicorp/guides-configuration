@@ -27,8 +27,7 @@ else
   exit 1;
 fi
 
-# Don't enable or start the consul service as it's not configured until runtime
-#sudo systemctl enable consul
-#sudo systemctl start consul
+sudo systemctl enable consul
+sudo systemctl start consul
 
 logger "Complete"
