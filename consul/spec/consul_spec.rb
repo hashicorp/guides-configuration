@@ -20,17 +20,15 @@ end
 
 file('/etc/consul.d/consul-default.json') do
   it { should exist }
-  its(:content_as_json)
-    { should include('data_dir' => '/opt/consul/data') }
-    { should include('ui' => 'TRUE') }
+  its(:content_as_json) { should include('data_dir' => '/opt/consul/data') }
+  its(:content_as_json) { should include('ui' => 'true') }
   it { should be_readable.by('consul') }
 end
 
 file('/etc/consul.d/consul-server.json') do
   it { should exist }
-  its(:content_as_json)
-    { should include('server' => 'true') }
-    { should include('bootstrap_expect' => '1') }
+  its(:content_as_json) { should include('server' => 'true') }
+  its(:content_as_json) { should include('bootstrap_expect' => '1') }
   it { should be_readable_by('consul') }
 end
 
@@ -44,8 +42,6 @@ describe port(8500) do
   it { should be_listening.with('tcp') }
 end
 
-describe http_get(8500, 'localhost', '/v1/status/leader') do
-  its(:status) { should eq 200 }
+describe command('curl http://localhost:8500/v1/status/leader -sL -w "%{http_code}\\n" -o /dev/null') do
+  its(:stdout) { should match /200/ }
 end
-
-

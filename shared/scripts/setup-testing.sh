@@ -1,3 +1,3 @@
 #!/bin/bash
 sudo gem install bundler --no-ri --no-rdoc
-bundle install --system
+sudo /usr/local/bin/bundle install --system
