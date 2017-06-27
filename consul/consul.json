@@ -146,6 +146,14 @@
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "inline": [
+        "cd /tmp/shared/scripts && bash setup-testing.sh",
+        "cd /tmp/consul && rake spec"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "inline": [
         "bash /tmp/shared/scripts/cleanup-aws.sh"
       ]
     },
