@@ -6,8 +6,8 @@ describe file('/usr/local/bin/consul') do
 end
 
 describe service('consul') do
-  it { should be_enabled   }
-  it { should be_running   }
+  it { should be_enabled }
+  it { should be_running }
 end
 
 describe file('/etc/consul.d') do
@@ -18,21 +18,26 @@ describe user('consul') do
   it { should exist }
 end
 
-file('/etc/consul.d/consul.hcl') do
+file('/etc/consul.d/consul-default.json') do
   it { should exist }
-  its(:content) { should match /127.0.0.1:8200/ }
+  its(:content_as_json)
+    { should include('data_dir' => '/opt/consul/data') }
+    { should include('ui' => 'TRUE') }
   it { should be_readable.by('consul') }
 end
 
-file('/etc/consul.d/consul-server.hcl') do
+file('/etc/consul.d/consul-server.json') do
   it { should exist }
-  its(:content) { should match /tls_disable = 1/ }
+  its(:content_as_json)
+    { should include('server' => 'true') }
+    { should include('bootstrap_expect' => '1') }
   it { should be_readable_by('consul') }
 end
 
 file('/opt/consul/data') do
   it { should be_directory }
   it { should be_writable_by('consul') }
+  it { should be_readable_by('consul') }
 end
 
 describe port(8500) do

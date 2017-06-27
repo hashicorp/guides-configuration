@@ -16,12 +16,25 @@ end
 
 file('/etc/nomad.d/nomad-server.hcl') do
   it { should exist }
-  its(:content) { should match /127.0.0.1:8200/ }
+  its(:content) { should match /true/ }
 end
 
 file('/etc/nomad.d/nomad-client.hcl') do
   it { should exist }
-  its(:content) { should match /tls_disable = 1/ }
+  its(:content) { should match /true/ }
+end
+
+file('/etc/nomad.d/nomad-default.hcl') do
+  it { should exist }
+  its(:content) { should match /\/opt\/nomad\/data/ }
+end
+
+file('/etc/nomad.d/nomad-consul.hcl') do
+  it { should exist }
+  its(:content) { should match /127.0.0.1:8500/ }
+  its(:content) { should match /auto_advertise = true/ }
+  its(:content) { should match /client_auto_join    = true/ }
+  its(:content) { should match /server_auto_join    = true/ }
 end
 
 file('/opt/nomad/data') do
