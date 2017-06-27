@@ -1,34 +1,41 @@
 require 'spec_helper'
 
-describe file('/usr/local/bin/nomad') do
+describe file('/usr/local/bin/consul') do
   it { should be_file }
   it { should be_executable }
 end
 
-describe service('nomad') do
+describe service('consul') do
   it { should be_enabled   }
   it { should be_running   }
 end
 
-describe file('/etc/nomad.d') do
+describe file('/etc/consul.d') do
   it { should be_directory }
 end
 
-file('/etc/nomad.d/nomad-server.hcl') do
+describe user('consul') do
+  it { should exist }
+end
+
+file('/etc/consul.d/consul.hcl') do
   it { should exist }
   its(:content) { should match /127.0.0.1:8200/ }
+  it { should be_readable.by('consul') }
 end
 
-file('/etc/nomad.d/nomad-client.hcl') do
+file('/etc/consul.d/consul-server.hcl') do
   it { should exist }
   its(:content) { should match /tls_disable = 1/ }
+  it { should be_readable_by('consul') }
 end
 
-file('/opt/nomad/data') do
+file('/opt/consul/data') do
   it { should be_directory }
+  it { should be_writable_by('consul') }
 end
 
-describe port(4646) do
+describe port(8500) do
   it { should be_listening.with('tcp') }
 end
 
