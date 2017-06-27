@@ -1,4 +1,1 @@
-require 'spec_helper'
-describe interface('eth0') do
-  it { should be_up }
-end
+../../shared/spec/network_spec.rb

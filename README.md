@@ -1,6 +1,7 @@
 # Intro
 This repo contains Packer templates used for modules in hashicorp-modules
 
+These images are generally built through an internal CI System. Versions need to be updated manually, and generally there is a new release (using the latest patched images from upstream vendors).
 ---
 
 ## hashi-stack  
