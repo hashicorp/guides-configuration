@@ -38,10 +38,6 @@ file('/opt/consul/data') do
   it { should be_readable_by('consul') }
 end
 
-describe port(8500) do
-  it { should be_listening.with('tcp') }
-end
-
 describe command('curl http://localhost:8500/v1/status/leader -sL -w "%{http_code}\\n" -o /dev/null') do
   its(:stdout) { should match /200/ }
 end
