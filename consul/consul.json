@@ -15,7 +15,7 @@
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
-      "region": "{{user `aws_region`}}",
+      "region": "{{ user `aws_region` }}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
       "force_deregister": true,
@@ -41,9 +41,9 @@
         "Name": "Consul Server {{ user `consul_version` }}",
         "System": "Consul",
         "Product": "Consul",
-        "Environment": "{{user `environment`}}",
-        "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `consul_version`}}",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
+        "Product-Version": "{{ user `consul_version` }}",
         "OS": "RHEL",
         "OS-Version": "7.3"
       }
@@ -53,7 +53,7 @@
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
-      "region": "{{user `aws_region`}}",
+      "region": "{{ user `aws_region` }}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
       "force_deregister": true,
@@ -79,9 +79,9 @@
         "Name": "Consul Server {{ user `consul_version` }}",
         "System": "Consul",
         "Product": "Consul",
-        "Environment": "{{user `environment`}}",
-        "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `consul_version`}}",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
+        "Product-Version": "{{ user `consul_version` }}",
         "OS": "Ubuntu",
         "OS-Version": "16.04"
       }
@@ -126,10 +126,8 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=consul",
-        "GROUP=consul",
-        "VERSION={{user `consul_version`}}",
-        "URL={{user `consul_ent_url`}}"
+        "VERSION={{ user `consul_version` }}",
+        "URL={{ user `consul_ent_url` }}"
       ],
       "inline": [
         "bash /tmp/consul/scripts/install-consul.sh"

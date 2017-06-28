@@ -7,6 +7,12 @@ These images are generally built through an internal CI System. Versions need to
 ## hashi-stack  
 Contains provider specific templates that installs HashiCorp software on a single node (Consul, Nomad, Vault, consul-template and envconsul).
 
+Example HashiStack build command:
+
+```
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="test" CONSUL_VERSION="0.8.4" NOMAD_VERSION="0.5.6" VAULT_VERSION="0.7.3" packer build hashi-stack.json
+```
+
 ---
 
 ## consul

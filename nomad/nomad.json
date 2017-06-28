@@ -18,7 +18,7 @@
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
-      "region": "{{user `aws_region`}}",
+      "region": "{{ user `aws_region` }}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
       "force_deregister": true,
@@ -44,9 +44,9 @@
         "Name": "Nomad Server {{ user `nomad_version` }}",
         "System": "Nomad",
         "Product": "Nomad",
-        "Environment": "{{user `environment`}}",
-        "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `nomad_version`}}",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
+        "Product-Version": "{{ user `nomad_version` }}",
         "OS": "RHEL",
         "OS-Version": "7.3"
       }
@@ -56,7 +56,7 @@
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
-      "region": "{{user `aws_region`}}",
+      "region": "{{ user `aws_region` }}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
       "force_deregister": true,
@@ -82,9 +82,9 @@
         "Name": "Nomad Server {{ user `nomad_version` }}",
         "System": "Nomad",
         "Product": "Nomad",
-        "Environment": "{{user `environment`}}",
-        "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `nomad_version`}}",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
+        "Product-Version": "{{ user `nomad_version` }}",
         "OS": "Ubuntu",
         "OS-Version": "16.04"
       }
@@ -134,10 +134,8 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=consul",
-        "GROUP=consul",
-        "VERSION={{user `consul_version`}}",
-        "URL={{user `consul_ent_url`}}"
+        "VERSION={{ user `consul_version` }}",
+        "URL={{ user `consul_ent_url` }}"
       ],
       "inline": [
         "bash /tmp/consul/scripts/install-consul.sh"
@@ -153,22 +151,8 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=nomad",
-        "GROUP=nomad",
-        "COMMENT=Nomad",
-        "HOME=/srv/nomad"
-      ],
-      "inline": [
-        "bash /tmp/shared/scripts/setup-user.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "environment_vars": [
-        "USER=nomad",
-        "GROUP=nomad",
-        "VERSION={{user `nomad_version`}}",
-        "URL={{user `nomad_ent_url`}}"
+        "VERSION={{ user `nomad_version` }}",
+        "URL={{ user `nomad_ent_url` }}"
       ],
       "inline": [
         "bash /tmp/nomad/scripts/install-nomad.sh"
@@ -184,8 +168,15 @@
      {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
-      "scripts": [
-        "scripts/install-docker.sh"
+      "inline": [
+        "bash /tmp/nomad/scripts/install-docker.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "inline": [
+        "cd /tmp/shared/scripts && bash setup-testing.sh"
       ]
     },
     {
