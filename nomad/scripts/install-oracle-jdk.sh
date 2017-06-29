@@ -33,11 +33,11 @@ if [[ ! -z ${YUM} ]]; then
   download_jdk 8 rpm
   sudo rpm -Uvh jdk-*-linux-x64.rpm
 elif [[ ! -z ${APT_GET} ]]; then
-  JDK_VERSION="$(ls /opt/jdk/)"
   logger "Debian/Ubuntu system detected"
   download_jdk 8 tar.gz
   sudo mkdir -p /opt/jdk
   sudo tar xf jdk-*-linux-x64.tar.gz -C /opt/jdk
+  JDK_VERSION="$(ls /opt/jdk/)"
   sudo update-alternatives --install /usr/bin/java java /opt/jdk/${JDK_VERSION}/bin/java 2000
   sudo update-alternatives --install /usr/bin/javac javac /opt/jdk/${JDK_VERSION}/bin/javac 2000
   sudo update-alternatives --install /usr/bin/jar jar /opt/jdk/${JDK_VERSION}/bin/jar 2000
