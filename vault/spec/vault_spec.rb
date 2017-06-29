@@ -37,11 +37,6 @@ file('/etc/vault.d/vault-no-tls.hcl') do
   it { should be_readable_by('vault') }
 end
 
-describe port(8200) do
-  it { should be_listening.with('tcp') }
-end
-
-describe http_get(8200, 'localhost', '/sys/health') do
-  its(:json) { should include('initialized' => /false/) }
-  its(:status) { should eq 501 }
+describe command('curl http://localhost:8200/sys/health -sL -w "%{http_code}\\n" -o /dev/null') do
+  its(:stdout) { should match /501/ }
 end
