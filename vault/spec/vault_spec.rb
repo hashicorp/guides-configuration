@@ -37,6 +37,6 @@ file('/etc/vault.d/vault-no-tls.hcl') do
   it { should be_readable_by('vault') }
 end
 
-describe command('curl http://localhost:8200/sys/health -sL -w "%{http_code}\\n" -o /dev/null') do
+describe command('curl http://localhost:8200/v1/sys/health -sL -w "%{http_code}\\n" -o /dev/null') do
   its(:stdout) { should match /501/ }
 end
