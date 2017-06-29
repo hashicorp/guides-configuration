@@ -9,9 +9,9 @@ logger() {
 logger "Running"
 
 logger "Reset HashiCorp services"
-test -f /usr/local/bin/consul && sudo systemctl stop consul && sudo rm -rf /opt/consul/data/*
-test -f /usr/local/bin/nomad && sudo systemctl stop nomad && sudo rm -rf /opt/nomad/data/*
-test -f /usr/local/bin/vault && sudo systemctl stop vault && sudo rm -rf /opt/vault/data/*
+[[ -f "/usr/local/bin/consul" ]] && sudo systemctl stop consul && sudo rm -rf /opt/consul/data/*
+[[ -f "/usr/local/bin/nomad" ]] && sudo systemctl stop nomad && sudo rm -rf /opt/nomad/data/*
+[[ -f "/usr/local/bin/vault" ]] && sudo systemctl stop vault && sudo rm -rf /opt/vault/data/*
 
 logger "Cleanup install artifacts"
 sudo rm -rf /tmp/*
