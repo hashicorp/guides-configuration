@@ -40,7 +40,7 @@
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp HashiStack Server",
-      "ami_name": "{{ user `environment` }}-hashi-stack-server-RHEL_7.3",
+      "ami_name": "{{ user `environment` }}-hashistack-server-RHEL_7.3",
       "tags": {
         "Name": "HashiStack Server",
         "System": "HashiStack",
@@ -80,7 +80,7 @@
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp HashiStack Server",
-      "ami_name": "{{ user `environment` }}-hashi-stack-server-Ubuntu_16.04",
+      "ami_name": "{{ user `environment` }}-hashistack-server-Ubuntu_16.04",
       "tags": {
         "Name": "HashiStack Server",
         "System": "HashiStack",
