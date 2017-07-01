@@ -28,7 +28,7 @@ logger "Configuring vault ${VAULT_VERSION}"
 sudo cp /tmp/vault/config/* /etc/vault.d
 sudo chown -R vault:vault /etc/vault.d /etc/ssl/vault
 sudo chmod -R 0644 /etc/vault.d/*
-echo "export VAULT_ADDR=http://127.0.0.1:8200" | sudo tee -a /etc/profile.d/vault.sh
+echo "export VAULT_ADDR=http://127.0.0.1:8200" | sudo tee /etc/profile.d/vault.sh
 
 
 logger "Granting mlock syscall to vault binary"
