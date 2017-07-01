@@ -7,7 +7,11 @@
     "environment": "{{ env `PACKER_ENVIRONMENT` }}",
     "vcs_name": "{{ env `VCS_NAME` }}",
     "consul_version": "{{ env `CONSUL_VERSION` }}",
-    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}"
+    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "vault_version": "{{ env `VAULT_VERSION` }}",
+    "vault_ent_url": "{{ env `VAULT_ENT_URL` }}",
+    "nomad_version": "{{ env `NOMAD_VERSION` }}",
+    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}"
   },
   "builders": [
     {
@@ -15,9 +19,11 @@
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
-      "region": "{{user `aws_region`}}",
+      "region": "{{ user `aws_region` }}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
+      "force_deregister": true,
+      "force_delete_snapshot": true,
       "ssh_pty": true,
       "instance_type": "t2.medium",
       "associate_public_ip_address": true,
@@ -33,17 +39,19 @@
       "ssh_username": "ec2-user",
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "Consul Server",
-      "ami_name": "consul-server-{{ user `consul_version` }}-RHEL_7.3-{{isotime \"2006-01-02-1504\"}}",
+      "ami_description": "HashiCorp HashiStack Server",
+      "ami_name": "{{ user `environment` }}-hashistack-server-RHEL_7.3",
       "tags": {
-        "Name": "{{user `environment`}} Consul Server {{ user `consul_version` }}",
-        "System": "Consul",
-        "Product": "Consul",
-        "Environment": "{{user `environment`}}",
-        "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `consul_version`}}",
+        "Name": "HashiStack Server",
+        "System": "HashiStack",
+        "Product": "HashiStack",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
         "OS": "RHEL",
-        "OS-Version": "7.3"
+        "OS-Version": "7.3",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Nomad-Version": "{{ user `nomad_version` }}",
+        "Vault-Version": "{{ user `vault_version` }}"
       }
     },
     {
@@ -51,9 +59,11 @@
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
-      "region": "{{user `aws_region`}}",
+      "region": "{{ user `aws_region` }}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
+      "force_deregister": true,
+      "force_delete_snapshot": true,
       "ssh_pty": true,
       "instance_type": "t2.medium",
       "associate_public_ip_address": true,
@@ -69,17 +79,19 @@
       "ssh_username": "ubuntu",
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "Consul Server",
-      "ami_name": "consul-server-{{ user `consul_version` }}-Ubuntu_16.04-{{isotime \"2006-01-02-1504\"}}",
+      "ami_description": "HashiCorp HashiStack Server",
+      "ami_name": "{{ user `environment` }}-hashistack-server-Ubuntu_16.04",
       "tags": {
-        "Name": "{{user `environment`}} Consul Server {{ user `consul_version` }}",
-        "System": "Consul",
-        "Product": "Consul",
-        "Environment": "{{user `environment`}}",
-        "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `consul_version`}}",
+        "Name": "HashiStack Server",
+        "System": "HashiStack",
+        "Product": "HashiStack",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
         "OS": "Ubuntu",
-        "OS-Version": "16.04"
+        "OS-Version": "16.04",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Nomad-Version": "{{ user `nomad_version` }}",
+        "Vault-Version": "{{ user `vault_version` }}"
       }
     }
   ],
@@ -92,6 +104,16 @@
     {
       "type": "file",
       "source": "../consul",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../nomad",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../vault",
       "destination": "/tmp"
     },
     {
@@ -122,10 +144,8 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=consul",
-        "GROUP=consul",
-        "VERSION={{user `consul_version`}}",
-        "URL={{user `consul_ent_url`}}"
+        "VERSION={{ user `consul_version` }}",
+        "URL={{ user `consul_ent_url` }}"
       ],
       "inline": [
         "bash /tmp/consul/scripts/install-consul.sh"
@@ -136,6 +156,71 @@
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "inline": [
         "bash /tmp/consul/scripts/install-consul-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `nomad_version` }}",
+        "URL={{ user `nomad_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
+      ]
+    },
+     {
+      "type": "shell",
+      "only": ["amazon-ebs-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-docker.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/nomad/scripts/install-oracle-jdk.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=vault",
+        "GROUP=vault",
+        "COMMENT=Vault",
+        "HOME=/srv/vault"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `vault_version` }}",
+        "URL={{ user `vault_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "cd /tmp/shared/scripts && bash setup-testing.sh"
       ]
     },
     {

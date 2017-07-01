@@ -8,8 +8,8 @@
     "vcs_name": "{{ env `VCS_NAME` }}",
     "consul_version": "{{ env `CONSUL_VERSION` }}",
     "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
-    "nomad_version": "{{ env `NOMAD_VERSION` }}",
-    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}"
+    "vault_version": "{{ env `VAULT_VERSION` }}",
+    "vault_ent_url": "{{ env `VAULT_ENT_URL` }}"
   },
   "builders": [
     {
@@ -17,10 +17,11 @@
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
-      "region": "{{user `aws_region`}}",
-      "ami_regions": ["eu-west-2","us-east-1","us-west-1"],
+      "region": "{{ user `aws_region` }}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
+      "force_deregister": true,
+      "force_delete_snapshot": true,
       "ssh_pty": true,
       "instance_type": "t2.medium",
       "associate_public_ip_address": true,
@@ -30,20 +31,21 @@
           "name": "*RHEL-7.3_HVM_GA-*",
           "root-device-type": "ebs"
         },
+        "owners": ["309956199498"],
         "most_recent": true
       },
       "ssh_username": "ec2-user",
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "Nomad Server",
-      "ami_name": "nomad-server-{{ user `nomad_version` }}-RHEL_7.3-{{isotime \"2006-01-02-1504\"}}",
+      "ami_description": "HashiCorp Vault Server {{ user `vault_version` }}",
+      "ami_name": "{{ user `environment` }}-vault-server-{{ user `vault_version` }}-RHEL_7.3",
       "tags": {
-        "Name": "{{user `environment`}} Nomad Server {{ user `nomad_version` }}",
-        "System": "Nomad",
-        "Product": "Nomad",
-        "Environment": "{{user `environment`}}",
-        "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `nomad_version`}}",
+        "Name": "Vault Server {{ user `vault_version` }}",
+        "System": "Vault",
+        "Product": "Vault",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
+        "Product-Version": "{{ user `vault_version` }}",
         "OS": "RHEL",
         "OS-Version": "7.3"
       }
@@ -53,10 +55,11 @@
       "type": "amazon-ebs",
       "access_key": "{{ user `aws_access_key_id` }}",
       "secret_key": "{{ user `aws_secret_access_key` }}",
-      "region": "{{user `aws_region`}}",
-      "ami_regions": ["eu-west-2","us-east-1","us-west-1"],
+      "region": "{{ user `aws_region` }}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ami_groups": "all",
+      "force_deregister": true,
+      "force_delete_snapshot": true,
       "ssh_pty": true,
       "instance_type": "t2.medium",
       "associate_public_ip_address": true,
@@ -66,20 +69,21 @@
           "name": "*ubuntu-xenial-16.04-amd64-server-*",
           "root-device-type": "ebs"
         },
+        "owners": ["099720109477"],
         "most_recent": true
       },
       "ssh_username": "ubuntu",
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "Nomad Server",
-      "ami_name": "nomad-server-{{ user `nomad_version` }}-Ubuntu_16.04-{{isotime \"2006-01-02-1504\"}}",
+      "ami_description": "HashiCorp Vault Server {{ user `vault_version` }}",
+      "ami_name": "{{ user `environment` }}-vault-server-{{ user `vault_version` }}-Ubuntu_16.04",
       "tags": {
-        "Name": "{{user `environment`}} Nomad Server {{ user `nomad_version` }}",
-        "System": "Nomad",
-        "Product": "Nomad",
-        "Environment": "{{user `environment`}}",
-        "Built-By": "{{user `vcs_name`}}",
-        "Product-Version": "{{user `nomad_version`}}",
+        "Name": "Vault Server {{ user `vault_version` }}",
+        "System": "Vault",
+        "Product": "Vault",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
+        "Product-Version": "{{ user `vault_version` }}",
         "OS": "Ubuntu",
         "OS-Version": "16.04"
       }
@@ -98,7 +102,7 @@
     },
     {
       "type": "file",
-      "source": "../nomad",
+      "source": "../vault",
       "destination": "/tmp"
     },
     {
@@ -129,10 +133,8 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=consul",
-        "GROUP=consul",
-        "VERSION={{user `consul_version`}}",
-        "URL={{user `consul_ent_url`}}"
+        "VERSION={{ user `consul_version` }}",
+        "URL={{ user `consul_ent_url` }}"
       ],
       "inline": [
         "bash /tmp/consul/scripts/install-consul.sh"
@@ -148,10 +150,10 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=nomad",
-        "GROUP=nomad",
-        "COMMENT=Nomad",
-        "HOME=/srv/nomad"
+        "USER=vault",
+        "GROUP=vault",
+        "COMMENT=Vault",
+        "HOME=/srv/vault"
       ],
       "inline": [
         "bash /tmp/shared/scripts/setup-user.sh"
@@ -160,27 +162,27 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=nomad",
-        "GROUP=nomad",
-        "VERSION={{user `nomad_version`}}",
-        "URL={{user `nomad_ent_url`}}"
+        "VERSION={{ user `vault_version` }}",
+        "URL={{ user `vault_ent_url` }}"
       ],
       "inline": [
-        "bash /tmp/nomad/scripts/install-nomad.sh"
+        "bash /tmp/vault/scripts/install-vault.sh"
       ]
     },
     {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "inline": [
-        "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
+        "bash /tmp/vault/scripts/install-vault-systemd.sh"
       ]
     },
-     {
+    {
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
-      "scripts": [
-        "scripts/install-docker.sh"
+      "inline": [
+        "cd /tmp/shared/scripts && bash setup-testing.sh",
+        "cd /tmp/consul && rake spec",
+        "cd /tmp/vault && rake spec"
       ]
     },
     {

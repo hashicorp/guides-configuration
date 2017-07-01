@@ -1,0 +1,1 @@
+../../consul/spec/consul_spec.rb

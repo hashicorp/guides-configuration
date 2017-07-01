@@ -1,0 +1,1 @@
+../../shared/spec/ntp_spec.rb

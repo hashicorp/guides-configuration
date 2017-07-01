@@ -33,12 +33,10 @@ else
   exit 1;
 fi
 
-# Don't enable or start the consul service as it's not configured until runtime
-#sudo systemctl enable consul
-#sudo systemctl start consul
+sudo systemctl enable consul
+sudo systemctl start consul
 
-# Don't enable or start the vault service as it's not configured until runtime
-#sudo systemctl enable vault
-#sudo systemctl start vault
+sudo systemctl enable vault
+sudo systemctl start vault
 
 logger "Complete"

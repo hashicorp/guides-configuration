@@ -23,12 +23,16 @@ if [[ ! -z ${YUM} ]]; then
   logger "RHEL/CentOS system detected"
   logger "Performing updates and installing prerequisites"
   sudo yum -y check-update
-  sudo yum install -q -y wget unzip bind-utils
+  sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp
+  sudo systemctl start ntpd.service
+  sudo systemctl enable ntpd.service
 elif [[ ! -z ${APT_GET} ]]; then
   logger "Debian/Ubuntu system detected"
   logger "Performing updates and installing prerequisites"
   sudo apt-get -qq -y update
-  sudo apt-get install -qq -y wget unzip dnsutils
+  sudo apt-get install -qq -y wget unzip dnsutils ruby rubygems ntp
+  sudo systemctl start ntp.service
+  sudo systemctl enable ntp.service
 else
   logger "Prerequisites not installed due to OS detection failure"
   exit 1;
