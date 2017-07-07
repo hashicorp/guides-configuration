@@ -41,12 +41,7 @@ file('/opt/nomad/data') do
   it { should be_directory }
 end
 
-describe port(4646) do
-  it { should be_listening.with('tcp') }
+describe command('curl http://localhost:4646/v1/status/leader -sL -w "%{http_code}\\n" -o /dev/null') do
+  its(:stdout) { should match /200/ }
 end
-
-describe http_get(8500, 'localhost', '/v1/status/leader') do
-  its(:status) { should eq 200 }
-end
-
 
