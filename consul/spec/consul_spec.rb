@@ -10,6 +10,11 @@ describe service('consul') do
   it { should be_running }
 end
 
+describe service('dnsmasq') do
+  it { should be_enabled }
+  it { should be_running }
+end
+  
 describe file('/etc/consul.d') do
   it { should be_directory }
 end
@@ -31,6 +36,14 @@ file('/etc/consul.d/consul-server.json') do
   its(:content_as_json) { should include('bootstrap_expect' => '1') }
   it { should be_readable_by('consul') }
 end
+
+file('/etc/dnsmasq.d/consul') do
+  it { should exist }
+  its(:content) { should include('server=/consul/127.0.0.1#8600') }
+  its(:content) { should include('listen-address=127.0.0.1') }
+  its(:content) { should include('bind-interfaces') }
+end
+
 
 file('/opt/consul/data') do
   it { should be_directory }
