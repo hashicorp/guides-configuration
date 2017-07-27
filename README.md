@@ -27,7 +27,7 @@ AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.8.4" pa
 Example Consul build command (Azure):
 
 ```
-AZURE_RESOURCE_GROUP="packer" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" CONSUL_VERSION="0.9.0" packer build consul-azure.json
+AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" CONSUL_VERSION="0.9.0" packer build consul-azure.json
 ```
 
 ---
