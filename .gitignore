@@ -1,0 +1,21 @@
+### Packer ###
+# Cache objects
+packer_cache/
+
+# For built boxes
+*.box
+
+### Terraform ###
+# Compiled files
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# Module directory
+.terraform/
+
+### Vagrant ###
+.vagrant/
+
+### SSH Keys ###
+*.pem

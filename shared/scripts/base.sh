@@ -42,6 +42,6 @@ else
 fi
 
 logger "Disable reverse dns lookup in SSH"
-sudo sh -c 'echo "UseDNS no" >> /etc/ssh/sshd_config'
+sudo sh -c 'echo "\nUseDNS no" >> /etc/ssh/sshd_config'
 
 logger "Complete"

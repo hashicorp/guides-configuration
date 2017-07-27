@@ -4,7 +4,7 @@ This repo contains Packer templates used for modules in hashicorp-modules
 These images are generally built through an internal CI System. Versions need to be updated manually, and generally there is a new release (using the latest patched images from upstream vendors).
 ---
 
-## hashistack  
+## HashiStack  
 Contains provider specific templates that installs HashiCorp software on a single node (Consul, Nomad, Vault, consul-template and envconsul).
 
 Example HashiStack build command:
@@ -15,18 +15,24 @@ AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.8.4" NO
 
 ---
 
-## consul
+## Consul
 Contains Consul specific installation scripts, configuration files.  Also has Packer templates specific to Consul usage.
 
-Example Consul build command:
+Example Consul build command (AWS):
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.8.4" packer build consul.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.8.4" packer build consul-aws.json
+```
+
+Example Consul build command (Azure):
+
+```
+AZURE_RESOURCE_GROUP="packer" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" CONSUL_VERSION="0.9.0" packer build consul-azure.json
 ```
 
 ---
 
-## nomad  
+## Nomad  
 Contains Nomad specific installation scripts, configuration files.  Also has Packer templates specific to Nomad usage.
 
 
@@ -38,7 +44,7 @@ AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" NOMAD_VERSION="0.5.6" CON
 
 ---
 
-## vault    
+## Vault    
 Contains Vault specific installation scripts, configuration files.  Also has Packer templates specific to Vault usage.
 
 Example Vault (including Consul) build command:
