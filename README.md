@@ -46,3 +46,10 @@ Example Vault (including Consul) build command:
 ```
 AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" VAULT_VERSION="0.7.3" CONSUL_VERSION="0.8.4" packer build vault.json
 ```
+
+## Hashistack Version Tables:
+
+| Nomad | Consul | Vault | 
+|-------|--------|-------|
+| 0.5.6 | 0.8.4  | 0.7.3 |
+| 0.6.0 | 0.8.4  | 0.7.3 |
