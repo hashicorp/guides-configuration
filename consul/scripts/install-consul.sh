@@ -47,8 +47,6 @@ fi
 
 logger "Configuring dnsmasq to forward .consul requests to consul port 8600"
 sudo sh -c 'echo "server=/consul/127.0.0.1#8600" >> /etc/dnsmasq.d/consul'
-sudo sh -c 'echo "listen-address=127.0.0.1" >> /etc/dnsmasq.d/consul'
-sudo sh -c 'echo "bind-interfaces" >> /etc/dnsmasq.d/consul'
 sudo systemctl enable dnsmasq
 sudo systemctl restart dnsmasq
 
