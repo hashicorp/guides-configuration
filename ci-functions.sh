@@ -35,8 +35,8 @@ build () {
 }
 
 build_ent () {
-  echo "-----BEGIN PGP PRIVATE KEY BLOCK-----\n${PGP_SECRET_KEY}\n-----END PGP PRIVATE KEY BLOCK-----" | gpg --import
-  AWS_SECRET_KEY_ID=$(echo $AWS_SECRET_PGP | base64 -D | gpg -d -)
+  echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
+  AWS_SECRET_KEY_ID=$(echo $AWS_SECRET_PGP | base64 -d | gpg -d -)
   CONSUL_URL=$(awscli presign s3://${S3BUCKET}/consul-enterprise/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip --expires-in 60)
   VAULT_URL=$(awscli presign s3://${S3BUCKET}/vault-enterprise/vault-enterprise_${VAULT_VERSION}+ent_linux_amd64.zip --expires-in 60)
   for PRODUCT in $*; do
