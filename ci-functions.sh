@@ -45,8 +45,8 @@ build_ent () {
   echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
   export CONSUL_VERSION="${CONSUL_VERSION}+ent"
   export VAULT_VERSION="${VAULT_VERSION}+ent"
-  export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/consul-enterprise/consul-enterprise_${CONSUL_VERSION}_linux_amd64.zip --expires-in 60)
-  export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/vault-enterprise/vault-enterprise_${VAULT_VERSION}_linux_amd64.zip --expires-in 60)
+  export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/consul-enterprise/consul-enterprise_${CONSUL_VERSION}_linux_amd64.zip --expires-in 600)
+  export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/vault-enterprise/vault-enterprise_${VAULT_VERSION}_linux_amd64.zip --expires-in 600)
   for PRODUCT in $*; do
     echo "Building ${PRODUCT} template ...             "
     cd "${BUILDDIR}/${PRODUCT}"
