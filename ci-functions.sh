@@ -28,6 +28,8 @@ validate () {
 }
 
 build () {
+  export CONSUL_RELEASE="${CONSUL_VERSION}"
+  export VAULT_RELEASE="${VAULT_VERSION}"
   for PRODUCT in $*; do
     echo "Building ${PRODUCT} template ...             "
     cd "${BUILDDIR}/${PRODUCT}"
@@ -60,5 +62,9 @@ build_ent () {
     fi
     cd -
   done
-  gpg --delete-secret-keys ${PGP_SECRET_ID}  
+  echo "Cleaning up GPG Keyring ...                   "
+  gpg --fingerprint --with-colons ${PGP_SECRET_ID} |\
+    grep "^fpr" |\
+    sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' |\
+    xargs gpg --batch --delete-secret-keys
 }
