@@ -67,4 +67,7 @@ build_ent () {
     grep "^fpr" |\
     sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' |\
     xargs gpg --batch --delete-secret-keys
+  echo "Resetting vars for subsequent runs ...        "
+  export VAULT_VERSION="${VAULT_RELEASE}"
+  export CONSUL_VERSION="${CONSUL_RELEASE}"
 }
