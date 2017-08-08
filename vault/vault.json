@@ -7,8 +7,10 @@
     "environment": "{{ env `PACKER_ENVIRONMENT` }}",
     "vcs_name": "{{ env `VCS_NAME` }}",
     "consul_version": "{{ env `CONSUL_VERSION` }}",
+    "consul_release": "{{ env `CONSUL_RELEASE` }}",
     "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
     "vault_version": "{{ env `VAULT_VERSION` }}",
+    "vault_release": "{{ env `VAULT_RELEASE` }}",
     "vault_ent_url": "{{ env `VAULT_ENT_URL` }}"
   },
   "builders": [
@@ -37,7 +39,7 @@
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Vault Server {{ user `vault_version` }}",
-      "ami_name": "{{ user `environment` }}-vault-server-{{ user `vault_version` }}-RHEL_7.3",
+      "ami_name": "{{ user `environment` }}-vault-server-{{ user `vault_release` }}-RHEL_7.3",
       "tags": {
         "Name": "Vault Server {{ user `vault_version` }}",
         "System": "Vault",
@@ -74,7 +76,7 @@
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Vault Server {{ user `vault_version` }}",
-      "ami_name": "{{ user `environment` }}-vault-server-{{ user `vault_version` }}-Ubuntu_16.04",
+      "ami_name": "{{ user `environment` }}-vault-server-{{ user `vault_release` }}-Ubuntu_16.04",
       "tags": {
         "Name": "Vault Server {{ user `vault_version` }}",
         "System": "Vault",
