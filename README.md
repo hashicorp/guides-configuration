@@ -74,3 +74,12 @@ else
   echo -e "\033[31m\033[1m[BUILD ERROR]\033[0m"
 fi
 ```
+
+---
+
+## Hashistack Version Tables:
+
+| Nomad | Consul | Vault | 
+|-------|--------|-------|
+| 0.5.6 | 0.8.4  | 0.7.3 |
+| 0.6.0 | 0.8.4  | 0.7.3 |
