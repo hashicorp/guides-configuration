@@ -11,7 +11,8 @@
     "vault_version": "{{ env `VAULT_VERSION` }}",
     "vault_ent_url": "{{ env `VAULT_ENT_URL` }}",
     "nomad_version": "{{ env `NOMAD_VERSION` }}",
-    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}"
+    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
+    "distribution": "{{ env `DISTRIBUTION` }}"
   },
   "builders": [
     {
@@ -39,7 +40,7 @@
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp HashiStack Server",
-      "ami_name": "{{ user `environment` }}-hashistack-server-RHEL_7.3",
+      "ami_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-RHEL_7.3",
       "tags": {
         "Name": "HashiStack Server",
         "System": "HashiStack",
@@ -78,7 +79,7 @@
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp HashiStack Server",
-      "ami_name": "{{ user `environment` }}-hashistack-server-Ubuntu_16.04",
+      "ami_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-Ubuntu_16.04",
       "tags": {
         "Name": "HashiStack Server",
         "System": "HashiStack",

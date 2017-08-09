@@ -10,7 +10,8 @@
     "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
     "nomad_version": "{{ env `NOMAD_VERSION` }}",
     "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
-    "nomad_agent_type": "{{ env `NOMAD_AGENT_TYPE` }}"
+    "nomad_agent_type": "{{ env `NOMAD_AGENT_TYPE` }}",
+    "distribution": "{{ env `DISTRIBUTION` }}"
   },
   "builders": [
     {
@@ -38,7 +39,7 @@
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Nomad Server {{ user `nomad_version` }}",
-      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_version` }}-RHEL_7.3",
+      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_version` }}-{{ user `distribution` }}-RHEL_7.3",
       "tags": {
         "Name": "Nomad Server {{ user `nomad_version` }}",
         "System": "Nomad",
@@ -75,7 +76,7 @@
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Nomad Server {{ user `nomad_version` }}",
-      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_version` }}-Ubuntu_16.04",
+      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_version` }}-{{ user `distribution` }}-Ubuntu_16.04",
       "tags": {
         "Name": "Nomad Server {{ user `nomad_version` }}",
         "System": "Nomad",

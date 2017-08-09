@@ -30,6 +30,7 @@ validate () {
 build () {
   export CONSUL_RELEASE="${CONSUL_VERSION}"
   export VAULT_RELEASE="${VAULT_VERSION}"
+  export DISTRIBUTION="oss"
   for PRODUCT in $*; do
     echo "Building ${PRODUCT} template ...             "
     cd "${BUILDDIR}/${PRODUCT}"
@@ -51,6 +52,7 @@ build_ent () {
   export VAULT_RELEASE="${VAULT_VERSION}"
   export CONSUL_VERSION="${CONSUL_VERSION}+ent"
   export VAULT_VERSION="${VAULT_VERSION}+ent"
+  export DISTRIBUTION="ent"
   for PRODUCT in $*; do
     echo "Building ${PRODUCT} template ...             "
     cd "${BUILDDIR}/${PRODUCT}"

@@ -8,7 +8,8 @@
     "vcs_name": "{{ env `VCS_NAME` }}",
     "consul_version": "{{ env `CONSUL_VERSION` }}",
     "consul_release": "{{ env `CONSUL_RELEASE` }}",
-    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}"
+    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "distribution": "{{ env `DISTRIBUTION` }}"
   },
   "builders": [
     {
@@ -36,7 +37,7 @@
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Consul Server {{ user `consul_version` }}",
-      "ami_name": "{{ user `environment` }}-consul-server-{{ user `consul_release` }}-RHEL_7.3",
+      "ami_name": "{{ user `environment` }}-consul-server-{{ user `consul_release` }}-{{ user `distribution` }}-RHEL_7.3",
       "tags": {
         "Name": "Consul Server {{ user `consul_version` }}",
         "System": "Consul",
@@ -73,7 +74,7 @@
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Consul Server {{ user `consul_version` }}",
-      "ami_name": "{{ user `environment` }}-consul-server-{{ user `consul_release` }}-Ubuntu_16.04",
+      "ami_name": "{{ user `environment` }}-consul-server-{{ user `consul_release` }}-{{ user `distribution` }}-Ubuntu_16.04",
       "tags": {
         "Name": "Consul Server {{ user `consul_version` }}",
         "System": "Consul",
