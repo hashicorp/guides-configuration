@@ -16,14 +16,14 @@ if [[ ! -z ${YUM} ]]; then
   logger "RHEL/CentOS system detected"
   logger "Performing updates and installing prerequisites"
   sudo yum check-update
-  sudo yum install -q -y gcc libffi-devel python-devel openssl-devel
-  curl -L https://aka.ms/InstallAzureCli | bash
+  sudo yum install -q -y gcc libffi-devel python-devel openssl-devel python-pip
+  sudo pip install azure-cli
 elif [[ ! -z ${APT_GET} ]]; then
   logger "Debian/Ubuntu system detected"
   logger "Performing updates and installing prerequisites"
   sudo apt-get -qq -y update
-  sudo apt-get install -qq -y libssl-dev libffi-dev python-dev build-essential
-  curl -L https://aka.ms/InstallAzureCli | bash
+  sudo apt-get install -qq -y libssl-dev libffi-dev python-dev build-essential python-pip
+  sudo pip install azure-cli
 else
   logger "Prerequisites not installed due to OS detection failure"
   exit 1;

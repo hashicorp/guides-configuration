@@ -24,7 +24,7 @@
             "image_sku": "16.04-LTS",
             "os_type": "Linux",
             "ssh_username": "packer",
-            "managed_image_name": "{{ user `environment` }}-consul-server-{{ user `consul_version` }}-Ubuntu_16.04-{{ timestamp }}",
+            "managed_image_name": "{{ user `environment` }}-consul-server-{{ user `consul_version` }}-Ubuntu_16.04",
             "azure_tags": {
                 "Name": "Consul Server {{ user `consul_version` }}",
                 "System": "Consul",
@@ -115,7 +115,6 @@
             "inline": [
                 "apt-get update -qq -y",
                 "apt-get upgrade -qq -y",
-
                 "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
             ],
             "inline_shebang": "/bin/sh -x",
