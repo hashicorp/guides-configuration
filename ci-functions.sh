@@ -73,3 +73,11 @@ build_ent () {
   export VAULT_VERSION="${VAULT_RELEASE}"
   export CONSUL_VERSION="${CONSUL_RELEASE}"
 }
+
+publish () {
+
+  git clone https://github.com/hashicorp-modules/image-permission-aws
+  cd image-permission-aws
+  terraform init
+  terraform push -var "consul_version=${CONSUL_VERSION}" -var "vault_version=${VAULT_VERSION}" -var "nomad_version=${NOMAD_VERSION}" -overwrite=consul_version -overwrite=vault_version -overwrite=nomad_version -name=atlas-demo/image-permission-aws .
+}
