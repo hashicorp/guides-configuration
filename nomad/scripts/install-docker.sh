@@ -13,8 +13,6 @@ logger() {
 
 if [[ ! -z ${YUM} ]]; then
   echo "Installing Docker with RHEL Workaround"
-  #sudo yum -y install ftp://fr2.rpmfind.net/linux/centos/7.3.1611/extras/x86_64/Packages/container-selinux-2.12-2.gite7096ce.el7.noarch.rpm
-  #curl -sSL https://get.docker.com/ | sed -e '365s/redhat/centos/' | sed -e '376s/redhat/centos/' | sudo sh
   sudo yum-config-manager  -y   --add-repo     https://download.docker.com/linux/centos/docker-ce.repo
   sudo yum install -y docker-ce
 elif [[ ! -z ${APT_GET} ]]; then
