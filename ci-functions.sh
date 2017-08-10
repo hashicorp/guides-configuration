@@ -4,6 +4,10 @@ prepare () {
   curl -o /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
   unzip /tmp/packer.zip -d /tmp
   chmod +x /tmp/packer
+  rm -rf /tmp/terraform
+  curl -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+  unzip /tmp/terraform.zip -d /tmp
+  chmod +x /tmp/terraform
 }
 
 validate () {
@@ -76,8 +80,8 @@ build_ent () {
 
 publish () {
 
-  git clone https://github.com/hashicorp-modules/image-permission-aws
+  git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp-modules/image-permission-aws
   cd image-permission-aws
-  terraform init
-  terraform push -var "consul_version=${CONSUL_VERSION}" -var "vault_version=${VAULT_VERSION}" -var "nomad_version=${NOMAD_VERSION}" -overwrite=consul_version -overwrite=vault_version -overwrite=nomad_version -name=atlas-demo/image-permission-aws .
+  /tmp/terraform init
+  /tmp/terraform push -var "consul_version=${CONSUL_VERSION}" -var "vault_version=${VAULT_VERSION}" -var "nomad_version=${NOMAD_VERSION}" -overwrite=consul_version -overwrite=vault_version -overwrite=nomad_version -name=atlas-demo/image-permission-aws .
 }
