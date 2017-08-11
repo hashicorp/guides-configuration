@@ -51,8 +51,8 @@
         "OS": "RHEL",
         "OS-Version": "7.3",
         "Consul-Version": "{{ user `consul_version` }}",
-        "Nomad-Version": "{{ user `nomad_version` }}",
-        "Vault-Version": "{{ user `vault_version` }}"
+        "Vault-Version": "{{ user `vault_version` }}",
+        "Nomad-Version": "{{ user `nomad_version` }}"
       }
     },
     {
@@ -91,8 +91,8 @@
         "OS": "Ubuntu",
         "OS-Version": "16.04",
         "Consul-Version": "{{ user `consul_version` }}",
-        "Nomad-Version": "{{ user `nomad_version` }}",
-        "Vault-Version": "{{ user `vault_version` }}"
+        "Vault-Version": "{{ user `vault_version` }}",
+        "Nomad-Version": "{{ user `nomad_version` }}"
       }
     }
   ],
@@ -153,6 +153,47 @@
     {
       "type": "shell",
       "environment_vars": [
+        "USER=vault",
+        "GROUP=vault",
+        "COMMENT=Vault",
+        "HOME=/srv/vault"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `vault_version` }}",
+        "URL={{ user `vault_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=nomad",
+        "GROUP=nomad",
+        "COMMENT=Nomad",
+        "HOME=/srv/nomad"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
         "VERSION={{ user `nomad_version` }}",
         "URL={{ user `nomad_ent_url` }}"
       ],
@@ -178,35 +219,6 @@
       "type": "shell",
       "inline": [
         "bash /tmp/nomad/scripts/install-oracle-jdk.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "environment_vars": [
-        "USER=vault",
-        "GROUP=vault",
-        "COMMENT=Vault",
-        "HOME=/srv/vault"
-      ],
-      "inline": [
-        "bash /tmp/shared/scripts/setup-user.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "environment_vars": [
-        "VERSION={{ user `vault_version` }}",
-        "URL={{ user `vault_ent_url` }}"
-      ],
-      "inline": [
-        "bash /tmp/vault/scripts/install-vault.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
-      "inline": [
-        "bash /tmp/vault/scripts/install-vault-systemd.sh"
       ]
     },
     {
