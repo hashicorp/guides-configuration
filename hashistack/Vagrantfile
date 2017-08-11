@@ -51,6 +51,8 @@ Vagrant.configure("2") do |config|
   # bootstrap the vm
   config.vm.provision "shell", path: "../shared/scripts/base.sh"
   config.vm.provision "shell", path: "../shared/scripts/base-aws.sh"
+
+  # install consul
   config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
     env: {
       "USER" => consul_user,
@@ -58,22 +60,6 @@ Vagrant.configure("2") do |config|
       "GROUP" => consul_group,
       "HOME" => consul_home
     }
-  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
-    env: {
-      "USER" => vault_user,
-      "COMMENT" => vault_comment,
-      "GROUP" => vault_group,
-      "HOME" => vault_home
-    }
-  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
-    env: {
-      "USER" => nomad_user,
-      "COMMENT" => nomad_comment,
-      "GROUP" => nomad_group,
-      "HOME" => nomad_home
-    }
-
-  # install consul
   config.vm.provision "shell", path: "../consul/scripts/install-consul.sh",
     env: {
       "VERSION" => consul_version,
@@ -82,16 +68,28 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "../consul/scripts/install-consul-systemd.sh"
 
   # install vault
-  config.vm.provision "shell", path: "../vault/scripts/install-vault.sh",
+  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
     env: {
       "USER" => vault_user,
+      "COMMENT" => vault_comment,
       "GROUP" => vault_group,
+      "HOME" => vault_home
+    }
+  config.vm.provision "shell", path: "../vault/scripts/install-vault.sh",
+    env: {
       "VERSION" => vault_version,
       "URL" => vault_download_url
     }
   config.vm.provision "shell", path: "../vault/scripts/install-vault-systemd.sh"
 
   # install nomad
+  config.vm.provision "shell", path: "../shared/scripts/setup-user.sh",
+    env: {
+      "USER" => nomad_user,
+      "COMMENT" => nomad_comment,
+      "GROUP" => nomad_group,
+      "HOME" => nomad_home
+    }
   config.vm.provision "shell", path: "../nomad/scripts/install-nomad.sh",
     env: {
       "VERSION" => nomad_version,

@@ -8,6 +8,8 @@
     "vcs_name": "{{ env `VCS_NAME` }}",
     "consul_version": "{{ env `CONSUL_VERSION` }}",
     "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "vault_version": "{{ env `VAULT_VERSION` }}",
+    "vault_ent_url": "{{ env `VAULT_ENT_URL` }}",
     "nomad_version": "{{ env `NOMAD_VERSION` }}",
     "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
     "distribution": "{{ env `DISTRIBUTION` }}"
@@ -48,6 +50,7 @@
         "OS": "RHEL",
         "OS-Version": "7.3",
         "Consul-Version": "{{ user `consul_version` }}",
+        "Vault-Version": "{{ user `vault_version` }}",
         "Nomad-Version": "{{ user `nomad_version` }}"
       }
     },
@@ -103,6 +106,11 @@
     },
     {
       "type": "file",
+      "source": "../vault",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
       "source": "../nomad",
       "destination": "/tmp"
     },
@@ -146,6 +154,47 @@
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "inline": [
         "bash /tmp/consul/scripts/install-consul-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=vault",
+        "GROUP=vault",
+        "COMMENT=Vault",
+        "HOME=/srv/vault"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `vault_version` }}",
+        "URL={{ user `vault_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=nomad",
+        "GROUP=nomad",
+        "COMMENT=Nomad",
+        "HOME=/srv/nomad"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
       ]
     },
     {
