@@ -1,4 +1,4 @@
-export CONSUL_VERSION="0.8.4"
+export CONSUL_VERSION="0.9.2"
 export NOMAD_VERSION="0.6.0"
 export VAULT_VERSION="0.8.0"
 export PACKER_VERSION="0.12.3"
