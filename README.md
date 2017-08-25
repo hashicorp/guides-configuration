@@ -10,7 +10,7 @@ Contains provider specific templates that installs HashiCorp software on a singl
 Example HashiStack build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.8.4" NOMAD_VERSION="0.5.6" VAULT_VERSION="0.7.3" packer build hashistack.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" NOMAD_VERSION="0.5.6" VAULT_VERSION="0.7.3" packer build hashistack.json
 ```
 
 ---
@@ -21,13 +21,13 @@ Contains Consul specific installation scripts, configuration files.  Also has Pa
 Example Consul build command (AWS):
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.8.4" packer build consul-aws.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" packer build consul-aws.json
 ```
 
 Example Consul build command (Azure):
 
 ```
-AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" CONSUL_VERSION="0.9.0" packer build consul-azure.json
+AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" CONSUL_VERSION="0.9.2" packer build consul-azure.json
 ```
 
 ---
@@ -39,7 +39,7 @@ Contains Nomad specific installation scripts, configuration files.  Also has Pac
 Example Nomad (including Consul) build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" NOMAD_VERSION="0.5.6" CONSUL_VERSION="0.8.4" packer build nomad.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" NOMAD_VERSION="0.5.6" CONSUL_VERSION="0.9.2" packer build nomad.json
 ```
 
 ---
@@ -50,5 +50,5 @@ Contains Vault specific installation scripts, configuration files.  Also has Pac
 Example Vault (including Consul) build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" VAULT_VERSION="0.7.3" CONSUL_VERSION="0.8.4" packer build vault.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" VAULT_VERSION="0.7.3" CONSUL_VERSION="0.9.2" packer build vault.json
 ```
