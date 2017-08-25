@@ -1,0 +1,125 @@
+{
+    "variables": {
+        "azure_client_id": "{{ env `ARM_CLIENT_ID` }}",
+        "azure_client_secret": "{{ env `ARM_CLIENT_SECRET` }}",
+        "azure_subscription_id": "{{ env `ARM_SUBSCRIPTION_ID` }}",
+        "azure_resource_group": "{{ env `AZURE_RESOURCE_GROUP` }}",
+        "azure_location": "{{ env `AZURE_LOCATION` }}",
+        "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+        "vcs_name": "{{ env `VCS_NAME` }}",
+        "consul_version": "{{ env `CONSUL_VERSION` }}",
+        "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}"
+    },
+    "builders": [
+        {
+            "name": "azure-manaaged-image-ubuntu-16.04-systemd",
+            "type": "azure-arm",
+            "client_id": "{{ user `azure_client_id` }}",
+            "client_secret": "{{ user `azure_client_secret` }}",
+            "subscription_id": "{{ user `azure_subscription_id` }}",
+            "managed_image_resource_group_name": "{{ user `azure_resource_group` }}",
+            "location": "{{ user `azure_location` }}",
+            "image_publisher": "Canonical",
+            "image_offer": "UbuntuServer",
+            "image_sku": "16.04-LTS",
+            "os_type": "Linux",
+            "ssh_username": "packer",
+            "managed_image_name": "{{ user `environment` }}-consul-server-{{ user `consul_version` }}-Ubuntu_16.04",
+            "azure_tags": {
+                "Name": "Consul Server {{ user `consul_version` }}",
+                "System": "Consul",
+                "Product": "Consul",
+                "Environment": "{{ user `environment` }}",
+                "Built-By": "{{ user `vcs_name` }}",
+                "Product-Version": "{{ user `consul_version` }}",
+                "OS": "Ubuntu",
+                "OS-Version": "16.04"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "../shared",
+            "destination": "/tmp"
+        },
+        {
+            "type": "file",
+            "source": "../consul",
+            "destination": "/tmp"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "bash /tmp/shared/scripts/base.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": [
+                "azure-manaaged-image-ubuntu-16.04-systemd"
+            ],
+            "inline": [
+                "bash /tmp/shared/scripts/base-azure.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "environment_vars": [
+                "USER=consul",
+                "GROUP=consul",
+                "COMMENT=Consul",
+                "HOME=/srv/consul"
+            ],
+            "inline": [
+                "bash /tmp/shared/scripts/setup-user.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "environment_vars": [
+                "VERSION={{ user `consul_version` }}",
+                "URL={{ user `consul_ent_url` }}"
+            ],
+            "inline": [
+                "bash /tmp/consul/scripts/install-consul.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": [
+                "azure-manaaged-image-ubuntu-16.04-systemd"
+            ],
+            "inline": [
+                "bash /tmp/consul/scripts/install-consul-systemd.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": [
+                "azure-manaaged-image-ubuntu-16.04-systemd"
+            ],
+            "inline": [
+                "cd /tmp/shared/scripts && bash setup-testing.sh",
+                "cd /tmp/consul && rake spec"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "bash /tmp/shared/scripts/cleanup.sh"
+            ]
+        },
+        {
+            "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "apt-get update -qq -y",
+                "apt-get upgrade -qq -y",
+
+                "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
+            ],
+            "inline_shebang": "/bin/sh -x",
+            "type": "shell"
+        }
+    ]
+}
