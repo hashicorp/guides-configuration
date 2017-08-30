@@ -25,7 +25,15 @@ sudo mkdir -pm 0755 /opt/nomad/data
 logger "/usr/local/bin/nomad --version: $(/usr/local/bin/nomad --version)"
 
 logger "Configuring nomad ${NOMAD_VERSION}"
-sudo cp /tmp/nomad/config/* /etc/nomad.d/
+
+# Copy over all example Nomad config files
+sudo cp /tmp/nomad/config/* /etc/nomad.d/.
+
+# Start Nomad in -dev mode
+cat <<EOF >/etc/nomad.d/nomad.conf
+FLAG=-dev
+EOF
+
 sudo chown -R root:root /etc/nomad.d /opt/nomad
 sudo chmod -R 0644 /etc/nomad.d/*
 

@@ -22,10 +22,20 @@ sudo chown consul:consul /usr/local/bin/consul
 sudo mkdir -pm 0755 /etc/consul.d
 sudo mkdir -pm 0755 /opt/consul/data
 
+sudo chmod -R 0755 /opt/consul/*
+
 logger "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
 
 logger "Configuring consul ${CONSUL_VERSION}"
-sudo cp /tmp/consul/config/* /etc/consul.d/
+
+# Copy over all Consul config files
+sudo cp /tmp/consul/config/* /etc/consul.d/.
+
+# Start Consul in -dev mode
+cat <<EOF >/etc/consul.d/consul.conf
+FLAG=-dev
+EOF
+
 sudo chown -R consul:consul /etc/consul.d /opt/consul
 sudo chmod -R 0644 /etc/consul.d/*
 

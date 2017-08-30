@@ -25,11 +25,18 @@ sudo mkdir -pm 0755 /etc/ssl/vault
 logger "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 
 logger "Configuring vault ${VAULT_VERSION}"
-sudo cp /tmp/vault/config/* /etc/vault.d
+
+# Copy over all example Vault config files
+sudo cp /tmp/vault/config/* /etc/vault.d/.
+
+# Start Vault in -dev mode
+cat <<EOF >/etc/vault.d/vault.conf
+FLAG=-dev
+EOF
+
 sudo chown -R vault:vault /etc/vault.d /etc/ssl/vault
 sudo chmod -R 0644 /etc/vault.d/*
 echo "export VAULT_ADDR=http://127.0.0.1:8200" | sudo tee /etc/profile.d/vault.sh
-
 
 logger "Granting mlock syscall to vault binary"
 sudo setcap cap_ipc_lock=+ep /usr/local/bin/vault

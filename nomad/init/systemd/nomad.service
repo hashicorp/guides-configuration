@@ -5,7 +5,8 @@ After=consul-online.target
 
 [Service]
 Restart=on-failure
-ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d
+EnvironmentFile=/etc/nomad.d/nomad.conf
+ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d ${FLAG}
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=root
