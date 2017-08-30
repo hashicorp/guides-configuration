@@ -60,7 +60,7 @@ build_ent () {
   for PRODUCT in $*; do
     echo "Building ${PRODUCT} template ...             "
     cd "${BUILDDIR}/${PRODUCT}"
-    if /tmp/packer build *.json ; then
+    if /tmp/packer build ${PRODUCT}.json ; then
       echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
     else
       echo -e "\033[31m${PRODUCT} \033[1m[FAIL]\033[0m"
