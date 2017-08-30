@@ -1,5 +1,5 @@
 export CONSUL_VERSION="0.9.2"
-export NOMAD_VERSION="0.6.0"
+export NOMAD_VERSION="0.6.2"
 export VAULT_VERSION="0.8.1"
 export PACKER_VERSION="0.12.3"
 export TERRAFORM_VERSION="0.10.0"
