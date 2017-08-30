@@ -19,16 +19,14 @@ logger "Installing consul"
 sudo unzip -o /tmp/${CONSUL_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/consul
 sudo chown consul:consul /usr/local/bin/consul
-sudo mkdir -pm 0755 /etc/consul.d
-sudo mkdir -pm 0755 /opt/consul/data
-
-sudo chmod -R 0755 /opt/consul/*
-
 logger "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
 
 logger "Configuring consul ${CONSUL_VERSION}"
+sudo mkdir -pm 0755 /etc/consul.d
+sudo mkdir -pm 0755 /opt/consul/data
+sudo chmod -R 0755 /opt/consul/*
 
-# Copy over all Consul config files
+# Copy over all example Consul config files
 sudo cp /tmp/consul/config/* /etc/consul.d/.
 
 # Start Consul in -dev mode
@@ -38,6 +36,10 @@ EOF
 
 sudo chown -R consul:consul /etc/consul.d /opt/consul
 sudo chmod -R 0644 /etc/consul.d/*
+
+logger "Starting Consul"
+sudo systemctl enable consul
+sudo systemctl restart consul
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
