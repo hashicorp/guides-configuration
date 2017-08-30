@@ -77,7 +77,7 @@ Contains Consul specific installation scripts, configuration files.  Also has Pa
 Example Consul build command (AWS):
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" packer build consul-aws.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" packer build consul.json
 ```
 
 Example Consul build command (Azure):
@@ -106,7 +106,7 @@ Contains Vault specific installation scripts, configuration files.  Also has Pac
 Example Vault (including Consul) build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" VAULT_VERSION="0.7.3" CONSUL_VERSION="0.9.2" packer build vault.json
+AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" VAULT_VERSION="0.8.0" CONSUL_VERSION="0.9.2" packer build vault.json
 ```
 
 ## Continuous Integration
