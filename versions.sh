@@ -5,4 +5,3 @@ export PACKER_VERSION="0.12.3"
 export TERRAFORM_VERSION="0.10.8"
 export RHEL_VERSION="7.3"
 export UBUNTU_VERSION="16.04"
-export RUN_BUILD=true
