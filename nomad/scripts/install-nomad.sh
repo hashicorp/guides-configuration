@@ -19,12 +19,12 @@ logger "Installing nomad"
 sudo unzip -o /tmp/${NOMAD_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/nomad
 sudo chown root:root /usr/local/bin/nomad
-sudo mkdir -pm 0755 /etc/nomad.d
-sudo mkdir -pm 0755 /opt/nomad/data
-
 logger "/usr/local/bin/nomad --version: $(/usr/local/bin/nomad --version)"
 
 logger "Configuring nomad ${NOMAD_VERSION}"
+sudo mkdir -pm 0755 /etc/nomad.d
+sudo mkdir -pm 0755 /opt/nomad/data
+sudo chmod -R 0755 /opt/nomad/*
 
 # Copy over all example Nomad config files
 sudo cp /tmp/nomad/config/* /etc/nomad.d/.
@@ -36,5 +36,9 @@ EOF
 
 sudo chown -R root:root /etc/nomad.d /opt/nomad
 sudo chmod -R 0644 /etc/nomad.d/*
+
+logger "Starting Nomad"
+sudo systemctl enable nomad
+sudo systemctl restart nomad
 
 logger "Complete"
