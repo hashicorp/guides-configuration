@@ -37,10 +37,6 @@ EOF
 sudo chown -R consul:consul /etc/consul.d /opt/consul
 sudo chmod -R 0644 /etc/consul.d/*
 
-logger "Starting Consul"
-sudo systemctl enable consul
-sudo systemctl restart consul
-
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
