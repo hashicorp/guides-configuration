@@ -14,7 +14,7 @@ validate () {
   for PRODUCT in $*; do
     echo "Reviewing ${PRODUCT} template ...             "
     cd "${BUILDDIR}/${PRODUCT}"
-    if /tmp/packer validate *.json > /dev/null; then
+    if /tmp/packer validate ${PRODUCT}.json; then
       echo -e "\033[32m\033[1m[PASS]\033[0m"
     else
       echo -e "\033[31m\033[1m[FAIL]\033[0m"
