@@ -37,8 +37,4 @@ EOF
 sudo chown -R root:root /etc/nomad.d /opt/nomad
 sudo chmod -R 0644 /etc/nomad.d/*
 
-logger "Starting Nomad"
-sudo systemctl enable nomad
-sudo systemctl restart nomad
-
 logger "Complete"

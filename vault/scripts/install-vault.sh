@@ -40,8 +40,4 @@ echo "export VAULT_ADDR=http://127.0.0.1:8200" | sudo tee /etc/profile.d/vault.s
 logger "Granting mlock syscall to vault binary"
 sudo setcap cap_ipc_lock=+ep /usr/local/bin/vault
 
-logger "Starting Vault"
-sudo systemctl enable vault
-sudo systemctl restart vault
-
 logger "Complete"
