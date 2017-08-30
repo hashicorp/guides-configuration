@@ -30,7 +30,7 @@ sudo chmod -R 0755 /opt/consul/*
 sudo cp /tmp/consul/config/* /etc/consul.d/.
 
 # Start Consul in -dev mode
-cat <<EOF >/etc/consul.d/consul.conf
+cat <<EOF >/opt/consul/consul.conf
 FLAG=-dev
 EOF
 
