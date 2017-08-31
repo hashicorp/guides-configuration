@@ -31,8 +31,7 @@ sudo chmod -R 0755 /opt/vault/* /etc/ssl/vault/*
 sudo cp /tmp/vault/config/* /etc/vault.d/.
 
 # Start Vault in -dev mode
-echo "VAULT_DEV_ROOT_TOKEN_ID=root" | sudo tee /etc/vault.d/vault.conf
-echo "DEV_FLAG=-dev" | sudo tee -a /etc/vault.d/vault.conf
+echo 'FLAGS=-dev -dev-root-token-id=root' | sudo tee /etc/vault.d/vault.conf
 
 sudo chown -R vault:vault /etc/vault.d /opt/vault /etc/ssl/vault
 sudo chmod -R 0644 /etc/vault.d/*

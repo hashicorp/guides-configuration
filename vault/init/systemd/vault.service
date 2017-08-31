@@ -6,7 +6,7 @@ After=consul-online.target
 [Service]
 Restart=on-failure
 EnvironmentFile=/etc/vault.d/vault.conf
-ExecStart=/usr/local/bin/vault server -config /etc/vault.d ${DEV_FLAG}
+ExecStart=/usr/local/bin/vault server -config /etc/vault.d $FLAGS
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=vault
