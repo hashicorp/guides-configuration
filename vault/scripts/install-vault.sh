@@ -29,7 +29,9 @@ sudo mkdir -pm 0755 /etc/ssl/vault
 sudo cp /tmp/vault/config/* /etc/vault.d/.
 
 # Start Vault in -dev mode
-echo "FLAG=-dev" | sudo tee /etc/vault.d/vault.conf
+echo "HOME=/etc/vault.d" | sudo tee /etc/vault.d/vault.conf
+echo "VAULT_DEV_ROOT_TOKEN_ID=root" | sudo tee -a /etc/vault.d/vault.conf
+echo "DEV_FLAG=-dev" | sudo tee -a /etc/vault.d/vault.conf
 
 sudo chown -R vault:vault /etc/vault.d /etc/ssl/vault
 sudo chmod -R 0644 /etc/vault.d/*
