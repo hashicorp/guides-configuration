@@ -1,4 +1,6 @@
 require 'spec_helper'
-describe interface('eth0') do
-  it { should be_up }
+if host_inventory['ec2']['ami-id']
+  describe interface('eth0') do
+    it { should be_up }
+  end
 end
