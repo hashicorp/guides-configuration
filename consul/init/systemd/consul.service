@@ -6,7 +6,7 @@ After=network-online.target
 [Service]
 Restart=on-failure
 EnvironmentFile=/etc/consul.d/consul.conf
-ExecStart=/usr/local/bin/consul agent -config-dir /etc/consul.d ${DEV_FLAG}
+ExecStart=/usr/local/bin/consul agent -config-dir /etc/consul.d $FLAGS
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=consul

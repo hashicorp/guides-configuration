@@ -52,9 +52,7 @@ Vagrant.configure("2") do |config|
 
   # Setup and run tests
   config.vm.provision "shell", inline: "cd /tmp/shared/scripts && bash setup-testing.sh"
-
-  # TODO: Update to `rake spec` once `network_spec.rb` works for Vagrant
-  config.vm.provision "shell", inline: "cd /tmp/consul && rspec spec/consul_spec.rb"
+  config.vm.provision "shell", inline: "cd /tmp/consul && rake spec"
 
   # Uncomment to run cleanup script - disabled by default for local debugging purposes
   # config.vm.provision "shell", inline: "bash /tmp/shared/scripts/cleanup.sh"
