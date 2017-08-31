@@ -36,9 +36,9 @@ Vagrant.configure("2") do |config|
 
   # Setup networking
   config.vm.network :private_network, ip: "192.168.50.153"
-  config.vm.network :forwarded_port, guest: 8500, host: 8500, auto_correct: true
-  config.vm.network :forwarded_port, guest: 8200, host: 8200, auto_correct: true
-  config.vm.network :forwarded_port, guest: 4646, host: 4646, auto_correct: true
+  config.vm.network :forwarded_port, guest: 8500, host: 5500, auto_correct: true
+  config.vm.network :forwarded_port, guest: 8200, host: 5200, auto_correct: true
+  config.vm.network :forwarded_port, guest: 4646, host: 5646, auto_correct: true
   config.vm.network "private_network", type: "dhcp"
 
   # Use base_box set at the top of this file
