@@ -23,18 +23,20 @@ logger "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 
 logger "Configuring vault ${VAULT_VERSION}"
 sudo mkdir -pm 0755 /etc/vault.d
+sudo mkdir -pm 0755 /opt/vault/data
 sudo mkdir -pm 0755 /etc/ssl/vault
+sudo chmod -R 0755 /opt/vault/* /etc/ssl/vault/*
 
 # Copy over all example Vault config files
 sudo cp /tmp/vault/config/* /etc/vault.d/.
 
 # Start Vault in -dev mode
-echo "HOME=/etc/vault.d" | sudo tee /etc/vault.d/vault.conf
-echo "VAULT_DEV_ROOT_TOKEN_ID=root" | sudo tee -a /etc/vault.d/vault.conf
+echo "VAULT_DEV_ROOT_TOKEN_ID=root" | sudo tee /etc/vault.d/vault.conf
 echo "DEV_FLAG=-dev" | sudo tee -a /etc/vault.d/vault.conf
 
-sudo chown -R vault:vault /etc/vault.d /etc/ssl/vault
+sudo chown -R vault:vault /etc/vault.d /opt/vault /etc/ssl/vault
 sudo chmod -R 0644 /etc/vault.d/*
+
 echo "export VAULT_ADDR=http://127.0.0.1:8200" | sudo tee /etc/profile.d/vault.sh
 
 logger "Granting mlock syscall to vault binary"
