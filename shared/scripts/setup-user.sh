@@ -8,9 +8,9 @@ logger() {
 
 logger "Running"
 
+GROUP="${GROUP:-}"
 USER="${USER:-}"
 COMMENT="${COMMENT:-}"
-GROUP="${GROUP:-}"
 HOME="${HOME:-}"
 
 # Detect package management system.
