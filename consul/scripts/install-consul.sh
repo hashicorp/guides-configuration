@@ -32,6 +32,7 @@ sudo cp /tmp/consul/config/* /etc/consul.d/.
 # Start Consul in -dev mode
 cat <<EOF >/etc/sysconfig/consul
 FLAG=-dev
+
 EOF
 
 sudo chown -R consul:consul /etc/consul.d /opt/consul
