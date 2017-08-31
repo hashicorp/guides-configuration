@@ -30,9 +30,7 @@ sudo chmod -R 0755 /opt/nomad/*
 sudo cp /tmp/nomad/config/* /etc/nomad.d/.
 
 # Start Nomad in -dev mode
-cat <<EOF >/etc/nomad.d/nomad.conf
-FLAG=-dev
-EOF
+echo 'FLAG=-dev' | sudo tee /etc/nomad.d/nomad.conf
 
 sudo chown -R root:root /etc/nomad.d /opt/nomad
 sudo chmod -R 0644 /etc/nomad.d/*
