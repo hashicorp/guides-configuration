@@ -25,7 +25,8 @@ logger "Configuring vault ${VAULT_VERSION}"
 sudo mkdir -pm 0755 /etc/vault.d
 sudo mkdir -pm 0755 /opt/vault/data
 sudo mkdir -pm 0755 /etc/ssl/vault
-sudo chmod -R 0755 /opt/vault/* /etc/ssl/vault/*
+sudo chmod -R 0755 /opt/vault/*
+sudo chmod -R 0755 /etc/ssl/vault/*
 
 # Copy over all example Vault config files
 sudo cp /tmp/vault/config/* /etc/vault.d/.
