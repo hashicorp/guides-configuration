@@ -21,6 +21,6 @@ export TERRAFORM_VERSION="0.10.8"
 # Development branch: X.Y.Z-devX (e.g. 0.1.1-dev1)
 export RELEASE_VERSION="0.1.0-dev1"
 
-# Force build on feature branch
-export FORCE_BUILD=true
-export RUN_BUILD=true # TODO: Remove when merging into master
+# Force build or run on feature branch
+export RUN_BUILD=true
+export RUN_PUBLISH=true
