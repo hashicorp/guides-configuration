@@ -4,12 +4,14 @@
     "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
     "aws_region": "{{ env `AWS_REGION` }}",
     "aws_owner": "{{ env `AWS_OWNER` }}",
-    "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+    "release_version": "{{ env `RELEASE_VERSION` }}",
     "vcs_name": "{{ env `VCS_NAME` }}",
     "consul_version": "{{ env `CONSUL_VERSION` }}",
-    "consul_release": "{{ env `CONSUL_RELEASE` }}",
     "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
-    "distribution": "{{ env `DISTRIBUTION` }}"
+    "consul_group": "consul",
+    "consul_user": "consul",
+    "consul_comment": "Consul",
+    "consul_home": "/srv/consul"
   },
   "builders": [
     {
@@ -36,17 +38,16 @@
       "ssh_username": "ec2-user",
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "HashiCorp Consul Server {{ user `consul_version` }}",
-      "ami_name": "{{ user `environment` }}-consul-server-{{ user `consul_release` }}-{{ user `distribution` }}-RHEL_7.3",
-      "ami_regions": ["us-west-2"],
+      "ami_name": "consul-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
+      "ami_description": "HashiCorp Consul Image {{ user `release_version` }}",
       "tags": {
-        "Name": "Consul Server {{ user `consul_version` }}",
+        "Name": "Consul Image {{ user `release_version` }}",
         "System": "Consul",
         "Product": "Consul",
-        "Environment": "{{ user `environment` }}",
         "Built-By": "{{ user `vcs_name` }}",
-        "Product-Version": "{{ user `consul_version` }}",
-        "OS": "RHEL",
+        "Release-Version": "{{ user `release_version` }}",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "OS": "rhel",
         "OS-Version": "7.3"
       }
     },
@@ -74,17 +75,16 @@
       "ssh_username": "ubuntu",
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "HashiCorp Consul Server {{ user `consul_version` }}",
-      "ami_name": "{{ user `environment` }}-consul-server-{{ user `consul_release` }}-{{ user `distribution` }}-Ubuntu_16.04",
-      "ami_regions": ["us-west-2"],
+      "ami_name": "consul-image_{{ user `release_version` }}_{{ user `consul_version` }}_ubuntu_16.04_consul",
+      "ami_description": "HashiCorp Consul Image {{ user `release_version` }}",
       "tags": {
-        "Name": "Consul Server {{ user `consul_version` }}",
+        "Name": "Consul Image {{ user `release_version` }}",
         "System": "Consul",
         "Product": "Consul",
-        "Environment": "{{ user `environment` }}",
         "Built-By": "{{ user `vcs_name` }}",
-        "Product-Version": "{{ user `consul_version` }}",
-        "OS": "Ubuntu",
+        "Release-Version": "{{ user `release_version` }}",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "OS": "ubuntu",
         "OS-Version": "16.04"
       }
     }
@@ -111,10 +111,10 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=consul",
-        "GROUP=consul",
-        "COMMENT=Consul",
-        "HOME=/srv/consul"
+        "GROUP={{ user `consul_group` }}",
+        "USER={{ user `consul_user` }}",
+        "COMMENT={{ user `consul_comment` }}",
+        "HOME={{ user `consul_home` }}"
       ],
       "inline": [
         "bash /tmp/shared/scripts/setup-user.sh"
@@ -124,7 +124,9 @@
       "type": "shell",
       "environment_vars": [
         "VERSION={{ user `consul_version` }}",
-        "URL={{ user `consul_ent_url` }}"
+        "URL={{ user `consul_ent_url` }}",
+        "USER={{ user `consul_user` }}",
+        "GROUP={{ user `consul_group` }}"
       ],
       "inline": [
         "bash /tmp/consul/scripts/install-consul.sh"
