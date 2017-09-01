@@ -18,7 +18,7 @@ logger "Downloading nomad ${NOMAD_VERSION}"
 logger "Installing nomad"
 sudo unzip -o /tmp/${NOMAD_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/nomad
-sudo chown root:root /usr/local/bin/nomad
+sudo chown ${USER}:${GROUP} /usr/local/bin/nomad
 logger "/usr/local/bin/nomad --version: $(/usr/local/bin/nomad --version)"
 
 logger "Configuring nomad ${NOMAD_VERSION}"
@@ -32,7 +32,7 @@ sudo cp /tmp/nomad/config/* /etc/nomad.d/.
 # Start Nomad in -dev mode
 echo 'FLAGS=-dev' | sudo tee /etc/nomad.d/nomad.conf
 
-sudo chown -R root:root /etc/nomad.d /opt/nomad
+sudo chown -R ${USER}:${GROUP} /etc/nomad.d /opt/nomad
 sudo chmod -R 0644 /etc/nomad.d/*
 
 logger "Complete"

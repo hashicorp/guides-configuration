@@ -4,15 +4,19 @@
     "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
     "aws_region": "{{ env `AWS_REGION` }}",
     "aws_owner": "{{ env `AWS_OWNER` }}",
-    "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+    "release_version": "{{ env `RELEASE_VERSION` }}",
     "vcs_name": "{{ env `VCS_NAME` }}",
     "consul_version": "{{ env `CONSUL_VERSION` }}",
     "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "consul_group": "consul",
+    "consul_user": "consul",
+    "consul_comment": "Consul",
+    "consul_home": "/srv/consul",
     "nomad_version": "{{ env `NOMAD_VERSION` }}",
     "nomad_release": "{{ env `NOMAD_RELEASE` }}",
     "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
-    "nomad_agent_type": "{{ env `NOMAD_AGENT_TYPE` }}",
-    "distribution": "{{ env `DISTRIBUTION` }}"
+    "nomad_group": "root",
+    "nomad_user": "root"
   },
   "builders": [
     {
@@ -39,16 +43,17 @@
       "ssh_username": "ec2-user",
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "HashiCorp Nomad Server {{ user `nomad_version` }}",
-      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_release` }}-{{ user `distribution` }}-RHEL_7.3",
+      "ami_name": "nomad-image_{{ user `release_version` }}_nomad_{{ user `nomad_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
+      "ami_description": "HashiCorp Nomad Image {{ user `release_version` }}",
       "tags": {
-        "Name": "Nomad Server {{ user `nomad_version` }}",
+        "Name": "Nomad Image {{ user `release_version` }}",
         "System": "Nomad",
         "Product": "Nomad",
-        "Environment": "{{ user `environment` }}",
         "Built-By": "{{ user `vcs_name` }}",
-        "Product-Version": "{{ user `nomad_version` }}",
-        "OS": "RHEL",
+        "Release-Version": "{{ user `release_version` }}",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Nomad-Version": "{{ user `nomad_version` }}",
+        "OS": "rhel",
         "OS-Version": "7.3"
       }
     },
@@ -76,16 +81,17 @@
       "ssh_username": "ubuntu",
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "HashiCorp Nomad Server {{ user `nomad_version` }}",
-      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_release` }}-{{ user `distribution` }}-Ubuntu_16.04",
+      "ami_name": "nomad-image_{{ user `release_version` }}_nomad_{{ user `nomad_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
+      "ami_description": "HashiCorp Nomad Image {{ user `release_version` }}",
       "tags": {
-        "Name": "Nomad Server {{ user `nomad_version` }}",
+        "Name": "Nomad Image {{ user `release_version` }}",
         "System": "Nomad",
         "Product": "Nomad",
-        "Environment": "{{ user `environment` }}",
         "Built-By": "{{ user `vcs_name` }}",
-        "Product-Version": "{{ user `nomad_version` }}",
-        "OS": "Ubuntu",
+        "Release-Version": "{{ user `release_version` }}",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Nomad-Version": "{{ user `nomad_version` }}",
+        "OS": "ubuntu",
         "OS-Version": "16.04"
       }
     }
@@ -112,10 +118,10 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=consul",
-        "GROUP=consul",
-        "COMMENT=Consul",
-        "HOME=/srv/consul"
+        "GROUP={{ user `consul_group` }}",
+        "USER={{ user `consul_user` }}",
+        "COMMENT={{ user `consul_comment` }}",
+        "HOME={{ user `consul_home` }}"
       ],
       "inline": [
         "bash /tmp/shared/scripts/setup-user.sh"
@@ -123,22 +129,11 @@
     },
     {
       "type": "shell",
-      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
-      "inline": [
-        "bash /tmp/nomad/scripts/install-docker.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "inline": [
-        "bash /tmp/nomad/scripts/install-oracle-jdk.sh"
-      ]
-    },
-    {
-      "type": "shell",
       "environment_vars": [
         "VERSION={{ user `consul_version` }}",
-        "URL={{ user `consul_ent_url` }}"
+        "URL={{ user `consul_ent_url` }}",
+        "USER={{ user `consul_user` }}",
+        "GROUP={{ user `consul_group` }}"
       ],
       "inline": [
         "bash /tmp/consul/scripts/install-consul.sh"
@@ -155,7 +150,9 @@
       "type": "shell",
       "environment_vars": [
         "VERSION={{ user `nomad_version` }}",
-        "URL={{ user `nomad_ent_url` }}"
+        "URL={{ user `nomad_ent_url` }}",
+        "USER={{ user `nomad_user` }}",
+        "GROUP={{ user `nomad_group` }}"
       ],
       "inline": [
         "bash /tmp/nomad/scripts/install-nomad.sh"
@@ -166,6 +163,19 @@
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "inline": [
         "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-docker.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/nomad/scripts/install-oracle-jdk.sh"
       ]
     },
     {

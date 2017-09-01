@@ -18,7 +18,7 @@ logger "Downloading vault ${VAULT_VERSION}"
 logger "Installing vault"
 sudo unzip -o /tmp/${VAULT_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/vault
-sudo chown vault:vault /usr/local/bin/vault
+sudo chown ${USER}:${GROUP} /usr/local/bin/vault
 logger "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 
 logger "Configuring vault ${VAULT_VERSION}"
@@ -33,7 +33,7 @@ sudo cp /tmp/vault/config/* /etc/vault.d/.
 # Start Vault in -dev mode
 echo 'FLAGS=-dev -dev-root-token-id=root' | sudo tee /etc/vault.d/vault.conf
 
-sudo chown -R vault:vault /etc/vault.d /opt/vault /etc/ssl/vault
+sudo chown -R ${USER}:${GROUP} /etc/vault.d /opt/vault /etc/ssl/vault
 sudo chmod -R 0644 /etc/vault.d/*
 
 echo "export VAULT_ADDR=http://127.0.0.1:8200" | sudo tee /etc/profile.d/vault.sh

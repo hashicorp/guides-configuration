@@ -1,8 +1,26 @@
-export CONSUL_VERSION="1.0.0"
-export NOMAD_VERSION="0.7.0"
-export VAULT_VERSION="0.8.3"
+#!/bin/bash
+
+# X.Y.Z or X.Y.Z+ent for Enterprise binary (e.g. 0.9.2 or 0.9.2+ent)
+export CONSUL_VERSION="0.9.2"
+
+# X.Y.Z or X.Y.Z+ent for Enterprise binary (e.g. 0.8.1 or 0.8.1+ent)
+export VAULT_VERSION="0.8.1"
+
+# X.Y.Z (e.g. 0.6.2)
+export NOMAD_VERSION="0.6.2"
+
+# X.Y.Z (e.g. 0.12.3)
 export PACKER_VERSION="0.12.3"
+
+# X.Y.Z (e.g. 0.10.0)
 export TERRAFORM_VERSION="0.10.8"
-export RHEL_VERSION="7.3"
-export UBUNTU_VERSION="16.04"
-export RUN_BUILD=true
+
+# Production release: X.Y.Z (e.g. 0.1.1)
+# Release candidate: X.Y.Z-rcX (e.g. 0.1.1-rc1)
+# Beta release: X.Y.Z-betaX (e.g. 0.1.1-beta1)
+# Development branch: X.Y.Z-devX (e.g. 0.1.1-dev1)
+export RELEASE_VERSION="0.1.0-dev1"
+
+# Force build on feature branch
+export FORCE_BUILD=true
+export RUN_BUILD=true # TODO: Remove when merging into master

@@ -18,7 +18,7 @@ logger "Downloading consul ${CONSUL_VERSION}"
 logger "Installing consul"
 sudo unzip -o /tmp/${CONSUL_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/consul
-sudo chown consul:consul /usr/local/bin/consul
+sudo chown ${USER}:${GROUP} /usr/local/bin/consul
 logger "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
 
 logger "Configuring consul ${CONSUL_VERSION}"
@@ -32,7 +32,7 @@ sudo cp /tmp/consul/config/* /etc/consul.d/.
 # Start Consul in -dev mode
 echo 'FLAGS=-dev -ui' | sudo tee /etc/consul.d/consul.conf
 
-sudo chown -R consul:consul /etc/consul.d /opt/consul
+sudo chown -R ${USER}:${GROUP} /etc/consul.d /opt/consul
 sudo chmod -R 0644 /etc/consul.d/*
 
 # Detect package management system.
