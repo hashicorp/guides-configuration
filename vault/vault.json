@@ -46,8 +46,9 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "vault-image_{{ user `release_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
       "ami_description": "HashiCorp Vault Image {{ user `release_version` }}",
+      "ami_regions": ["us-east-1", "us-west-1", "eu-west-1"],
       "tags": {
-        "Name": "Vault Image {{ user `release_version` }}",
+        "Name": "Vault RHEL Image {{ user `release_version` }}",
         "System": "Vault",
         "Product": "Vault",
         "Built-By": "{{ user `vcs_name` }}",
@@ -84,8 +85,9 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "vault-image_{{ user `release_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp Vault Image {{ user `release_version` }}",
+      "ami_regions": ["us-east-1", "us-west-1", "eu-west-1"],
       "tags": {
-        "Name": "Vault Image {{ user `release_version` }}",
+        "Name": "Vault Ubuntu Image {{ user `release_version` }}",
         "System": "Vault",
         "Product": "Vault",
         "Built-By": "{{ user `vcs_name` }}",
