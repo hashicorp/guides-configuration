@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # X.Y.Z or X.Y.Z+ent for Enterprise binary (e.g. 0.9.2 or 0.9.2+ent)
-export CONSUL_VERSION="0.9.2+ent"
+export CONSUL_VERSION="0.9.2"
 
 # X.Y.Z or X.Y.Z+ent for Enterprise binary (e.g. 0.8.1 or 0.8.1+ent)
-export VAULT_VERSION="0.8.1+ent"
+export VAULT_VERSION="0.8.1"
 
 # X.Y.Z (e.g. 0.6.2)
 export NOMAD_VERSION="0.6.2"
