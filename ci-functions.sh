@@ -8,25 +8,6 @@ prepare () {
   curl -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
   unzip /tmp/terraform.zip -d /tmp
   chmod +x /tmp/terraform
-  # Detect package management system.
-  YUM=$(which yum 2>/dev/null)
-  APT_GET=$(which apt-get 2>/dev/null)
-
-  if [[ ! -z ${YUM} ]]; then
-    logger "RHEL/CentOS system detected"
-    logger "Performing updates and installing prerequisites"
-
-    sudo yum -y check-update
-    sudo yum install -q -y parallel 
-  elif [[ ! -z ${APT_GET} ]]; then
-    logger "Debian/Ubuntu system detected"
-    logger "Performing updates and installing prerequisites"
-    sudo apt-get -qq -y update
-    sudo apt-get install -qq -y parallel
-  else
-    logger "Prerequisites not installed due to OS detection failure"
-    exit 1;
-  fi
 }
 
 validate () {
