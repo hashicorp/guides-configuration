@@ -38,6 +38,8 @@ build () {
   for PRODUCT in $*; do
     echo "Building ${PRODUCT} template ...             "
     cd "${BUILDDIR}/${PRODUCT}"
+    export TMPDIR="/tmp/${PRODUCT}-$((1 + RANDOM % 100))"
+    mkdir -p $TMPDIR
     if /tmp/packer build ${PRODUCT}.json ; then
       echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
     else
@@ -60,6 +62,8 @@ build_ent () {
   for PRODUCT in $*; do
     echo "Building ${PRODUCT} template ...             "
     cd "${BUILDDIR}/${PRODUCT}"
+    export TMPDIR="/tmp/${PRODUCT}-$((1 + RANDOM % 100))"
+    mkdir -p $TMPDIR
     if /tmp/packer build ${PRODUCT}.json ; then
       echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
     else
