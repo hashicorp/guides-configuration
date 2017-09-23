@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## DON'T FORGET TO UPDATE the README with any version bumps ##
+
 # X.Y.Z or X.Y.Z+ent for Enterprise binary (e.g. 0.9.2 or 0.9.2+ent)
 export CONSUL_VERSION="0.9.2"
 
