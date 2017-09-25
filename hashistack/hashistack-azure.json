@@ -213,6 +213,12 @@
     {
       "type": "shell",
       "inline": [
+        "bash /tmp/shared/scripts/disable_firewall.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
         "bash /tmp/shared/scripts/cleanup.sh"
       ]
     },
