@@ -30,7 +30,11 @@ After authenticating (see above) with Azure, perform the following steps.
 
 - Starting with this repo as the root, run the following:
   ```
+  $ export S3BUCKET="${ENTERPRISE_BINARY_S3BUCKET}"
+  $ export AWS_ACCESS_KEY_ID="${YOUR_AWS_BINARY_ACCESS_KEY_ID}"
+  $ export AWS_SECRET_ACCESS_KEY="${YOUR_AWS_BINARY_SECRET_ACCESS_KEY}"
   $ cd hashistack
+  # Run the next two steps before each packer build to regenerate URLs
   $ source ../versions.sh
   $ source ../local-variables.sh
   $ AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" packer build hashistack-azure.json
