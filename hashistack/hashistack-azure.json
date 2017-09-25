@@ -33,7 +33,7 @@
       "image_sku": "7.3",
       "os_type": "Linux",
       "ssh_username": "packer",
-      "managed_image_name": "{{ user `environment` }}-hashistack-server{{ user `distribution` }}-RHEL_7.3-{{timestamp}}",
+      "managed_image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-RHEL_7.3-{{timestamp}}",
       "azure_tags": {
           "Name": "HashiStack Server",
           "System": "HashiStack",
@@ -60,7 +60,7 @@
       "image_sku": "16.04-LTS",
       "os_type": "Linux",
       "ssh_username": "packer",
-      "managed_image_name": "{{ user `environment` }}-hashistack-server{{ user `distribution` }}-Ubuntu_16.04-{{timestamp}}",
+      "managed_image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-Ubuntu_16.04-{{timestamp}}",
       "azure_tags": {
         "Name": "HashiStack Server",
         "System": "HashiStack",

@@ -5,7 +5,7 @@
   #
   # Below is one example of how to use it
   # First, authenticate with Azure using this guide: https://www.terraform.io/docs/providers/azurerm/authenticating_via_azure_cli.html
-  # There are also some useful tips here: https://github.com/tdsacilowski/azure-consul
+  # There are also some useful tips for authenticating here: https://github.com/tdsacilowski/azure-consul
   # Example:
   # $ cd hashistack
   # $ source ../versions.sh
