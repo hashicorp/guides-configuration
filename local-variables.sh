@@ -1,4 +1,4 @@
-  # Variables you'll need to build locally
+  # Variables you'll need to trigger Packer image builds locally
   # You'll need to override your AWS credentials with the ones given to you
   # via this repo: https://github.com/hashicorp/licensing-binaries
   # and this job: https://tfe.hashicorp.engineering/terraform/licensing/environments/binaries/changes/runs
@@ -12,7 +12,7 @@
   # $ cd hashistack
   # $ source ../versions.sh
   # $ source ../local-variables.sh
-  # AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" packer build hashistack-azure.json
+  # $ AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" packer build hashistack-azure.json
   #
   export S3BUCKET="${S3BUCKET}"
   export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
