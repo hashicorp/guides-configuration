@@ -1,0 +1,220 @@
+{
+  "variables": {
+    "azure_client_id": "{{ env `ARM_CLIENT_ID` }}",
+    "azure_client_secret": "{{ env `ARM_CLIENT_SECRET` }}",
+    "azure_subscription_id": "{{ env `ARM_SUBSCRIPTION_ID` }}",
+    "azure_resource_group": "{{ env `AZURE_RESOURCE_GROUP` }}",
+    "azure_location": "{{ env `AZURE_LOCATION` }}",
+    "aws_access_key_id": "{{ env `AWS_ACCESS_KEY_ID` }}",
+    "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
+    "aws_region": "{{ env `AWS_REGION` }}",
+    "aws_owner": "{{ env `AWS_OWNER` }}",
+    "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+    "vcs_name": "{{ env `VCS_NAME` }}",
+    "consul_version": "{{ env `CONSUL_VERSION` }}",
+    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "vault_version": "{{ env `VAULT_VERSION` }}",
+    "vault_ent_url": "{{ env `VAULT_ENT_URL` }}",
+    "nomad_version": "{{ env `NOMAD_VERSION` }}",
+    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
+    "distribution": "{{ env `DISTRIBUTION` }}"
+  },
+    "builders": [
+  {
+      "name": "azure-managed-image-RHEL-7.3-systemd",
+      "type": "azure-arm",
+      "client_id": "{{ user `azure_client_id` }}",
+      "client_secret": "{{ user `azure_client_secret` }}",
+      "subscription_id": "{{ user `azure_subscription_id` }}",
+      "managed_image_resource_group_name": "{{ user `azure_resource_group` }}",
+      "location": "{{ user `azure_location` }}",
+      "image_publisher": "RedHat",
+      "image_offer": "RHEL",
+      "image_sku": "7.3",
+      "os_type": "Linux",
+      "ssh_username": "packer",
+      "managed_image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-RHEL_7.3",
+      "azure_tags": {
+          "Name": "HashiStack Server",
+          "System": "HashiStack",
+          "Product": "HashiStack",
+          "Environment": "{{ user `environment` }}",
+          "Built-By": "{{ user `vcs_name` }}",
+          "OS": "RHEL",
+          "OS-Version": "7.3",
+          "Consul-Version": "{{ user `consul_version` }}",
+          "Nomad-Version": "{{ user `nomad_version` }}",
+          "Vault-Version": "{{ user `vault_version` }}"
+      }
+  },
+  {
+      "name": "azure-managed-image-ubuntu-16.04-systemd",
+      "type": "azure-arm",
+      "client_id": "{{ user `azure_client_id` }}",
+      "client_secret": "{{ user `azure_client_secret` }}",
+      "subscription_id": "{{ user `azure_subscription_id` }}",
+      "managed_image_resource_group_name": "{{ user `azure_resource_group` }}",
+      "location": "{{ user `azure_location` }}",
+      "image_publisher": "Canonical",
+      "image_offer": "UbuntuServer",
+      "image_sku": "16.04-LTS",
+      "os_type": "Linux",
+      "ssh_username": "packer",
+      "managed_image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-Ubuntu_16.04",
+      "azure_tags": {
+        "Name": "HashiStack Server",
+        "System": "HashiStack",
+        "Product": "HashiStack",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
+        "OS": "Ubuntu",
+        "OS-Version": "16.04",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Nomad-Version": "{{ user `nomad_version` }}",
+        "Vault-Version": "{{ user `vault_version` }}"
+      }
+  }
+],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../shared",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../consul",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../nomad",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../vault",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/base.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-RHEL-7.3-systemd", "azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/shared/scripts/base-aws.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=consul",
+        "GROUP=consul",
+        "COMMENT=Consul",
+        "HOME=/srv/consul"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `consul_version` }}",
+        "URL={{ user `consul_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-RHEL-7.3-systemd", "azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `nomad_version` }}",
+        "URL={{ user `nomad_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-RHEL-7.3-systemd", "azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
+      ]
+    },
+     {
+      "type": "shell",
+      "only": ["azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-docker.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/nomad/scripts/install-oracle-jdk.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=vault",
+        "GROUP=vault",
+        "COMMENT=Vault",
+        "HOME=/srv/vault"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `vault_version` }}",
+        "URL={{ user `vault_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-RHEL-7.3-systemd", "azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "cd /tmp/shared/scripts && bash setup-testing.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-RHEL-7.3-systemd", "azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/shared/scripts/cleanup-aws.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
