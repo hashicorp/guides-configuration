@@ -213,7 +213,7 @@
     {
       "type": "shell",
       "inline": [
-        "bash /tmp/shared/scripts/disable_firewall.sh"
+        "bash /tmp/shared/scripts/disable-firewall.sh"
       ]
     },
     {
