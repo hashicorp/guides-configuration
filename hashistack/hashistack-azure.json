@@ -33,7 +33,7 @@
       "image_sku": "7.3",
       "os_type": "Linux",
       "ssh_username": "packer",
-      "managed_image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-RHEL_7.3",
+      "managed_image_name": "{{ user `environment` }}-hashistack-server{{ user `distribution` }}-RHEL_7.3-{{timestamp}}",
       "azure_tags": {
           "Name": "HashiStack Server",
           "System": "HashiStack",
@@ -60,7 +60,7 @@
       "image_sku": "16.04-LTS",
       "os_type": "Linux",
       "ssh_username": "packer",
-      "managed_image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-Ubuntu_16.04",
+      "managed_image_name": "{{ user `environment` }}-hashistack-server{{ user `distribution` }}-Ubuntu_16.04-{{timestamp}}",
       "azure_tags": {
         "Name": "HashiStack Server",
         "System": "HashiStack",
@@ -215,6 +215,17 @@
       "inline": [
         "bash /tmp/shared/scripts/cleanup.sh"
       ]
+    },
+    {
+        "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+        "inline": [
+            "apt-get update -qq -y",
+            "apt-get upgrade -qq -y",
+
+            "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
+        ],
+        "inline_shebang": "/bin/sh -x",
+        "type": "shell"
     }
   ]
 }
