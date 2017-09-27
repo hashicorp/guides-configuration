@@ -28,13 +28,29 @@ This is particularly useful for customers on Azure, as it's difficult to share m
 #### An example using Packer to build images on Azure
 After authenticating (see above) with Azure, perform the following steps.
 
-- Starting with this repo as the root, run the following:
+- Authenticate with Azure using the [Azure setup instructions](https://github.com/tdsacilowski/azure-consul/blob/master/README.md#deployment-prerequisites).
+- Create a file like the below with your credentials and source it. (`vi env.sh`, then `source env.sh`)
   ```
+  # Exporting variables in both cases just in case, no pun intended
+  export ARM_SUBSCRIPTION_ID="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  export ARM_CLIENT_ID="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+  export ARM_CLIENT_SECRET="cccccccc-cccc-cccc-cccc-cccccccccccc"
+  export ARM_TENANT_ID="dddddddd-dddd-dddd-dddd-dddddddddddd"
+  export subscription_id="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  export client_id="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+  export client_secret="cccccccc-cccc-cccc-cccc-cccccccccccc"
+  ```
+- With the root of this repo as your working directory, run the following:
+  ```
+  # Export prerequisite variables
+  #
   $ export S3BUCKET="${ENTERPRISE_BINARY_S3BUCKET}"
   $ export AWS_ACCESS_KEY_ID="${YOUR_AWS_BINARY_ACCESS_KEY_ID}"
   $ export AWS_SECRET_ACCESS_KEY="${YOUR_AWS_BINARY_SECRET_ACCESS_KEY}"
   $ cd hashistack
-  # Run the next two steps before each packer build to regenerate URLs
+  #
+  # Run the next two steps before each packer build to regenerate URLs,
+  # as the enterprise download URLs expire after 10 minutes#
   $ source ../versions.sh
   $ source ../local-variables.sh
   $ AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" packer build hashistack-azure.json
