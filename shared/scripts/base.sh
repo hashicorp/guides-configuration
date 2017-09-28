@@ -28,9 +28,6 @@ if [[ ! -z ${YUM} ]]; then
   sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp
   sudo systemctl start ntpd.service
   sudo systemctl enable ntpd.service
-  logger "Disable reverse dns lookup in SSH"
-  sudo sh -c 'echo "\nUseDNS no" >> /etc/ssh/sshd_config'
-  sudo systemctl restart sshd.service
 elif [[ ! -z ${APT_GET} ]]; then
   logger "Debian/Ubuntu system detected"
   logger "Performing updates and installing prerequisites"

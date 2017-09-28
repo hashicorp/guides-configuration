@@ -57,7 +57,7 @@ After authenticating (see above) with Azure, perform the following steps.
   ```
 
 ***Notes:***
-- Right now using [Teddy Sacilowski's Azure Consul terraform config](https://github.com/tdsacilowski/azure-consul) and an image resulting from the above, it's possible to deploy a HashiStack cluster (functionality untestested as of yet) on Ubuntu and RHEL. However, the RHEL deployment is currently inaccessible via SSH due to an unknown bug.
+- Right now using the [hashistack-azure](https://github.com/hashicorp-guides/hashistack/tree/chad_hashistack_azure/terraform-azure) and an image resulting from the above, it's possible to deploy a HashiStack cluster (some functional tests pending) on Ubuntu and RHEL. You may need to start Vault on RHEL.
 - Make sure to source `versions.sh` and `local-variables.sh` before each packer build as the AWS enterprise download URLs expire after 10 minutes.
 
 ---
