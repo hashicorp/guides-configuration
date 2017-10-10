@@ -131,6 +131,12 @@ fi
 
 ---
 
+## Some notes on the CI pipeline
+
+- All images are built privately and then their launch permissions are updated by a Terraform Workspace hosted in Atlas (https://atlas.hashicorp.com/terraform/atlas-demo/environments/image-permission-aws/changes/runs).
+
+- Please do not update variables manually on the TFE job. They are updated by the CI process when it runs directly from the `versions.sh` file available in this repository.
+
 ## Hashistack Version Tables:
 
 | Nomad | Consul | Vault |
