@@ -13,7 +13,7 @@ AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" NO
 ```
 
 ### Building HashiStack images locally (outside of the CI pipeline)
-This is a workflow that's designed to allow you to trigger local builds of enterprise Packer images. This functionality is currently under development. The Azure example below is all that's been tested.
+This is a workflow that's designed to allow you to trigger local builds of enterprise or OSS Packer images. This functionality is currently under development. The Azure example below is all that's been tested.
 
 This is particularly useful for customers using Azure, as it's not possible to share machine images with them.
 
@@ -29,9 +29,9 @@ This is particularly useful for customers using Azure, as it's not possible to s
 After authenticating (see above) with Azure, perform the following steps.
 
 - Authenticate with Azure using the [Azure setup instructions](https://github.com/tdsacilowski/azure-consul/blob/master/README.md#deployment-prerequisites).
-- Create a file like the below with your credentials and source it before running the next step if you want.
+- Create a file like the below with your credentials and source it before running the next step.
   **You can skip this step if you want. The `azure-local-env.sh` will take care of it for you, asking you to input each variable that is not already set in your environment.**
-  
+
   ```
   vi env.sh
   ```
