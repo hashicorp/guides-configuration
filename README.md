@@ -29,7 +29,9 @@ This is particularly useful for customers using Azure, as it's not possible to s
 After authenticating (see above) with Azure, perform the following steps.
 
 - Authenticate with Azure using the [Azure setup instructions](https://github.com/tdsacilowski/azure-consul/blob/master/README.md#deployment-prerequisites).
-- Create a file like the below with your credentials and source it before running the next step if you want. If you don't, the `azure-local-env.sh` will take care of it for you, asking you to input each variable that is not already set in your environment.
+- Create a file like the below with your credentials and source it before running the next step if you want.
+  **You can skip this step if you want. The `azure-local-env.sh` will take care of it for you, asking you to input each variable that is not already set in your environment.**
+  
   ```
   vi env.sh
   ```
