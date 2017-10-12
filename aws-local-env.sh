@@ -1,7 +1,7 @@
   #!/bin/bash
   # aws-local-env.sh
   #
-  # Disclaimer: building AWS Packer images locally has not been tested. The Azure process has.
+  # Disclaimer: Building AWS Packer images locally has not been tested. The Azure process has.
   #
   # Variables you'll need to trigger Packer image builds locally
   # If you have an ~/.aws/credentials file, you'll need to override that with
