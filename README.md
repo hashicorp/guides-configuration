@@ -13,9 +13,9 @@ AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" NO
 ```
 
 ### Building HashiStack images locally (outside of the CI pipeline)
-This is a workflow that's designed to allow you to trigger local builds of enterprise Packer images. This functionality is currently under development. The example below is all that's been tested.
+This is a workflow that's designed to allow you to trigger local builds of enterprise Packer images. This functionality is currently under development. The Azure example below is all that's been tested.
 
-This is particularly useful for customers on Azure, as it's difficult to share machine images with them.
+This is particularly useful for customers using Azure, as it's not possible to share machine images with them.
 
 #### Prerequisites
 - If you don't already have credentials to access HashiCorp enterprise binaries, add an appropriate entry for yourself (if you're an employee) in the [licensing binaries repository](https://github.com/hashicorp/licensing-binaries).
@@ -29,8 +29,14 @@ This is particularly useful for customers on Azure, as it's difficult to share m
 After authenticating (see above) with Azure, perform the following steps.
 
 - Authenticate with Azure using the [Azure setup instructions](https://github.com/tdsacilowski/azure-consul/blob/master/README.md#deployment-prerequisites).
-- Create a file like the below with your credentials and source it. (`vi env.sh`, then `source env.sh`)
+- Create a file like the below with your credentials and source it before running the next step if you want. If you don't, the `azure-local-env.sh` will take care of it for you, asking you to input each variable that is not already set in your environment.
   ```
+  vi env.sh
+  ```
+
+  ```
+  #!/bin/bash
+  # env.sh
   # Exporting variables in both cases just in case, no pun intended
   export ARM_SUBSCRIPTION_ID="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
   export ARM_CLIENT_ID="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
@@ -40,25 +46,26 @@ After authenticating (see above) with Azure, perform the following steps.
   export client_id="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
   export client_secret="cccccccc-cccc-cccc-cccc-cccccccccccc"
   ```
-- With the root of this repo as your working directory, run the following:
+
   ```
-  # Export prerequisite variables
+  source env.sh
+  ```
+
+
+- With the root of this repo as your working directory, run the following before each packer build:
+  ```
+  # Source azure-local-env.sh before each packer build to regenerate URLs,
+  # as the enterprise download URLs expire after 10 minutes.
   #
-  $ export S3BUCKET="${ENTERPRISE_BINARY_S3BUCKET}"
-  $ export AWS_ACCESS_KEY_ID="${YOUR_AWS_BINARY_ACCESS_KEY_ID}"
-  $ export AWS_SECRET_ACCESS_KEY="${YOUR_AWS_BINARY_SECRET_ACCESS_KEY}"
+  $ source azure-local-env.sh # aws-local-env.sh for AWS (AWS local build untested)
   $ cd hashistack
-  #
-  # Run the next two steps before each packer build to regenerate URLs,
-  # as the enterprise download URLs expire after 10 minutes#
-  $ source ../versions.sh
-  $ source ../local-variables.sh
-  $ AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" packer build hashistack-azure.json
+  $ packer build hashistack-azure.json
   ```
 
 ***Notes:***
 - Right now using the [hashistack-azure](https://github.com/hashicorp-guides/hashistack/tree/chad_hashistack_azure/terraform-azure) and an image resulting from the above, it's possible to deploy a HashiStack cluster (some functional tests pending) on Ubuntu and RHEL. You may need to start Vault on RHEL.
-- Make sure to source `versions.sh` and `local-variables.sh` before each packer build as the AWS enterprise download URLs expire after 10 minutes.
+- Make sure to source `azure-local-env.sh` or `aws-local-env.sh` before each packer build as the AWS enterprise download URLs expire after 10 minutes.
+- If someone has time to test this process on an AWS build, it would help. Mainly, I suspect the AWS credential variables to download binaries will conflict with local AWS credential environment variables.
 
 ---
 
