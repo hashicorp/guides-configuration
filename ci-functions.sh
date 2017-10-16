@@ -73,10 +73,11 @@ build_ent () {
     cd -
   done
   echo "Cleaning up GPG Keyring ...                   "
-  gpg --fingerprint --with-colons ${PGP_SECRET_ID} |\
-    grep "^fpr" |\
-    sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' |\
-    xargs gpg --batch --delete-secret-keys
+  #gpg --fingerprint --with-colons ${PGP_SECRET_ID} |\
+  #  grep "^fpr" |\
+  #  sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' |\
+  #  xargs gpg --batch --delete-secret-keys
+  rm -rf ~/.gnupg
   echo "Resetting vars for subsequent runs ...        "
   export VAULT_VERSION="${VAULT_RELEASE}"
   export CONSUL_VERSION="${CONSUL_RELEASE}"
