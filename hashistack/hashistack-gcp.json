@@ -1,0 +1,205 @@
+{
+  "variables": {
+    "gcp_account_file": "{{ env `GCP_ACCOUNT_FILE_JSON`}}",
+    "gcp_zone": "{{ env `GCP_ZONE` }}",
+    "gcp_project_id": "{{ env `GCP_PROJECT_ID` }}",
+    "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+    "vcs_name": "{{ env `VCS_NAME` }}",
+    "consul_version": "{{ env `CONSUL_VERSION` }}",
+    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "vault_version": "{{ env `VAULT_VERSION` }}",
+    "vault_ent_url": "{{ env `VAULT_ENT_URL` }}",
+    "nomad_version": "{{ env `NOMAD_VERSION` }}",
+    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
+    "distribution": "{{ env `DISTRIBUTION` }}"
+  },
+  "builders": [
+    {
+      "name": "gcp-ubuntu-16.04-systemd",
+      "image_description": "Hashicorp HashiStack Server",
+      "image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-Ubuntu_16.04",
+      "type": "googlecompute",
+      "account_file": "{{ user `gcp_account_file` }}",
+      "zone": "{{ user `gcp_zone` }}",
+      "project_id": "{{ user `gcp_project_id` }}",
+      "source_image_family": "ubuntu-1604-lts",
+      "machine_type": "n1-standard-1",
+      "ssh_username": "ubuntu",
+      "labels": {
+        "Name": "HashiStack Server",
+        "System": "HashiStack",
+        "Product": "HashiStack",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
+        "OS": "Ubuntu",
+        "OS-Version": "16.04",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Nomad-Version": "{{ user `nomad_version` }}",
+        "Vault-Version": "{{ user `vault_version` }}"
+      }
+    },
+    {
+      "name": "gcp-rhel-7.3-systemd",
+      "image_description": "Hashicorp HashiStack Server",
+      "image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-RHEL_7.3",
+      "type": "googlecompute",
+      "account_file": "{{ user `gcp_account_file` }}",
+      "zone": "{{ user `gcp_zone` }}",
+      "project_id": "{{ user `gcp_project_id` }}",
+      "source_image_family": "rhel-7",
+      "machine_type": "n1-standard-1",
+      "ssh_username": "gcp-user",
+      "labels": {
+        "Name": "HashiStack Server",
+        "System": "HashiStack",
+        "Product": "HashiStack",
+        "Environment": "{{ user `environment` }}",
+        "Built-By": "{{ user `vcs_name` }}",
+        "OS": "RHEL",
+        "OS-Version": "7.3",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Nomad-Version": "{{ user `nomad_version` }}",
+        "Vault-Version": "{{ user `vault_version` }}"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../shared",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../consul",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../nomad",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../vault",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/base.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=consul",
+        "GROUP=consul",
+        "COMMENT=Consul",
+        "HOME=/srv/consul"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `consul_version` }}",
+        "URL={{ user `consul_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": [
+        "gcp-ubuntu-16.04-systemd",
+        "gcp-rhel-7.3-systemd"
+      ],
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `nomad_version` }}",
+        "URL={{ user `nomad_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": [
+        "gcp-ubuntu-16.04-systemd",
+        "gcp-rhel-7.3-systemd"
+      ],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
+      ]
+    },
+     {
+      "type": "shell",
+      "only": [
+        "gcp-ubuntu-16.04-systemd"
+      ],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-docker.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/nomad/scripts/install-oracle-jdk.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=vault",
+        "GROUP=vault",
+        "COMMENT=Vault",
+        "HOME=/srv/vault"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `vault_version` }}",
+        "URL={{ user `vault_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": [
+        "gcp-ubuntu-16.04-systemd",
+        "gcp-rhel-7.3-systemd"
+      ],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "cd /tmp/shared/scripts && bash setup-testing.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
