@@ -17,7 +17,7 @@
     {
       "name": "gcp-ubuntu-16.04-systemd",
       "image_description": "Hashicorp HashiStack Server",
-      "image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-Ubuntu_16.04",
+      "image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-ubuntu-16-04",
       "type": "googlecompute",
       "account_file": "{{ user `gcp_account_file` }}",
       "zone": "{{ user `gcp_zone` }}",
@@ -25,7 +25,7 @@
       "source_image_family": "ubuntu-1604-lts",
       "machine_type": "n1-standard-1",
       "ssh_username": "ubuntu",
-      "labels": {
+      "metadata": {
         "Name": "HashiStack Server",
         "System": "HashiStack",
         "Product": "HashiStack",
@@ -41,7 +41,7 @@
     {
       "name": "gcp-rhel-7.3-systemd",
       "image_description": "Hashicorp HashiStack Server",
-      "image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-RHEL_7.3",
+      "image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-rhel-7-3",
       "type": "googlecompute",
       "account_file": "{{ user `gcp_account_file` }}",
       "zone": "{{ user `gcp_zone` }}",
@@ -49,7 +49,7 @@
       "source_image_family": "rhel-7",
       "machine_type": "n1-standard-1",
       "ssh_username": "gcp-user",
-      "labels": {
+      "metadata": {
         "Name": "HashiStack Server",
         "System": "HashiStack",
         "Product": "HashiStack",
