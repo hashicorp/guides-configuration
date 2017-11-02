@@ -107,6 +107,11 @@
     },
     {
       "type": "file",
+      "source": "../consul-template",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
       "source": "../nomad",
       "destination": "/tmp"
     },
@@ -148,6 +153,12 @@
       ],
       "inline": [
         "bash /tmp/consul/scripts/install-consul.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/consul-template/scripts/install-consul-template.sh"
       ]
     },
     {
