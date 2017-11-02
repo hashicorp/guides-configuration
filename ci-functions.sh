@@ -56,9 +56,13 @@ build_ent () {
   sleep 10
   export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/vault-enterprise/${VAULT_VERSION}/vault-enterprise_${VAULT_VERSION}_linux_amd64.zip --expires-in 1800)
   sleep 10
+  export NOMAD_ENT_URL=$(AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" aws s3 presign --region="us-east-1" s3://${S3BUCKET}/nomad-enterprise/${NOMAD_VERSION}/nomad-enterprise_${NOMAD_VERSION}+ent_linux_amd64.zip --expires-in 600)
+  sleep 10
   export CONSUL_RELEASE="${CONSUL_VERSION}"
+  export NOMAD_RELEASE="${NOMAD_VERSION}"
   export VAULT_RELEASE="${VAULT_VERSION}"
   export CONSUL_VERSION="${CONSUL_VERSION}+ent"
+  export NOMAD_VERSION="${NOMAD_RELEASE}+ent"
   export VAULT_VERSION="${VAULT_VERSION}+ent"
   export DISTRIBUTION="ent"
   for PRODUCT in $*; do
@@ -83,6 +87,7 @@ build_ent () {
   echo "Resetting vars for subsequent runs ...        "
   export VAULT_VERSION="${VAULT_RELEASE}"
   export CONSUL_VERSION="${CONSUL_RELEASE}"
+  export NOMAD_VERSION="${NOMAD_RELEASE}"
 }
 
 publish () {
