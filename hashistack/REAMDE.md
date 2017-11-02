@@ -10,7 +10,7 @@ gcloud config set project $YOUR_PROJECT_NAME
 gcloud service-management enable compute.googleapis.com
 ```
 
-When testing locally you will need to set the proper environment variables.  Modify the env.sh.example file with the proper values, and source it.
+When testing locally you will need to set the proper environment variables.  Make a copy of the env.sh.example file with the proper values, and source it.
 
 ```
 cp env.sh.example env.sh
@@ -18,6 +18,10 @@ vim env.sh
 source env.sh
 ```
 
-
 ### Things To Be Aware Of
- - Label names must be all lowercase, and cannot contain periods/dots.
+ - GCP does not like capital letters or characters other than dash (-).  Text fields must be all lowercase, and cannot contain periods/dots or any other punctuation.
+ - To build opensource hashistack leave the $PRODUCT_ENT_URL vars blank.
+
+### Additional Reading
+https://cloud.google.com/solutions/image-management-best-practices
+https://cloud.google.com/compute/docs/images/sharing-images-across-projects
