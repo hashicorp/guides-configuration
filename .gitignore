@@ -19,3 +19,6 @@ packer_cache/
 
 ### SSH Keys ###
 *.pem
+
+### local testing ###
+hashistack/env.sh
