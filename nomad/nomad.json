@@ -9,6 +9,7 @@
     "consul_version": "{{ env `CONSUL_VERSION` }}",
     "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
     "nomad_version": "{{ env `NOMAD_VERSION` }}",
+    "nomad_release": "{{ env `NOMAD_RELEASE` }}",
     "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
     "nomad_agent_type": "{{ env `NOMAD_AGENT_TYPE` }}",
     "distribution": "{{ env `DISTRIBUTION` }}"
@@ -39,7 +40,7 @@
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Nomad Server {{ user `nomad_version` }}",
-      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_version` }}-{{ user `distribution` }}-RHEL_7.3",
+      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_release` }}-{{ user `distribution` }}-RHEL_7.3",
       "tags": {
         "Name": "Nomad Server {{ user `nomad_version` }}",
         "System": "Nomad",
