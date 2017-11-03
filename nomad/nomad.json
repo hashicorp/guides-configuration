@@ -77,7 +77,7 @@
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Nomad Server {{ user `nomad_version` }}",
-      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_version` }}-{{ user `distribution` }}-Ubuntu_16.04",
+      "ami_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_release` }}-{{ user `distribution` }}-Ubuntu_16.04",
       "tags": {
         "Name": "Nomad Server {{ user `nomad_version` }}",
         "System": "Nomad",
