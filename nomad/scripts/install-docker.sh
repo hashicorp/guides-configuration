@@ -14,6 +14,7 @@ logger() {
 if [[ ! -z ${YUM} ]]; then
   echo "Installing Docker with RHEL Workaround"
   sudo yum-config-manager  -y   --add-repo     https://download.docker.com/linux/centos/docker-ce.repo
+  sudo yum -y erase docker-engine-selinux
   sudo yum install -y docker-ce
 elif [[ ! -z ${APT_GET} ]]; then
   echo "Installing Docker"
