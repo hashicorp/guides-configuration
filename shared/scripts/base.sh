@@ -24,6 +24,7 @@ if [[ ! -z ${YUM} ]]; then
   logger "Performing updates and installing prerequisites"
   sudo yum-config-manager --enable rhui-REGION-rhel-server-releases-optional
   sudo yum-config-manager --enable rhui-REGION-rhel-server-supplementary
+  sudo yum-config-manager --enable rhui-REGION-rhel-server-extras
   sudo yum -y check-update
   sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp
   sudo systemctl start ntpd.service
