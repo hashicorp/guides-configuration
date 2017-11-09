@@ -17,31 +17,31 @@
     {
       "name": "gcp-ubuntu-16.04-systemd",
       "image_description": "Hashicorp HashiStack Server",
-      "image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-ubuntu-16-04",
+      "image_name": "{{ (user `environment`) | clean_image_name }}-hashistack-server-{{ (user `distribution`) | clean_image_name }}-ubuntu-16-04",
       "type": "googlecompute",
       "account_file": "{{ user `gcp_account_file` }}",
       "zone": "{{ user `gcp_zone` }}",
       "project_id": "{{ user `gcp_project_id` }}",
       "source_image_family": "ubuntu-1604-lts",
       "machine_type": "n1-standard-1",
-      "ssh_username": "ubuntu",
+      "ssh_username": "gcp-user",
       "metadata": {
-        "Name": "HashiStack Server",
-        "System": "HashiStack",
-        "Product": "HashiStack",
-        "Environment": "{{ user `environment` }}",
-        "Built-By": "{{ user `vcs_name` }}",
-        "OS": "Ubuntu",
-        "OS-Version": "16.04",
-        "Consul-Version": "{{ user `consul_version` }}",
-        "Nomad-Version": "{{ user `nomad_version` }}",
-        "Vault-Version": "{{ user `vault_version` }}"
+        "name": "hashistack server",
+        "system": "hashistack",
+        "product": "hashistack",
+        "environment": "{{ user `environment` | lower}}",
+        "built-by": "{{ user `vcs_name` | lower}}",
+        "os": "ubuntu",
+        "os-version": "v-16.04",
+        "consul-version": "v-{{ user `consul_version` }}",
+        "nomad_version": "v-{{ user `nomad_version` }}",
+        "vault-version": "v-{{ user `vault_version` }}"
       }
     },
     {
       "name": "gcp-rhel-7.3-systemd",
       "image_description": "Hashicorp HashiStack Server",
-      "image_name": "{{ user `environment` }}-hashistack-server-{{ user `distribution` }}-rhel-7-3",
+      "image_name": "{{ (user `environment`) | clean_image_name }}-hashistack-server-{{ (user `distribution`) | clean_image_name }}-rhel-7-3",
       "type": "googlecompute",
       "account_file": "{{ user `gcp_account_file` }}",
       "zone": "{{ user `gcp_zone` }}",
@@ -50,16 +50,16 @@
       "machine_type": "n1-standard-1",
       "ssh_username": "gcp-user",
       "metadata": {
-        "Name": "HashiStack Server",
-        "System": "HashiStack",
-        "Product": "HashiStack",
-        "Environment": "{{ user `environment` }}",
-        "Built-By": "{{ user `vcs_name` }}",
-        "OS": "RHEL",
-        "OS-Version": "7.3",
-        "Consul-Version": "{{ user `consul_version` }}",
-        "Nomad-Version": "{{ user `nomad_version` }}",
-        "Vault-Version": "{{ user `vault_version` }}"
+        "name": "hashistack server",
+        "system": "hashistack",
+        "product": "hashistack",
+        "environment": "{{ user `environment` | lower}}",
+        "built-by": "{{ user `vcs_name` | lower}}",
+        "os": "rhel",
+        "os-version": "v-7-3",
+        "consul-version": "v-{{ user `consul_version` }}",
+        "nomad_version": "v-{{ user `nomad_version` }}",
+        "vault-version": "v-{{ user `vault_version` }}"
       }
     }
   ],
@@ -200,6 +200,24 @@
       "inline": [
         "bash /tmp/shared/scripts/cleanup.sh"
       ]
+    }
+  ],
+  "post-processors" : [
+    {
+      "type": "googlecompute-export",
+      "only": ["gcp-ubuntu-16.04-systemd"],
+      "paths": [
+        "gs://hc-se-image-store/{{ user `environment` }}/consul-{{ user `consul_version`}}-nomad-{{ user `nomad_version`}}-vault-{{ user `vault_version`}}/hashistack-server-ubuntu-16-04.tar.gz"
+      ],
+      "keep_input_artifact": false
+    },
+    {
+      "type": "googlecompute-export",
+      "only": ["gcp-rhel-7.3-systemd"],
+      "paths": [
+        "gs://hc-se-image-store/{{ user `environment` }}/consul-{{ user `consul_version`}}-nomad-{{ user `nomad_version`}}-vault-{{ user `vault_version`}}/hashistack-server-rhel-7-3.tar.gz"
+      ],
+      "keep_input_artifact": false
     }
   ]
 }
