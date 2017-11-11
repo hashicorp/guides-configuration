@@ -48,7 +48,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: $script, privileged: false
 
   # Copy the Consul, Nomad, and shared directories to the vm
-  config.vm.provision "file", source: "../../packer-templates", destination: "/tmp"
+  config.vm.provision "file", source: "../../guides-configuration", destination: "/tmp"
 
   # Bootstrap the vm
   config.vm.provision "shell", inline: "bash /tmp/shared/scripts/base.sh"
