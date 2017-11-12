@@ -26,14 +26,14 @@ if [[ ! -z ${YUM} ]]; then
   sudo yum-config-manager --enable rhui-REGION-rhel-server-supplementary
   sudo yum-config-manager --enable rhui-REGION-rhel-server-extras
   sudo yum -y check-update
-  sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp
+  sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp git
   sudo systemctl start ntpd.service
   sudo systemctl enable ntpd.service
 elif [[ ! -z ${APT_GET} ]]; then
   logger "Debian/Ubuntu system detected"
   logger "Performing updates and installing prerequisites"
   sudo apt-get -qq -y update
-  sudo apt-get install -qq -y wget unzip dnsutils ruby rubygems ntp
+  sudo apt-get install -qq -y wget unzip dnsutils ruby rubygems ntp git
   sudo systemctl start ntp.service
   sudo systemctl enable ntp.service
   logger "Disable reverse dns lookup in SSH"
