@@ -34,6 +34,7 @@ logger "Cloning guides-configuration repo"
 git clone https://github.com/hashicorp/guides-configuration.git
 
 # TODO: Remove when merged
+cd guides-configuration
 git checkout f-refactor
 
 logger "Complete"
