@@ -26,7 +26,7 @@ if [[ ! -z ${YUM} ]]; then
   sudo yum-config-manager --enable rhui-REGION-rhel-server-supplementary
   sudo yum-config-manager --enable rhui-REGION-rhel-server-extras
   sudo yum -y check-update
-  sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp git
+  sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp git ca-certificates
   sudo systemctl start ntpd.service
   sudo systemctl enable ntpd.service
 elif [[ ! -z ${APT_GET} ]]; then
