@@ -42,6 +42,7 @@ APT_GET=$(which apt-get 2>/dev/null)
 if [[ ! -z ${YUM} ]]; then
   logger "Installing dnsmasq"
   sudo yum install -q -y dnsmasq
+  sudo sed -i '1i nameserver 127.0.0.1\n' /etc/resolv.conf
 elif [[ ! -z ${APT_GET} ]]; then
   logger "Installing dnsmasq"
   sudo apt-get -qq -y update
