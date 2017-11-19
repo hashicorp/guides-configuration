@@ -97,27 +97,7 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "../shared",
-      "destination": "/tmp"
-    },
-    {
-      "type": "file",
-      "source": "../consul",
-      "destination": "/tmp"
-    },
-    {
-      "type": "file",
-      "source": "../consul-template",
-      "destination": "/tmp"
-    },
-    {
-      "type": "file",
-      "source": "../nomad",
-      "destination": "/tmp"
-    },
-    {
-      "type": "file",
-      "source": "../vault",
+      "source": "../",
       "destination": "/tmp"
     },
     {
