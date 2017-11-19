@@ -230,7 +230,8 @@
     {
       "type": "shell",
       "inline": [
-        "cd /tmp/shared/scripts && bash setup-testing.sh"
+        "cd /tmp && bash /tmp/shared/scripts/setup-testing.sh",
+        "cd /tmp && rake hashistack:spec"
       ]
     },
     {

@@ -1,1 +1,0 @@
-../../nomad/spec/nomad_spec.rb
