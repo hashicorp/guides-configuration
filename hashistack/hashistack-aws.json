@@ -226,7 +226,7 @@
     {
       "type": "shell",
       "inline": [
-        "cd /tmp/shared/scripts/ && bash /tmp/shared/scripts/setup-testing.sh",
+        "cd /tmp/shared/scripts && bash /tmp/shared/scripts/setup-testing.sh",
         "cd /tmp && rake hashistack:spec"
       ]
     },

@@ -183,7 +183,7 @@
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "inline": [
-        "cd /tmp/shared/scripts/ && bash /tmp/shared/scripts/setup-testing.sh",
+        "cd /tmp/shared/scripts && bash /tmp/shared/scripts/setup-testing.sh",
         "cd /tmp && rake vault:spec"
       ]
     },

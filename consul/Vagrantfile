@@ -60,11 +60,11 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-consul-systemd.sh"
 
   # Setup tests
-  config.vm.provision "shell", inline: "cd /tmp/shared/scripts && bash setup-testing.sh"
+  config.vm.provision "shell", inline: "cd /tmp/shared/scripts && bash /tmp/shared/scripts/setup-testing.sh"
 
   # Run tests if `RUN_TESTS` env var is provided
   if (run_tests)
-    config.vm.provision "shell", inline: "cd /tmp/consul && rake spec"
+    config.vm.provision "shell", inline: "cd /tmp && rake consul:spec"
   end
 
   # Cleanup if `CLEANUP` env var is provided
