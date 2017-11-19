@@ -13,7 +13,7 @@ CONSUL_ZIP="consul_${CONSUL_VERSION}_linux_amd64.zip"
 CONSUL_URL=${URL:-"https://releases.hashicorp.com/consul/${CONSUL_VERSION}/${CONSUL_ZIP}"}
 
 logger "Downloading consul ${CONSUL_VERSION}"
-curl --silent --output /tmp/${CONSUL_ZIP} ${CONSUL_URL}
+[ 200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${CONSUL_ZIP} ${CONSUL_URL}) ] && exit 1
 
 logger "Installing consul"
 sudo unzip -o /tmp/${CONSUL_ZIP} -d /usr/local/bin/
