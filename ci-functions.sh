@@ -111,13 +111,13 @@ build () {
 
   if [[ ${GIT_BRANCH} == *"master"* ]]; then
     echo "Building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
-    packer_build consul vault nomad hashistack
+    packer_build consul-aws vault-aws nomad-aws hashistack-aws
   else
     echo "RUN_BUILD: ${RUN_BUILD}"
 
     if ! [ -z ${RUN_BUILD} ]; then
       echo "Building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
-      packer_build consul vault nomad hashistack
+      packer_build consul-aws vault-aws nomad-aws hashistack-aws
     else
       echo "Skip building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
     fi
