@@ -8,7 +8,6 @@
     "aws_access_key_id": "{{ env `AWS_ACCESS_KEY_ID` }}",
     "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
     "aws_region": "{{ env `AWS_REGION` }}",
-    "aws_owner": "{{ env `AWS_OWNER` }}",
     "environment": "{{ env `PACKER_ENVIRONMENT` }}",
     "vcs_name": "{{ env `VCS_NAME` }}",
     "consul_version": "{{ env `CONSUL_VERSION` }}",
