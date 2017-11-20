@@ -12,12 +12,13 @@ prepare () {
   chmod +x /tmp/terraform
 }
 
-packer_validate () {
-  for PRODUCT in $*; do
-    echo "Reviewing ${PRODUCT}.json template..."
-    cd "${BUILDDIR}/${PRODUCT}"
+validate () {
+  for TEMPLATE in $*; do
+    echo "cd into product directory"
+    cd ${BUILDDIR}/$(echo ${TEMPLATE} | sed 's/-.*//')
+    echo "Reviewing ${TEMPLATE}-aws.json template..."
 
-    if /tmp/packer validate ${PRODUCT}.json; then
+    if /tmp/packer validate ${TEMPLATE}-aws.json; then
       echo -e "\033[32m\033[1m[PASS]\033[0m"
     else
       echo -e "\033[31m\033[1m[FAIL]\033[0m"
@@ -34,10 +35,6 @@ packer_validate () {
     echo -e "\033[31m\033[1m[FAIL]\033[0m"
     return 1
   fi
-}
-
-validate () {
-  packer_validate consul-aws vault-aws nomad-aws hashistack-aws
 }
 
 packer_build () {
@@ -73,14 +70,15 @@ packer_build () {
     export NOMAD_VERSION=${NOMAD_VERSION/'+'/'-'}
   fi
 
-  for PRODUCT in $*; do
-    echo "Building ${PRODUCT}.json Packer template..."
-    cd "${BUILDDIR}/${PRODUCT}"
+  for TEMPLATE in $*; do
+    echo "cd into product directory"
+    cd ${BUILDDIR}/$(echo ${TEMPLATE} | sed 's/-.*//')
+    echo "Building ${TEMPLATE}-aws.json Packer template..."
 
-    if /tmp/packer build ${PRODUCT}.json ; then
-      echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
+    if /tmp/packer build ${TEMPLATE}-aws.json ; then
+      echo -e "\033[32m${TEMPLATE} \033[1m[PASS]\033[0m"
     else
-      echo -e "\033[31m${PRODUCT} \033[1m[FAIL]\033[0m"
+      echo -e "\033[31m${TEMPLATE} \033[1m[FAIL]\033[0m"
       return 1
     fi
 
