@@ -13,7 +13,7 @@ NOMAD_ZIP="nomad_${NOMAD_VERSION}_linux_amd64.zip"
 NOMAD_URL=${URL:-"https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/${NOMAD_ZIP}"}
 
 logger "Downloading nomad ${NOMAD_VERSION}"
-curl --silent --output /tmp/${NOMAD_ZIP} ${NOMAD_URL}
+[200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${NOMAD_ZIP} ${NOMAD_URL})] && exit 1
 
 logger "Installing nomad"
 sudo unzip -o /tmp/${NOMAD_ZIP} -d /usr/local/bin/

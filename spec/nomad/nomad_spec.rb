@@ -41,7 +41,7 @@ file('/opt/nomad/data') do
   it { should be_directory }
 end
 
-describe command('curl http://localhost:4646/v1/status/leader -sL -w "%{http_code}\\n" -o /dev/null') do
+describe command('curl http://localhost:4646/v1/status/leader -sL -w "%{http_code}\\n" -o /dev/null'), :if => os[:family] == 'redhat' do
   its(:stdout) { should match /200/ }
 end
 

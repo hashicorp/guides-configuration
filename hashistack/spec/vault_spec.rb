@@ -1,1 +1,0 @@
-../../vault/spec/vault_spec.rb

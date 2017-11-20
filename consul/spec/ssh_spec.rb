@@ -1,1 +1,0 @@
-../../shared/spec/ssh_spec.rb

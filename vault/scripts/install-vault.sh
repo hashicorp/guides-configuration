@@ -13,7 +13,7 @@ VAULT_ZIP="vault_${VAULT_VERSION}_linux_amd64.zip"
 VAULT_URL=${URL:-"https://releases.hashicorp.com/vault/${VAULT_VERSION}/${VAULT_ZIP}"}
 
 logger "Downloading vault ${VAULT_VERSION}"
-curl --silent --output /tmp/${VAULT_ZIP} ${VAULT_URL}
+[200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${VAULT_ZIP} ${VAULT_URL})] && exit 1
 
 logger "Installing vault"
 sudo unzip -o /tmp/${VAULT_ZIP} -d /usr/local/bin/
