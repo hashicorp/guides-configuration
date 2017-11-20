@@ -37,7 +37,20 @@ validate () {
   fi
 }
 
-packer_build () {
+build () {
+  if [ -z ${RELEASE_VERSION} ]; then
+    # Set RELEASE_VERSION to the current git branch if not specified so it's not empty
+    export RELEASE_VERSION = ${GIT_BRANCH}
+  fi
+
+  if [ -z ${USER_TRIGGER+x} ]; then
+    export VCS_NAME = ${USER_TRIGGER}
+  fi
+
+  echo "Starting build from ${GIT_BRANCH}"
+  echo "RELEASE_VERSION: ${RELEASE_VERSION}"
+  echo "VCS_NAME: ${VCS_NAME}"
+
   echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
   echo "Building Consul version: ${CONSUL_VERSION}"
   echo "Building Vault version: ${VAULT_VERSION}"
@@ -90,42 +103,13 @@ packer_build () {
     grep "^fpr" |\
     sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' |\
     xargs gpg --batch --delete-secret-keys
+
+  echo "Completed build from ${GIT_BRANCH}"
 }
 
 # TODO: Remove when merging into master
 build_ent () {
   echo "build_ent is DEPRECATED: Remove this function when merging to master"
-}
-
-build () {
-  if [ -z ${RELEASE_VERSION} ]; then
-    # Set RELEASE_VERSION to the current git branch if not specified so it's not empty
-    export RELEASE_VERSION = ${GIT_BRANCH}
-  fi
-
-  if [ -z ${USER_TRIGGER+x} ]; then
-    export VCS_NAME = ${USER_TRIGGER}
-  fi
-
-  echo "Starting build from ${GIT_BRANCH}"
-  echo "RELEASE_VERSION: ${RELEASE_VERSION}"
-  echo "VCS_NAME: ${VCS_NAME}"
-
-  if [[ ${GIT_BRANCH} == *"master"* ]]; then
-    echo "Building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
-    packer_build consul-aws vault-aws nomad-aws hashistack-aws
-  else
-    echo "RUN_BUILD: ${RUN_BUILD}"
-
-    if ! [ -z ${RUN_BUILD} ]; then
-      echo "Building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
-      packer_build consul-aws vault-aws nomad-aws hashistack-aws
-    else
-      echo "Skip building ${RELEASE_VERSION} images from ${GIT_BRANCH}"
-    fi
-  fi
-
-  echo "Completed build from ${GIT_BRANCH}"
 }
 
 publish () {
