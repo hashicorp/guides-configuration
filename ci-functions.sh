@@ -12,7 +12,7 @@ prepare () {
   chmod +x /tmp/terraform
 }
 
-validate () {
+packer_validate () {
   for PRODUCT in $*; do
     echo "Reviewing ${PRODUCT}.json template..."
     cd "${BUILDDIR}/${PRODUCT}"
@@ -34,6 +34,10 @@ validate () {
     echo -e "\033[31m\033[1m[FAIL]\033[0m"
     return 1
   fi
+}
+
+validate () {
+  packer_validate consul-aws vault-aws nomad-aws hashistack-aws
 }
 
 packer_build () {
