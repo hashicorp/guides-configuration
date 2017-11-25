@@ -1,4 +1,3 @@
-{
   "variables": {
     "aws_access_key_id": "{{ env `AWS_ACCESS_KEY_ID` }}",
     "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
@@ -45,7 +44,6 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "vault-image_{{ user `release_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
       "ami_description": "HashiCorp Vault Image {{ user `release_version` }}",
-      "ami_regions": ["us-east-1", "us-west-1", "eu-west-1"],
       "tags": {
         "Name": "Vault RHEL Image {{ user `release_version` }}",
         "System": "Vault",
@@ -84,7 +82,6 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "vault-image_{{ user `release_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp Vault Image {{ user `release_version` }}",
-      "ami_regions": ["us-east-1", "us-west-1", "eu-west-1"],
       "tags": {
         "Name": "Vault Ubuntu Image {{ user `release_version` }}",
         "System": "Vault",

@@ -14,7 +14,7 @@ prepare () {
 
 validate () {
   for TEMPLATE in $*; do
-    echo "cd into product directory"
+    echo "cd into ${TEMPLATE} directory"
     cd ${BUILDDIR}/$(echo ${TEMPLATE} | sed 's/-.*//')
     echo "Reviewing ${TEMPLATE}-aws.json template..."
 
@@ -84,7 +84,7 @@ build () {
   fi
 
   for TEMPLATE in $*; do
-    echo "cd into product directory"
+    echo "cd into ${TEMPLATE} directory"
     cd ${BUILDDIR}/$(echo ${TEMPLATE} | sed 's/-.*//')
     echo "Building ${TEMPLATE}-aws.json Packer template..."
 
