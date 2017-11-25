@@ -49,7 +49,6 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "hashistack-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_vault_{{ user `vault_version` }}_nomad_{{ user `nomad_version` }}_rhel_7.3",
       "ami_description": "HashiCorp HashiStack Image {{ user `release_version` }}",
-      "ami_regions": ["us-east-1", "us-west-1", "eu-west-1"],
       "tags": {
         "Name": "HashiStack RHEL Image {{ user `release_version` }}",
         "System": "HashiStack",
@@ -89,7 +88,6 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "hashistack-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_vault_{{ user `vault_version` }}_nomad_{{ user `nomad_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp HashiStack Image {{ user `release_version` }}",
-      "ami_regions": ["us-east-1", "us-west-1", "eu-west-1"],
       "tags": {
         "Name": "HashiStack Ubuntu Image {{ user `release_version` }}",
         "System": "HashiStack",
