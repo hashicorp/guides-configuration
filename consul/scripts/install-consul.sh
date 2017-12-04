@@ -30,7 +30,7 @@ sudo chmod -R 0755 /opt/consul/*
 sudo cp /tmp/consul/config/* /etc/consul.d/.
 
 # Start Consul in -dev mode
-echo 'FLAGS=-dev -ui' | sudo tee /etc/consul.d/consul.conf
+echo "FLAGS=-dev -ui" | sudo tee /etc/consul.d/consul.conf
 
 sudo chown -R ${USER}:${GROUP} /etc/consul.d /opt/consul
 sudo chmod -R 0644 /etc/consul.d/*
