@@ -10,6 +10,11 @@ describe file('/usr/local/bin/consul') do
   it { should be_executable }
 end
 
+describe command('/sbin/getcap /usr/local/bin/vault') do
+  its(:stdout) { should match /cap_ipc_lock\+ep/ }
+  its(:exit_status) { should eq 0 }
+end
+
 describe service('vault') do
   it { should be_enabled }
   it { should be_running }
