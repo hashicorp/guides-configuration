@@ -11,7 +11,7 @@ describe file('/usr/local/bin/consul') do
 end
 
 describe command('/sbin/getcap /usr/local/bin/vault') do
-  its(:stderr) { should match /cap_ipc_lock+ep/ }
+  its(:stdout) { should match /cap_ipc_lock+ep/ }
   its(:exit_status) { should eq 0 }
 end
 
