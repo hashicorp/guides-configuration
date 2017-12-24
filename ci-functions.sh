@@ -52,11 +52,22 @@ build () {
 
 build_ent () {
   echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
-  export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip)
+  export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) \
+    AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} \
+    aws s3 presign \
+    --region="us-east-1" \
+    s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip)
   sleep 10
-  export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/vault-enterprise/${VAULT_VERSION}/vault-enterprise_${VAULT_VERSION}_linux_amd64.zip)
+  export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) \
+    AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} \
+    aws s3 presign \
+    --region="us-east-1" \
+    s3://${S3BUCKET}/vault/prem/${VAULT_VERSION}/vault-enterprise_${VAULT_VERSION}+prem_linux_amd64.zip)
   sleep 10
-  export NOMAD_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/nomad-enterprise/${NOMAD_VERSION}/nomad-enterprise_${NOMAD_VERSION}+ent_linux_amd64.zip)
+  export NOMAD_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) \
+    AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} \
+    aws s3 presign --region="us-east-1" \
+    s3://${S3BUCKET}/nomad-enterprise/${NOMAD_VERSION}/nomad-enterprise_${NOMAD_VERSION}+ent_linux_amd64.zip)
   sleep 10
   export CONSUL_RELEASE="${CONSUL_VERSION}"
   export NOMAD_RELEASE="${NOMAD_VERSION}"
@@ -95,5 +106,11 @@ publish () {
   git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp-modules/image-permission-aws
   cd image-permission-aws
   /tmp/terraform init
-  /tmp/terraform push -var "consul_version=${CONSUL_VERSION}" -var "vault_version=${VAULT_VERSION}" -var "nomad_version=${NOMAD_VERSION}" -overwrite=consul_version -overwrite=vault_version -overwrite=nomad_version -name=atlas-demo/image-permission-aws .
+  /tmp/terraform push -var "consul_version=${CONSUL_VERSION}" \
+    -var "vault_version=${VAULT_VERSION}" \
+    -var "nomad_version=${NOMAD_VERSION}" \
+    -overwrite=consul_version \
+    -overwrite=vault_version \
+    -overwrite=nomad_version \
+    -name=atlas-demo/image-permission-aws .
 }
