@@ -31,6 +31,10 @@ validate () {
   fi
 }
 
+gpg_import () {
+  echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
+}
+
 build () {
   export CONSUL_RELEASE="${CONSUL_VERSION}"
   export VAULT_RELEASE="${VAULT_VERSION}"
@@ -50,25 +54,35 @@ build () {
   done
 }
 
+presign_ent_url () {
+  if [ $# -eq 0 ]; then
+    echo -e "\033[31m\033[1m[FAIL - no product name provided]\033[0m"
+    return 1
+  fi
+  
+  _AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -)
+  _AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY}
+  _REGION="us-east-1"
+
+  if [ $1 = "consul" ]; then
+    S3_URL=s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip
+  elif [ $1 = "vault" ]; then
+    S3_URL=s3://${S3BUCKET}/vault/prem/${VAULT_VERSION}/vault-enterprise_${VAULT_VERSION}+prem_linux_amd64.zip
+  elif [ $1 = "nomad" ]; then
+    S3_URL=s3://${S3BUCKET}/nomad-enterprise/${NOMAD_VERSION}/nomad-enterprise_${NOMAD_VERSION}+ent_linux_amd64.zip
+  else
+    echo -e "\033[31m\033[1m[FAIL - invalid product selection for S3 enterprise URL]\033[0m"
+    return 1
+  fi
+
+  echo "$(AWS_SECRET_ACCESS_KEY=${_AWS_SECRET_ACCESS_KEY} \
+    AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID} \
+    aws s3 presign \
+    --region=${_REGION} \
+    ${S3_URL} )"/
+}
+
 build_ent () {
-  echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
-  export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) \
-    AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} \
-    aws s3 presign \
-    --region="us-east-1" \
-    s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip)
-  sleep 10
-  export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) \
-    AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} \
-    aws s3 presign \
-    --region="us-east-1" \
-    s3://${S3BUCKET}/vault/prem/${VAULT_VERSION}/vault-enterprise_${VAULT_VERSION}+prem_linux_amd64.zip)
-  sleep 10
-  export NOMAD_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) \
-    AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} \
-    aws s3 presign --region="us-east-1" \
-    s3://${S3BUCKET}/nomad-enterprise/${NOMAD_VERSION}/nomad-enterprise_${NOMAD_VERSION}+ent_linux_amd64.zip)
-  sleep 10
   export CONSUL_RELEASE="${CONSUL_VERSION}"
   export NOMAD_RELEASE="${NOMAD_VERSION}"
   export VAULT_RELEASE="${VAULT_VERSION}"
