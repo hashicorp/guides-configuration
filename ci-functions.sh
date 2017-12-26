@@ -70,7 +70,6 @@ else
   return 1
 fi
 cd -
-done
 }
 
 presign_ent_url () {
