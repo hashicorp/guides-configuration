@@ -79,7 +79,7 @@ presign_ent_url () {
     AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID} \
     aws s3 presign \
     --region=${_REGION} \
-    ${S3_URL} )"/
+    ${S3_URL} )"
 }
 
 build_ent () {
