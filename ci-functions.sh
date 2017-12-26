@@ -35,23 +35,42 @@ gpg_import () {
   echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
 }
 
+
 build () {
-  export CONSUL_RELEASE="${CONSUL_VERSION}"
-  export VAULT_RELEASE="${VAULT_VERSION}"
+export CONSUL_RELEASE="${CONSUL_VERSION}"
+export NOMAD_RELEASE="${NOMAD_VERSION}"
+export VAULT_RELEASE="${VAULT_VERSION}"
+
+if [[ $1 =~ .*ent ]] ; then
+  PRODUCT=${1/-ent/}
+  echo "Building $PRODUCT Enterprise template ...       "
+  export CONSUL_VERSION="${CONSUL_VERSION}+ent"
+  export NOMAD_VERSION="${NOMAD_RELEASE}+ent"
+  export VAULT_VERSION="${VAULT_VERSION}+ent"
+  export CONSUL_ENT_URL=${_CONSUL_ENT_URL}
+  export VAULT_ENT_URL=${_VAULT_ENT_URL}
+  export NOMAD_ENT_URL=${_NOMAD_ENT_URL}
+  export DISTRIBUTION="ent"
+else
+  PRODUCT=$1  
+  echo "Building $PRODUCT OSS template ...       "
+  export CONSUL_ENT_URL=''
+  export VAULT_ENT_URL=''
+  export NOMAD_ENT_URL=''
   export DISTRIBUTION="oss"
-  for PRODUCT in $*; do
-    echo "Building ${PRODUCT} template ...             "
-    cd "${BUILDDIR}/${PRODUCT}"
-    export TMPDIR="/tmp/${PRODUCT}-$((1 + RANDOM % 100))"
-    mkdir -p $TMPDIR
-    if /tmp/packer build ${PRODUCT}.json ; then
-      echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
-    else
-      echo -e "\033[31m${PRODUCT} \033[1m[FAIL]\033[0m"
-      return 1
-    fi
-    cd -
-  done
+fi  
+
+cd "${BUILDDIR}/${PRODUCT}"
+export TMPDIR="/tmp/${PRODUCT}-$((1 + RANDOM % 100))"
+mkdir -p $TMPDIR
+if /tmp/packer build ${PRODUCT}.json ; then
+  echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
+else
+  echo -e "\033[31m${PRODUCT} \033[1m[FAIL]\033[0m"
+  return 1
+fi
+cd -
+done
 }
 
 presign_ent_url () {
@@ -80,39 +99,6 @@ presign_ent_url () {
     aws s3 presign \
     --region=${_REGION} \
     ${S3_URL} )"
-}
-
-build_ent () {
-  export CONSUL_RELEASE="${CONSUL_VERSION}"
-  export NOMAD_RELEASE="${NOMAD_VERSION}"
-  export VAULT_RELEASE="${VAULT_VERSION}"
-  export CONSUL_VERSION="${CONSUL_VERSION}+ent"
-  export NOMAD_VERSION="${NOMAD_RELEASE}+ent"
-  export VAULT_VERSION="${VAULT_VERSION}+ent"
-  export DISTRIBUTION="ent"
-  for PRODUCT in $*; do
-    echo "Building ${PRODUCT} template ...             "
-    cd "${BUILDDIR}/${PRODUCT}"
-    export TMPDIR="/tmp/${PRODUCT}-$((1 + RANDOM % 100))"
-    mkdir -p $TMPDIR
-    if /tmp/packer build ${PRODUCT}.json ; then
-      echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
-    else
-      echo -e "\033[31m${PRODUCT} \033[1m[FAIL]\033[0m"
-      return 1
-    fi
-    cd -
-  done
-  echo "Cleaning up GPG Keyring ...                   "
-  #gpg --fingerprint --with-colons ${PGP_SECRET_ID} |\
-  #  grep "^fpr" |\
-  #  sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' |\
-  #  xargs gpg --batch --delete-secret-keys
-  rm -rf ~/.gnupg
-  echo "Resetting vars for subsequent runs ...        "
-  export VAULT_VERSION="${VAULT_RELEASE}"
-  export CONSUL_VERSION="${CONSUL_RELEASE}"
-  export NOMAD_VERSION="${NOMAD_RELEASE}"
 }
 
 publish () {
