@@ -25,7 +25,7 @@ fi
 
 echo "Cloning guides-configuration repo"
 git clone https://github.com/hashicorp/guides-configuration.git
-cp -a guides-configuration/. .
+cp -R guides-configuration/. .
 rm -rf guides-configuration
 
 # TODO: Remove when merged
