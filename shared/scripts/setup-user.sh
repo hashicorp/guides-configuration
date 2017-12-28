@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 set -x
 
-logger() {
-  DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT $0: $1"
-}
-
-logger "Running"
+echo "Running"
 
 GROUP="${GROUP:-}"
 USER="${USER:-}"
@@ -55,13 +50,13 @@ user_ubuntu() {
 }
 
 if [[ ! -z ${YUM} ]]; then
-  logger "Setting up user ${USER} for RHEL/CentOS"
+  echo "Setting up user ${USER} for RHEL/CentOS"
   user_rhel
 elif [[ ! -z ${APT_GET} ]]; then
-  logger "Setting up user ${USER} for Debian/Ubuntu"
+  echo "Setting up user ${USER} for Debian/Ubuntu"
   user_ubuntu
 else
-  logger "${USER} user not created due to OS detection failure"
+  echo "${USER} user not created due to OS detection failure"
   exit 1;
 fi
 
@@ -70,4 +65,4 @@ sudo mkdir -pm 0755 ${HOME}
 sudo chown -R ${USER}:${GROUP} ${HOME}
 sudo chmod -R 0755 ${HOME}
 
-logger "Complete"
+echo "Complete"
