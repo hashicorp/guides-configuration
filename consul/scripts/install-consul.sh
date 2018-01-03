@@ -17,7 +17,7 @@ sudo chown ${USER}:${GROUP} /usr/local/bin/consul
 echo "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
 
 echo "Configuring consul ${CONSUL_VERSION}"
-sudo mkdir -pm 0755 /etc/consul.d/pki
+sudo mkdir -pm 0644 /etc/consul.d/pki
 sudo mkdir -pm 0755 /opt/consul/data
 
 # Copy over all example Consul config files
