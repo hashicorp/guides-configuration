@@ -17,9 +17,8 @@ sudo chown ${USER}:${GROUP} /usr/local/bin/consul
 echo "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
 
 echo "Configuring consul ${CONSUL_VERSION}"
-sudo mkdir -pm 0755 /etc/consul.d
+sudo mkdir -pm 0755 /etc/consul.d/pki
 sudo mkdir -pm 0755 /opt/consul/data
-sudo chmod -R 0755 /opt/consul/*
 
 # Copy over all example Consul config files
 sudo cp /tmp/consul/config/* /etc/consul.d/.
@@ -29,6 +28,7 @@ echo "FLAGS=-dev -ui" | sudo tee /etc/consul.d/consul.conf
 
 sudo chown -R ${USER}:${GROUP} /etc/consul.d /opt/consul
 sudo chmod -R 0644 /etc/consul.d/*
+sudo chmod -R 0755 /opt/consul/*
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
