@@ -17,8 +17,7 @@ sudo chown ${USER}:${GROUP} /usr/local/bin/vault
 echo "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 
 echo "Configuring vault ${VAULT_VERSION}"
-sudo mkdir -pm 0644 /etc/vault.d
-sudo mkdir -pm 0755 /opt/vault/data /opt/vault/tls
+sudo mkdir -pm 0755 /etc/vault.d /opt/vault/data /opt/vault/tls
 
 # Copy over all example Vault config files
 sudo cp /tmp/vault/config/* /etc/vault.d/.
@@ -27,6 +26,7 @@ sudo cp /tmp/vault/config/* /etc/vault.d/.
 echo "FLAGS=-dev -dev-root-token-id=root" | sudo tee /etc/vault.d/vault.conf
 
 sudo chown -R ${USER}:${GROUP} /etc/vault.d /opt/vault
+sudo chmod -R 0644 /etc/vault.d/*
 
 echo "export VAULT_ADDR=http://127.0.0.1:8200" | sudo tee /etc/profile.d/vault.sh
 echo "export VAULT_TOKEN=root" | sudo tee -a /etc/profile.d/vault.sh
