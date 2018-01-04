@@ -31,63 +31,73 @@ validate () {
   fi
 }
 
-build () {
-  export CONSUL_RELEASE="${CONSUL_VERSION}"
-  export VAULT_RELEASE="${VAULT_VERSION}"
-  export DISTRIBUTION="oss"
-  for PRODUCT in $*; do
-    echo "Building ${PRODUCT} template ...             "
-    cd "${BUILDDIR}/${PRODUCT}"
-    export TMPDIR="/tmp/${PRODUCT}-$((1 + RANDOM % 100))"
-    mkdir -p $TMPDIR
-    if /tmp/packer build ${PRODUCT}.json ; then
-      echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
-    else
-      echo -e "\033[31m${PRODUCT} \033[1m[FAIL]\033[0m"
-      return 1
-    fi
-    cd -
-  done
+gpg_import () {
+  echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
 }
 
-build_ent () {
-  echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
-  export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip)
-  sleep 10
-  export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/vault-enterprise/${VAULT_VERSION}/vault-enterprise_${VAULT_VERSION}_linux_amd64.zip)
-  sleep 10
-  export NOMAD_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/nomad-enterprise/${NOMAD_VERSION}/nomad-enterprise_${NOMAD_VERSION}+ent_linux_amd64.zip)
-  sleep 10
-  export CONSUL_RELEASE="${CONSUL_VERSION}"
-  export NOMAD_RELEASE="${NOMAD_VERSION}"
-  export VAULT_RELEASE="${VAULT_VERSION}"
+
+build () {
+export CONSUL_RELEASE="${CONSUL_VERSION}"
+export NOMAD_RELEASE="${NOMAD_VERSION}"
+export VAULT_RELEASE="${VAULT_VERSION}"
+
+if [[ $1 =~ .*ent ]] ; then
+  PRODUCT=${1/-ent/}
+  echo "Building $PRODUCT Enterprise template ...       "
   export CONSUL_VERSION="${CONSUL_VERSION}+ent"
   export NOMAD_VERSION="${NOMAD_RELEASE}+ent"
   export VAULT_VERSION="${VAULT_VERSION}+ent"
+  export CONSUL_ENT_URL=${_CONSUL_ENT_URL}
+  export VAULT_ENT_URL=${_VAULT_ENT_URL}
+  export NOMAD_ENT_URL=${_NOMAD_ENT_URL}
   export DISTRIBUTION="ent"
-  for PRODUCT in $*; do
-    echo "Building ${PRODUCT} template ...             "
-    cd "${BUILDDIR}/${PRODUCT}"
-    export TMPDIR="/tmp/${PRODUCT}-$((1 + RANDOM % 100))"
-    mkdir -p $TMPDIR
-    if /tmp/packer build ${PRODUCT}.json ; then
-      echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
-    else
-      echo -e "\033[31m${PRODUCT} \033[1m[FAIL]\033[0m"
-      return 1
-    fi
-    cd -
-  done
-  echo "Cleaning up GPG Keyring ...                   "
-  #gpg --fingerprint --with-colons ${PGP_SECRET_ID} |\
-  #  grep "^fpr" |\
-  #  sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' |\
-  #  xargs gpg --batch --delete-secret-keys
-  rm -rf ~/.gnupg
-  echo "Resetting vars for subsequent runs ...        "
-  export VAULT_VERSION="${VAULT_RELEASE}"
-  export CONSUL_VERSION="${CONSUL_RELEASE}"
-  export NOMAD_VERSION="${NOMAD_RELEASE}"
+else
+  PRODUCT=$1  
+  echo "Building $PRODUCT OSS template ...       "
+  export CONSUL_ENT_URL=''
+  export VAULT_ENT_URL=''
+  export NOMAD_ENT_URL=''
+  export DISTRIBUTION="oss"
+fi  
+
+cd "${BUILDDIR}/${PRODUCT}"
+export TMPDIR="/tmp/${PRODUCT}-$((1 + RANDOM % 100))"
+mkdir -p $TMPDIR
+if /tmp/packer build ${PRODUCT}.json ; then
+  echo -e "\033[32m${PRODUCT} \033[1m[PASS]\033[0m"
+else
+  echo -e "\033[31m${PRODUCT} \033[1m[FAIL]\033[0m"
+  return 1
+fi
+cd -
+}
+
+presign_ent_url () {
+  if [ $# -eq 0 ]; then
+    echo -e "\033[31m\033[1m[FAIL - no product name provided]\033[0m"
+    return 1
+  fi
+  
+  _AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -)
+  _AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY}
+  _REGION="us-east-1"
+
+  if [ $1 = "consul" ]; then
+    S3_URL=s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip
+  elif [ $1 = "vault" ]; then
+    S3_URL=s3://${S3BUCKET}/vault/prem/${VAULT_VERSION}/vault-enterprise_${VAULT_VERSION}+prem_linux_amd64.zip
+  elif [ $1 = "nomad" ]; then
+    S3_URL=s3://${S3BUCKET}/nomad-enterprise/${NOMAD_VERSION}/nomad-enterprise_${NOMAD_VERSION}+ent_linux_amd64.zip
+  else
+    echo -e "\033[31m\033[1m[FAIL - invalid product selection for S3 enterprise URL]\033[0m"
+    return 1
+  fi
+
+  echo "$(AWS_SECRET_ACCESS_KEY=${_AWS_SECRET_ACCESS_KEY} \
+    AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID} \
+    aws s3 presign \
+    --region=${_REGION} \
+    ${S3_URL} )"
 }
 
 publish () {
@@ -95,5 +105,11 @@ publish () {
   git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp-modules/image-permission-aws
   cd image-permission-aws
   /tmp/terraform init
-  /tmp/terraform push -var "consul_version=${CONSUL_VERSION}" -var "vault_version=${VAULT_VERSION}" -var "nomad_version=${NOMAD_VERSION}" -overwrite=consul_version -overwrite=vault_version -overwrite=nomad_version -name=atlas-demo/image-permission-aws .
+  /tmp/terraform push -var "consul_version=${CONSUL_VERSION}" \
+    -var "vault_version=${VAULT_VERSION}" \
+    -var "nomad_version=${NOMAD_VERSION}" \
+    -overwrite=consul_version \
+    -overwrite=vault_version \
+    -overwrite=nomad_version \
+    -name=atlas-demo/image-permission-aws .
 }
