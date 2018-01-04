@@ -18,7 +18,7 @@ echo "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 
 echo "Configuring vault ${VAULT_VERSION}"
 sudo mkdir -pm 0644 /etc/vault.d
-sudo mkdir -pm 0755 /opt/vault/data /opt/vault/pki
+sudo mkdir -pm 0755 /opt/vault/data /opt/vault/tls
 
 # Copy over all example Vault config files
 sudo cp /tmp/vault/config/* /etc/vault.d/.

@@ -18,7 +18,7 @@ echo "/usr/local/bin/nomad --version: $(/usr/local/bin/nomad --version)"
 
 echo "Configuring nomad ${NOMAD_VERSION}"
 sudo mkdir -pm 0644 /etc/nomad.d
-sudo mkdir -pm 0755 /opt/nomad/data /opt/nomad/pki
+sudo mkdir -pm 0755 /opt/nomad/data /opt/nomad/tls
 
 # Copy over all example Nomad config files
 sudo cp /tmp/nomad/config/* /etc/nomad.d/.

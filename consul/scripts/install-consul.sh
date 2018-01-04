@@ -18,7 +18,7 @@ echo "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
 
 echo "Configuring consul ${CONSUL_VERSION}"
 sudo mkdir -pm 0644 /etc/consul.d
-sudo mkdir -pm 0755 /opt/consul/data /opt/consul/pki
+sudo mkdir -pm 0755 /opt/consul/data /opt/consul/tls
 
 # Copy over all example Consul config files
 sudo cp /tmp/consul/config/* /etc/consul.d/.
