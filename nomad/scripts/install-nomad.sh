@@ -28,6 +28,6 @@ echo "FLAGS=-dev" | sudo tee /etc/nomad.d/nomad.conf
 sudo chown -R ${USER}:${GROUP} /etc/nomad.d /opt/nomad
 sudo chmod -R 0644 /etc/nomad/*
 
-echo "export NOMAD_ADDR=http://127.0.0.1:8200" | sudo tee /etc/profile.d/nomad.sh
+echo "export NOMAD_ADDR=http://127.0.0.1:4646" | sudo tee /etc/profile.d/nomad.sh
 
 echo "Complete"
