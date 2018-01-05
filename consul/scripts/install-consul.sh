@@ -19,9 +19,6 @@ echo "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
 echo "Configuring consul ${CONSUL_VERSION}"
 sudo mkdir -pm 0755 /etc/consul.d /opt/consul/data /opt/consul/tls
 
-# Copy over all example Consul config files
-sudo cp /tmp/consul/config/* /etc/consul.d/.
-
 # Start Consul in -dev mode
 echo "FLAGS=-dev -ui" | sudo tee /etc/consul.d/consul.conf
 

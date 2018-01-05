@@ -19,9 +19,6 @@ echo "/usr/local/bin/nomad --version: $(/usr/local/bin/nomad --version)"
 echo "Configuring nomad ${NOMAD_VERSION}"
 sudo mkdir -pm 0755 /etc/nomad.d /opt/nomad/data /opt/nomad/tls
 
-# Copy over all example Nomad config files
-sudo cp /tmp/nomad/config/* /etc/nomad.d/.
-
 # Start Nomad in -dev mode
 echo "FLAGS=-dev" | sudo tee /etc/nomad.d/nomad.conf
 

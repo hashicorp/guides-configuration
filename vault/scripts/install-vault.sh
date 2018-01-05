@@ -19,9 +19,6 @@ echo "/usr/local/bin/vault --version: $(/usr/local/bin/vault --version)"
 echo "Configuring vault ${VAULT_VERSION}"
 sudo mkdir -pm 0755 /etc/vault.d /opt/vault/data /opt/vault/tls
 
-# Copy over all example Vault config files
-sudo cp /tmp/vault/config/* /etc/vault.d/.
-
 # Start Vault in -dev mode
 echo "FLAGS=-dev -dev-root-token-id=root" | sudo tee /etc/vault.d/vault.conf
 
