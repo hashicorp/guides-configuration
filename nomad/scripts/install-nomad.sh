@@ -23,7 +23,7 @@ sudo mkdir -pm 0755 /etc/nomad.d /opt/nomad/data /opt/nomad/tls
 echo "FLAGS=-dev" | sudo tee /etc/nomad.d/nomad.conf
 
 sudo chown -R ${USER}:${GROUP} /etc/nomad.d /opt/nomad
-sudo chmod -R 0644 /etc/nomad/*
+sudo chmod -R 0644 /etc/nomad.d/*
 
 echo "export NOMAD_ADDR=http://127.0.0.1:4646" | sudo tee /etc/profile.d/nomad.sh
 
