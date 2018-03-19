@@ -74,7 +74,7 @@
       "ssh_username": "ubuntu",
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
-      "ami_name": "consul-image_{{ user `release_version` }}_{{ user `consul_version` }}_ubuntu_16.04_consul",
+      "ami_name": "consul-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp Consul Image {{ user `release_version` }}",
       "tags": {
         "Name": "Consul Ubuntu Image {{ user `release_version` }}",
