@@ -12,14 +12,10 @@ end
 
 describe file('/etc/nomad.d') do
   it { should be_directory }
-  it { should be_writable_by('root') }
-  it { should be_readable_by('root') }
 end
 
 describe file('/opt/nomad/data') do
   it { should be_directory }
-  it { should be_writable_by('root') }
-  it { should be_readable_by('root') }
 end
 
 describe file('/opt/nomad/tls') do

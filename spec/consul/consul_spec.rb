@@ -16,14 +16,10 @@ end
 
 describe file('/etc/consul.d') do
   it { should be_directory }
-  it { should be_writable_by('consul') }
-  it { should be_readable_by('consul') }
 end
 
 describe file('/opt/consul/data') do
   it { should be_directory }
-  it { should be_writable_by('consul') }
-  it { should be_readable_by('consul') }
 end
 
 describe file('/opt/consul/tls') do

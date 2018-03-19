@@ -26,14 +26,10 @@ end
 
 describe file('/etc/vault.d') do
   it { should be_directory }
-  it { should be_writable_by('vault') }
-  it { should be_readable_by('vault') }
 end
 
 describe file('/opt/vault/data') do
   it { should be_directory }
-  it { should be_writable_by('vault') }
-  it { should be_readable_by('vault') }
 end
 
 describe file('/opt/vault/tls') do
