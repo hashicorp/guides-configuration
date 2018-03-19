@@ -94,7 +94,7 @@ build () {
   if [ -z ${USER_TRIGGER+x} ]; then
     export VCS_NAME="Manual"
   else
-    export VCS_NAME=${USER_TRIGGER}
+    export VCS_NAME=${GIT_BRANCH}
   fi
 
   echo "Starting build from ${GIT_BRANCH}"
