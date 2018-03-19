@@ -18,7 +18,7 @@ else
   exit 1;
 fi
 
-curl -o ${SYSTEMD_DIR}/consul.service https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/init/systemd/consul.service
+sudo curl -o ${SYSTEMD_DIR}/consul.service https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/init/systemd/consul.service
 sudo chmod 0664 ${SYSTEMD_DIR}/consul.service
 
 sudo systemctl enable consul
