@@ -2,9 +2,8 @@
 # vi: set ft=ruby :
 
 # Networking
-private_ip = ENV['PRIVATE_IP'] || "192.168.50.150"
+private_ip = ENV['PRIVATE_IP'] || "192.168.50.153"
 consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
-vault_host_port = ENV['VAULT_HOST_PORT'] || 8200
 nomad_host_port = ENV['NOMAD_HOST_PORT'] || 4646
 
 # Base box selection
@@ -17,14 +16,6 @@ consul_group = "consul"
 consul_user = "consul"
 consul_comment = "Consul"
 consul_home = "/srv/consul"
-
-# Vault variables
-vault_version = ENV['VAULT_VERSION'] || "0.8.1"
-vault_ent_url = ENV['VAULT_ENT_URL']
-vault_group = "vault"
-vault_user = "vault"
-vault_comment = "Vault"
-vault_home = "/srv/vault"
 
 # Nomad variables
 nomad_version = ENV['NOMAD_VERSION'] || "0.6.2"
@@ -48,16 +39,15 @@ Vagrant.configure("2") do |config|
   # Setup networking
   config.vm.network :private_network, ip: private_ip
   config.vm.network :forwarded_port, guest: 8500, host: consul_host_port, auto_correct: true
-  config.vm.network :forwarded_port, guest: 8200, host: vault_host_port, auto_correct: true
   config.vm.network :forwarded_port, guest: 4646, host: nomad_host_port, auto_correct: true
   config.vm.network "private_network", type: "dhcp"
 
   # Use base_box set at the top of this file
   config.vm.box = base_box
-  config.vm.hostname = "hashistack"
+  config.vm.hostname = "nomad"
   config.vm.provision "shell", inline: $script, privileged: false
 
-  # Copy the Consul, Vault, Nomad, and shared directories to the vm
+  # Copy the Consul, Nomad, and shared directories to the vm
   config.vm.provision "file", source: "../consul", destination: "/tmp"
   config.vm.provision "file", source: "../vault", destination: "/tmp"
   config.vm.provision "file", source: "../shared", destination: "/tmp"
@@ -71,7 +61,7 @@ Vagrant.configure("2") do |config|
       "GROUP" => consul_group,
       "USER" => consul_user,
       "COMMENT" => consul_comment,
-      "HOME" => consul_home
+      "HOME" => consul_home,
     }
 
   # Install Consul
@@ -84,26 +74,6 @@ Vagrant.configure("2") do |config|
     }
 
   config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-consul-systemd.sh"
-
-  # Setup Vault user
-  config.vm.provision "shell", inline: "bash /tmp/shared/scripts/setup-user.sh",
-    env: {
-      "GROUP" => vault_group,
-      "USER" => vault_user,
-      "COMMENT" => vault_comment,
-      "HOME" => vault_home,
-    }
-
-  # Install Vault
-  config.vm.provision "shell", inline: "bash /tmp/vault/scripts/install-vault.sh",
-    env: {
-      "VERSION" => vault_version,
-      "URL" => vault_ent_url,
-      "USER" => vault_user,
-      "GROUP" => vault_group,
-    }
-
-  config.vm.provision "shell", inline: "bash /tmp/vault/scripts/install-vault-systemd.sh"
 
   # Install Nomad
   config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-nomad.sh",
@@ -123,7 +93,7 @@ Vagrant.configure("2") do |config|
 
   # Run tests if `RUN_TESTS` env var is provided
   if (run_tests)
-    config.vm.provision "shell", inline: "cd /tmp && rake hashistack:spec"
+    config.vm.provision "shell", inline: "cd /tmp && rake nomad:spec"
   end
 
   # Cleanup if `CLEANUP` env var is provided
@@ -149,37 +119,11 @@ Vagrant.configure("2") do |config|
   end
 
    config.vm.post_up_message = "
-Your HashiStack dev cluster has been successfully provisioned!
+Your Nomad dev cluster has been successfully provisioned!
 
-To SSH into the Consul host, run the below command.
+To SSH into a Nomad host, run the below command.
 
   $ vagrant ssh
-
-You can now interact with Consul using any of the CLI (https://www.consul.io/docs/commands/index.html) or API (https://www.consul.io/api/index.html) commands.
-
-  # Use the CLI to retrieve the Consul members, write a key/value, and read that key/value
-  $ consul members
-  $ consul kv put cli bar=baz
-  $ consul kv get cli
-
-  # Use the API to retrieve the Consul members, write a key/value, and read that key/value
-  $ curl http://127.0.0.1:8500/v1/agent/members | jq '.'
-  $ curl -X PUT -d '{\"bar=baz\"}' http://127.0.0.1:8500/v1/kv/api | jq '.'
-  $ curl http://127.0.0.1:8500/v1/kv/api | jq '.'
-
-You can interact with Vault using any of the CLI (https://www.vaultproject.io/docs/commands/index.html) or API (https://www.vaultproject.io/api/index.html) commands.
-
-  # The Root token for your Vault -dev instance is set to `root` and placed in /srv/vault/.vault-token, the `VAULT_TOKEN` environment variable has already been set for you
-  $ echo $VAULT_TOKEN
-  $ sudo cat /srv/vault/.vault-token
-
-  # Use the CLI to write and read a generic secret
-  $ vault write secret/cli bar=baz
-  $ vault read secret/cli
-
-  # Use the API to write and read a generic secret
-  $ curl -H \"X-Vault-Token: $VAULT_TOKEN\" -X POST -d '{\"bar\":\"baz\"}' http://127.0.0.1:8200/v1/secret/api | jq '.'
-  $ curl -H \"X-Vault-Token: $VAULT_TOKEN\" http://127.0.0.1:8200/v1/secret/api | jq '.'
 
 You can interact with Nomad using any of the CLI (https://www.nomadproject.io/docs/commands/index.html) or API (https://www.nomadproject.io/api/index.html) commands.
 
@@ -205,7 +149,6 @@ You can interact with Nomad using any of the CLI (https://www.nomadproject.io/do
   $ curl -X GET http://127.0.0.1:4646/v1/jobs | jq '.' # Check that the job is stopped
 
 Visit the Consul UI: http://#{private_ip}:#{consul_host_port}/
-Visit the Vault UI: http://#{private_ip}:#{vault_host_port}/
 Visit the Nomad UI: http://#{private_ip}:#{nomad_host_port}/
 
 Don't forget to tear your VM down after.
