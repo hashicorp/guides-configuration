@@ -88,11 +88,13 @@ presign_ent_url () {
 build () {
   if [ -z ${RELEASE_VERSION} ]; then
     # Set RELEASE_VERSION to the current git branch if not specified so it's not empty
-    export RELEASE_VERSION = ${GIT_BRANCH}
+    export RELEASE_VERSION=${GIT_BRANCH}
   fi
 
   if [ -z ${USER_TRIGGER+x} ]; then
-    export VCS_NAME = ${USER_TRIGGER}
+    export VCS_NAME="Manual"
+  else
+    export VCS_NAME=${USER_TRIGGER}
   fi
 
   echo "Starting build from ${GIT_BRANCH}"

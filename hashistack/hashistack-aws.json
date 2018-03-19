@@ -50,7 +50,7 @@
       "ami_name": "hashistack-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_vault_{{ user `vault_version` }}_nomad_{{ user `nomad_version` }}_rhel_7.3",
       "ami_description": "HashiCorp HashiStack Image {{ user `release_version` }}",
       "tags": {
-        "Name": "HashiStack RHEL Image {{ user `release_version` }}",
+        "Name": "HashiStack RHEL 7.3 Image {{ user `release_version` }}: Consul v{{ user `consul_version` }} Vault v{{ user `vault_version` }} Nomad v{{ user `nomad_version` }}",
         "System": "HashiStack",
         "Product": "HashiStack",
         "Built-By": "{{ user `vcs_name` }}",
@@ -89,7 +89,7 @@
       "ami_name": "hashistack-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_vault_{{ user `vault_version` }}_nomad_{{ user `nomad_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp HashiStack Image {{ user `release_version` }}",
       "tags": {
-        "Name": "HashiStack Ubuntu Image {{ user `release_version` }}",
+        "Name": "HashiStack Ubuntu 16.04 Image {{ user `release_version` }}: Consul v{{ user `consul_version` }} Vault v{{ user `vault_version` }} Nomad v{{ user `nomad_version` }}",
         "System": "HashiStack",
         "Product": "HashiStack",
         "Built-By": "{{ user `vcs_name` }}",

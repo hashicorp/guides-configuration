@@ -40,7 +40,7 @@
       "ami_name": "consul-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
       "ami_description": "HashiCorp Consul Image {{ user `release_version` }}",
       "tags": {
-        "Name": "Consul RHEL Image {{ user `release_version` }}",
+        "Name": "Consul RHEL 7.3 Image {{ user `release_version` }}: Consul v{{ user `consul_version` }}",
         "System": "Consul",
         "Product": "Consul",
         "Built-By": "{{ user `vcs_name` }}",
@@ -77,7 +77,7 @@
       "ami_name": "consul-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp Consul Image {{ user `release_version` }}",
       "tags": {
-        "Name": "Consul Ubuntu Image {{ user `release_version` }}",
+        "Name": "Consul Ubuntu 16.04 Image {{ user `release_version` }}: Consul v{{ user `consul_version` }}",
         "System": "Consul",
         "Product": "Consul",
         "Built-By": "{{ user `vcs_name` }}",

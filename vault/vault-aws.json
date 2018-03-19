@@ -46,7 +46,7 @@
       "ami_name": "vault-image_{{ user `release_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
       "ami_description": "HashiCorp Vault Image {{ user `release_version` }}",
       "tags": {
-        "Name": "Vault RHEL Image {{ user `release_version` }}",
+        "Name": "Vault RHEL 7.3 Image {{ user `release_version` }}: Vault v{{ user `vault_version` }} Consul v{{ user `consul_version` }}",
         "System": "Vault",
         "Product": "Vault",
         "Built-By": "{{ user `vcs_name` }}",
@@ -84,7 +84,7 @@
       "ami_name": "vault-image_{{ user `release_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp Vault Image {{ user `release_version` }}",
       "tags": {
-        "Name": "Vault Ubuntu Image {{ user `release_version` }}",
+        "Name": "Vault Ubuntu 16.04 Image {{ user `release_version` }}: Vault v{{ user `vault_version` }} Consul v{{ user `consul_version` }}",
         "System": "Vault",
         "Product": "Vault",
         "Built-By": "{{ user `vcs_name` }}",
