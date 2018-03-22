@@ -24,9 +24,6 @@ sudo curl -o ${SYSTEMD_DIR}/consul-online.target https://raw.githubusercontent.c
 sudo curl -o ${SYSTEMD_DIR}/consul-online.sh https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/init/systemd/consul-online.sh
 sudo chmod 0664 ${SYSTEMD_DIR}/{nomad*,consul*}
 
-sudo systemctl enable consul
-sudo systemctl start consul
-
 sudo systemctl enable nomad
 sudo systemctl start nomad
 
