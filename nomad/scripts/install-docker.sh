@@ -9,7 +9,7 @@ echo "Running"
 if [[ ! -z ${YUM} ]]; then
   echo "Installing Docker with RHEL Workaround"
   sudo yum -yq install policycoreutils-python yum-utils device-mapper-persistent-data lvm2
-  sudo yum -y erase docker-engine-selinux container-selinux
+  sudo yum -y remove docker-engine-selinux container-selinux
   sudo yum-config-manager -y --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
   sudo yum install -y --setopt=obsoletes=0 \
