@@ -20,7 +20,7 @@ echo "Configuring nomad ${NOMAD_VERSION}"
 sudo mkdir -pm 0755 /etc/nomad.d /opt/nomad/data /opt/nomad/tls
 
 # Start Nomad in -dev mode
-echo "FLAGS=-dev" | sudo tee /etc/nomad.d/nomad.conf
+echo "FLAGS=-dev -config=/etc/nomad.d" | sudo tee /etc/nomad.d/nomad.conf
 
 sudo chown -R ${USER}:${GROUP} /etc/nomad.d /opt/nomad
 sudo chmod -R 0644 /etc/nomad.d/*

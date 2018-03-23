@@ -10,7 +10,7 @@ describe file('/usr/local/bin/consul') do
   it { should be_executable }
 end
 
-describe command('/sbin/getcap /usr/local/bin/vault') do
+describe command('/sbin/getcap $(readlink -f $(which vault))') do
   its(:stdout) { should match (/cap_ipc_lock\+ep/) }
   its(:exit_status) { should eq 0 }
 end
