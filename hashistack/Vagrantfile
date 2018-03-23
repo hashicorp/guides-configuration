@@ -116,7 +116,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
   config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-docker.sh"
-  config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-oracle-jdk.sh"
+  config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-java.sh"
 
   # Setup tests
   config.vm.provision "shell", inline: "bash /tmp/shared/scripts/setup-testing.sh"
