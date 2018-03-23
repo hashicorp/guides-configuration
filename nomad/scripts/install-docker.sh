@@ -12,9 +12,14 @@ if [[ ! -z ${YUM} ]]; then
   sudo yum -y remove docker-engine-selinux container-selinux
   sudo yum-config-manager -y --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
+  # sudo yum install -y --setopt=obsoletes=0 \
+  #  docker-ce \
+  #  docker-ce-selinux
+
+  # Pinning Docker version as the above does not work at the moment
   sudo yum install -y --setopt=obsoletes=0 \
-   docker-ce \
-   docker-ce-selinux
+   docker-ce-17.03.2.ce-1.el7.centos.x86_64 \
+   docker-ce-selinux-17.03.2.ce-1.el7.centos.noarch
 elif [[ ! -z ${APT_GET} ]]; then
   echo "Installing Docker"
   curl -sSL https://get.docker.com/ | sudo sh
