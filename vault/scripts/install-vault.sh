@@ -29,6 +29,6 @@ echo "export VAULT_ADDR=http://127.0.0.1:8200" | sudo tee /etc/profile.d/vault.s
 echo "export VAULT_TOKEN=root" | sudo tee -a /etc/profile.d/vault.sh
 
 echo "Granting mlock syscall to vault binary"
-sudo setcap cap_ipc_lock=+ep /usr/local/bin/vault
+sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
 
 echo "Complete"
