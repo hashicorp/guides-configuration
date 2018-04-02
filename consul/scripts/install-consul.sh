@@ -5,25 +5,31 @@ echo "Running"
 
 CONSUL_VERSION="${VERSION}"
 CONSUL_ZIP="consul_${CONSUL_VERSION}_linux_amd64.zip"
-CONSUL_URL=${URL:-"https://releases.hashicorp.com/consul/${CONSUL_VERSION}/${CONSUL_ZIP}"}
+CONSUL_URL=${URL:-https://releases.hashicorp.com/consul/${CONSUL_VERSION}/${CONSUL_ZIP}}
+CONSUL_DIR=/usr/local/bin
+CONSUL_PATH=${CONSUL_DIR}/consul
+CONSUL_CONFIG_DIR=/etc/consul.d
+CONSUL_DATA_DIR=/opt/consul/data
+CONSUL_TLS_DIR=/opt/consul/tls
+CONSUL_ENV_VARS=${CONSUL_CONFIG_DIR}/consul.conf
 
 echo "Downloading consul ${CONSUL_VERSION}"
 [ 200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${CONSUL_ZIP} ${CONSUL_URL}) ] && exit 1
 
 echo "Installing consul"
-sudo unzip -o /tmp/${CONSUL_ZIP} -d /usr/local/bin/
-sudo chmod 0755 /usr/local/bin/consul
-sudo chown ${USER}:${GROUP} /usr/local/bin/consul
-echo "/usr/local/bin/consul --version: $(/usr/local/bin/consul --version)"
+sudo unzip -o /tmp/${CONSUL_ZIP} -d ${CONSUL_DIR}
+sudo chmod 0755 ${CONSUL_PATH}
+sudo chown ${USER}:${GROUP} ${CONSUL_PATH}
+echo "$(${CONSUL_PATH} --version)"
 
 echo "Configuring consul ${CONSUL_VERSION}"
-sudo mkdir -pm 0755 /etc/consul.d /opt/consul/data /opt/consul/tls
+sudo mkdir -pm 0755 ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_TLS_DIR}
 
 # Start Consul in -dev mode
-echo "FLAGS=-dev -ui" | sudo tee /etc/consul.d/consul.conf
+echo "FLAGS=-dev -ui" | sudo tee ${CONSUL_ENV_VARS}
 
-sudo chown -R ${USER}:${GROUP} /etc/consul.d /opt/consul/data /opt/consul/tls
-sudo chmod -R 0644 /etc/consul.d/*
+sudo chown -R ${USER}:${GROUP} ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_TLS_DIR}
+sudo chmod -R 0644 ${CONSUL_CONFIG_DIR}/*
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
