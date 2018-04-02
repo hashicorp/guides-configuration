@@ -38,6 +38,6 @@ echo "export VAULT_TOKEN=root" | sudo tee -a ${VAULT_PROFILE_SCRIPT}
 source ${VAULT_PROFILE_SCRIPT}
 
 echo "Granting mlock syscall to vault binary"
-sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
+sudo setcap cap_ipc_lock=+ep ${VAULT_PATH}
 
 echo "Complete"
