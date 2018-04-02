@@ -12,35 +12,47 @@ CONSUL_CONFIG_DIR=/etc/consul.d
 CONSUL_DATA_DIR=/opt/consul/data
 CONSUL_TLS_DIR=/opt/consul/tls
 CONSUL_ENV_VARS=${CONSUL_CONFIG_DIR}/consul.conf
+CONSUL_PROFILE_SCRIPT=/etc/profile.d/consul.sh
 
-echo "Downloading consul ${CONSUL_VERSION}"
+echo "Downloading Consul ${CONSUL_VERSION}"
 [ 200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${CONSUL_ZIP} ${CONSUL_URL}) ] && exit 1
 
-echo "Installing consul"
+echo "Installing Consul"
 sudo unzip -o /tmp/${CONSUL_ZIP} -d ${CONSUL_DIR}
 sudo chmod 0755 ${CONSUL_PATH}
 sudo chown ${USER}:${GROUP} ${CONSUL_PATH}
 echo "$(${CONSUL_PATH} --version)"
 
-echo "Configuring consul ${CONSUL_VERSION}"
+echo "Configuring Consul ${CONSUL_VERSION}"
 sudo mkdir -pm 0755 ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_TLS_DIR}
 
-# Start Consul in -dev mode
-echo "FLAGS=-dev -ui" | sudo tee ${CONSUL_ENV_VARS}
+echo "Start Consul in -dev mode"
+cat <<ENVVARS | sudo tee ${CONSUL_ENV_VARS}
+FLAGS=-dev -ui
+ENVVARS
 
+echo "Update directory permissions"
 sudo chown -R ${USER}:${GROUP} ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_TLS_DIR}
 sudo chmod -R 0644 ${CONSUL_CONFIG_DIR}/*
 
-# Detect package management system.
+echo "Set Consul profile script"
+cat <<PROFILE | sudo tee ${CONSUL_PROFILE_SCRIPT}
+export CONSUL_HTTP_ADDR=http://127.0.0.1:8500
+PROFILE
+
+echo "Source env vars"
+source ${CONSUL_PROFILE_SCRIPT}
+
+echo "Detect package management system."
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
 
 if [[ ! -z ${YUM} ]]; then
-  echo "Installing dnsmasq"
+  echo "Installing dnsmasq via yum"
   sudo yum install -q -y dnsmasq
   sudo sed -i '1i nameserver 127.0.0.1\n' /etc/resolv.conf
 elif [[ ! -z ${APT_GET} ]]; then
-  echo "Installing dnsmasq"
+  echo "Installing dnsmasq via apt-get"
   sudo apt-get -qq -y update
   sudo apt-get install -qq -y dnsmasq-base dnsmasq
 else
@@ -49,7 +61,11 @@ else
 fi
 
 echo "Configuring dnsmasq to forward .consul requests to consul port 8600"
-sudo sh -c 'echo "server=/consul/127.0.0.1#8600" > /etc/dnsmasq.d/consul'
+cat <<DNSMASQ | sudo tee /etc/dnsmasq.d/consul
+server=/consul/127.0.0.1#8600
+DNSMASQ
+
+echo "Enable and rsetart dnsmasq"
 sudo systemctl enable dnsmasq
 sudo systemctl restart dnsmasq
 
