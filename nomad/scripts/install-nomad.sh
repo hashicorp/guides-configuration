@@ -40,7 +40,4 @@ cat <<PROFILE | sudo tee ${NOMAD_PROFILE_SCRIPT}
 export NOMAD_ADDR=http://127.0.0.1:4646
 PROFILE
 
-echo "Source env vars"
-source ${NOMAD_PROFILE_SCRIPT}
-
 echo "Complete"

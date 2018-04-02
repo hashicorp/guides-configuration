@@ -40,9 +40,6 @@ cat <<PROFILE | sudo tee ${CONSUL_PROFILE_SCRIPT}
 export CONSUL_HTTP_ADDR=http://127.0.0.1:8500
 PROFILE
 
-echo "Source env vars"
-source ${CONSUL_PROFILE_SCRIPT}
-
 echo "Detect package management system."
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)

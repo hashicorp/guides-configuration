@@ -41,9 +41,6 @@ export VAULT_ADDR=http://127.0.0.1:8200
 export VAULT_TOKEN=root
 PROFILE
 
-echo "Source env vars"
-source ${VAULT_PROFILE_SCRIPT}
-
 echo "Granting mlock syscall to vault binary"
 sudo setcap cap_ipc_lock=+ep ${VAULT_PATH}
 
