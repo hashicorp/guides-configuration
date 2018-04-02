@@ -21,7 +21,7 @@ export TERRAFORM_VERSION="0.11.1"
 # Release candidate: X.Y.Z-rcX (e.g. 0.1.0-rc1)
 # Beta release: X.Y.Z-betaX (e.g. 0.1.0-beta1)
 # Development branch: X.Y.Z-devX (e.g. 0.1.0-dev1)
-export RELEASE_VERSION="0.1.0-dev1"
+export RELEASE_VERSION="0.1.0-beta1"
 
 # Force build or run on feature branch
 export RUN_BUILD=true
