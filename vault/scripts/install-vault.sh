@@ -20,9 +20,9 @@ echo "Configuring vault ${VAULT_VERSION}"
 sudo mkdir -pm 0755 /etc/vault.d /opt/vault/data /opt/vault/tls
 
 # Start Vault in -dev mode
-echo "FLAGS=-dev -dev-root-token-id=root" | sudo tee /etc/vault.d/vault.conf
+echo "FLAGS=-dev -dev-ha -dev-transactional -dev-root-token-id=root" | sudo tee /etc/vault.d/vault.conf
 
-sudo chown -R ${USER}:${GROUP} /etc/vault.d /opt/vault
+sudo chown -R ${USER}:${GROUP} /etc/vault.d /opt/vault/data /opt/vault/tls
 sudo chmod -R 0644 /etc/vault.d/*
 
 echo "export VAULT_ADDR=http://127.0.0.1:8200" | sudo tee /etc/profile.d/vault.sh

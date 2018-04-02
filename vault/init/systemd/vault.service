@@ -13,6 +13,7 @@ ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=vault
 Group=vault
+LimitMEMLOCK=infinity
 
 [Install]
 WantedBy=multi-user.target

@@ -20,9 +20,9 @@ echo "Configuring consul ${CONSUL_VERSION}"
 sudo mkdir -pm 0755 /etc/consul.d /opt/consul/data /opt/consul/tls
 
 # Start Consul in -dev mode
-echo "FLAGS=-dev -ui -config-dir=/etc/consul.d" | sudo tee /etc/consul.d/consul.conf
+echo "FLAGS=-dev -ui" | sudo tee /etc/consul.d/consul.conf
 
-sudo chown -R ${USER}:${GROUP} /etc/consul.d /opt/consul
+sudo chown -R ${USER}:${GROUP} /etc/consul.d /opt/consul/data /opt/consul/tls
 sudo chmod -R 0644 /etc/consul.d/*
 
 # Detect package management system.
