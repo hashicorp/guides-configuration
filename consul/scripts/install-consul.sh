@@ -43,6 +43,11 @@ PROFILE
 echo "Give consul user shell access for remote exec"
 sudo /usr/sbin/usermod --shell /bin/bash ${USER} >/dev/null
 
+echo "Allow consul sudo access for echo, tee, cat, sed, and systemctl"
+cat <<SUDOERS | sudo tee /etc/sudoers.d/consul
+consul ALL=(ALL) NOPASSWD: /usr/bin/echo, /usr/bin/tee, /usr/bin/cat, /usr/bin/sed, /usr/bin/systemctl
+SUDOERS
+
 echo "Detect package management system."
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
