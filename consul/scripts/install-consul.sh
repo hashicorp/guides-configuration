@@ -3,8 +3,8 @@ set -x
 
 echo "Running"
 
-CONSUL_VERSION="${VERSION}"
-CONSUL_ZIP="consul_${CONSUL_VERSION}_linux_amd64.zip"
+CONSUL_VERSION=${VERSION}
+CONSUL_ZIP=consul_${CONSUL_VERSION}_linux_amd64.zip
 CONSUL_URL=${URL:-https://releases.hashicorp.com/consul/${CONSUL_VERSION}/${CONSUL_ZIP}}
 CONSUL_DIR=/usr/local/bin
 CONSUL_PATH=${CONSUL_DIR}/consul
@@ -39,6 +39,9 @@ echo "Set Consul profile script"
 cat <<PROFILE | sudo tee ${CONSUL_PROFILE_SCRIPT}
 export CONSUL_HTTP_ADDR=http://127.0.0.1:8500
 PROFILE
+
+echo "Give consul user shell access for remote exec"
+sudo /usr/sbin/usermod --shell /bin/bash ${USER} >/dev/null
 
 echo "Detect package management system."
 YUM=$(which yum 2>/dev/null)

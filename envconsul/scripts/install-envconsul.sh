@@ -3,14 +3,14 @@ set -x
 
 echo "Running"
 
-ENVCONSUL_VERSION=${VERSION:-"0.6.2"}
-ENVCONSUL_ZIP="envconsul_${ENVCONSUL_VERSION}_linux_amd64.zip"
-ENVCONSUL_URL=${URL:-"https://releases.hashicorp.com/envconsul/${ENVCONSUL_VERSION}/${ENVCONSUL_ZIP}"}
-ENVCONSUL_USER=${USER:-"envconsul"}
-ENVCONSUL_GROUP=${GROUP:-"envconsul"}
-CONFIG_DIR="/etc/envconsul.d"
-DATA_DIR="/opt/envconsul/data"
-DOWNLOAD_DIR="/tmp"
+ENVCONSUL_VERSION=${VERSION:-0.6.2}
+ENVCONSUL_ZIP=envconsul_${ENVCONSUL_VERSION}_linux_amd64.zip
+ENVCONSUL_URL=${URL:-https://releases.hashicorp.com/envconsul/${ENVCONSUL_VERSION}/${ENVCONSUL_ZIP}}
+ENVCONSUL_USER=${USER:-envconsul}
+ENVCONSUL_GROUP=${GROUP:-envconsul}
+CONFIG_DIR=/etc/envconsul.d
+DATA_DIR=/opt/envconsul/data
+DOWNLOAD_DIR=/tmp
 
 echo "Downloading envconsul ${ENVCONSUL_VERSION}"
 curl --silent --output ${DOWNLOAD_DIR}/${ENVCONSUL_ZIP} ${ENVCONSUL_URL}
