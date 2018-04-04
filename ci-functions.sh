@@ -101,7 +101,7 @@ presign_ent_url () {
 }
 
 publish () {
-
+  rm -rf tf-se-ami-permissions
   git clone --recurse-submodules https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp/tf-se-ami-permissions
   cd tf-se-ami-permissions
   ./tfe-cli/bin/tfe pushvars -var "consul_version=${CONSUL_VERSION}" \
