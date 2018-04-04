@@ -104,11 +104,8 @@ publish () {
   rm -rf tf-se-ami-permissions
   git clone --recurse-submodules https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp/tf-se-ami-permissions
   cd tf-se-ami-permissions
-  ./tfe-cli/bin/tfe pushvars -var "consul_version=${CONSUL_VERSION}" \
-    -var "vault_version=${VAULT_VERSION}" \
-    -var "nomad_version=${NOMAD_VERSION}" \
-    -overwrite=consul_version \
-    -overwrite=vault_version \
-    -overwrite=nomad_version \
-    -name=hc-solutions-engineering/ami-builder
+  ./tfe-cli/bin/tfe pushvars -name=hc-solutions-engineering/ami-builder -var "consul_version=${CONSUL_VERSION}" -overwrite=consul_version
+  ./tfe-cli/bin/tfe pushvars -name=hc-solutions-engineering/ami-builder -var "nomad_version=${NOMAD_VERSION}" -overwrite=nomad_version
+  ./tfe-cli/bin/tfe pushvars -name=hc-solutions-engineering/ami-builder -var "vault_version=${VAULT_VERSION}" -overwrite=vault_version
+  ./tfe-cli/bin/tfe pushconfig -name=hc-solutions-engineering/ami-builder 
 }
