@@ -105,8 +105,9 @@ publish () {
   rm -rf tf-se-ami-permissions
   git clone --recurse-submodules https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp/tf-se-ami-permissions
   cd tf-se-ami-permissions
-  ./tfe-cli/bin/tfe pushvars -var "consul_version=${CONSUL_VERSION}" -overwrite=consul_version
-  ./tfe-cli/bin/tfe pushvars -var "nomad_version=${NOMAD_VERSION}" -overwrite=nomad_version
-  ./tfe-cli/bin/tfe pushvars -var "vault_version=${VAULT_VERSION}" -overwrite=vault_version
-  ./tfe-cli/bin/tfe pushconfig 
+  /tmp/terraform init
+  ./tfe-cli/bin/tfe pushvars -var "consul_version=${CONSUL_VERSION}" -overwrite consul_version
+  ./tfe-cli/bin/tfe pushvars -var "nomad_version=${NOMAD_VERSION}" -overwrite nomad_version
+  ./tfe-cli/bin/tfe pushvars -var "vault_version=${VAULT_VERSION}" -overwrite vault_version
+  ./tfe-cli/bin/tfe pushconfig
 }
