@@ -102,14 +102,13 @@ presign_ent_url () {
 
 publish () {
 
-  git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp-modules/image-permission-aws
-  cd image-permission-aws
-  /tmp/terraform init
-  /tmp/terraform push -var "consul_version=${CONSUL_VERSION}" \
+  git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp/tf-se-ami-permissions
+  cd tf-se-ami-permissions
+  ./tfe-cli/bin/tfe pushvars -var "consul_version=${CONSUL_VERSION}" \
     -var "vault_version=${VAULT_VERSION}" \
     -var "nomad_version=${NOMAD_VERSION}" \
     -overwrite=consul_version \
     -overwrite=vault_version \
     -overwrite=nomad_version \
-    -name=atlas-demo/image-permission-aws .
+    -name=hc-solutions-engineering/ami-builder
 }
