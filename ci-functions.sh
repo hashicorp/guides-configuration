@@ -155,7 +155,7 @@ publish () {
   echo "GIT_BRANCH: ${GIT_BRANCH}"
   echo "RUN_PUBLISH: ${RUN_PUBLISH}"
 
-  if ! [[ ${GIT_BRANCH} == *"master"* ]] && [ -z ${RUN_PUBLISH} ]; then
+  if ! [[ ${GIT_BRANCH} == *"master"* ]] && ! [ ${RUN_PUBLISH} == true ] && ! [ ${RUN_PUBLISH} == 1 ]; then
     echo "Do not publish, exit early"
     exit 0
   fi
