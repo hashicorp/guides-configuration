@@ -44,6 +44,7 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "nomad-image_{{ user `release_version` }}_nomad_{{ user `nomad_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
       "ami_description": "HashiCorp Nomad Image {{ user `release_version` }}",
+      "ami_regions": ["us-east-1"],
       "tags": {
         "Name": "Nomad RHEL 7.3 Image {{ user `release_version` }}: Nomad v{{ user `nomad_version` }} Consul v{{ user `consul_version` }}",
         "System": "Nomad",
@@ -82,6 +83,7 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "nomad-image_{{ user `release_version` }}_nomad_{{ user `nomad_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp Nomad Image {{ user `release_version` }}",
+      "ami_regions": ["us-east-1"],
       "tags": {
         "Name": "Nomad Ubuntu 16.04 Image {{ user `release_version` }}: Nomad v{{ user `nomad_version` }} Consul v{{ user `consul_version` }}",
         "System": "Nomad",
