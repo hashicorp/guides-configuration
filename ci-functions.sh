@@ -62,9 +62,6 @@ presign_ent_url () {
   _REGION="us-east-1"
   _PRODUCT=$1
   _VERSION=$2
-  echo "_REGION: ${_REGION}"
-  echo "_PRODUCT: ${_PRODUCT}"
-  echo "_VERSION: ${_VERSION}"
 
   if [ ${_PRODUCT} = "consul" ]; then
     _S3_URL=s3://${S3BUCKET}/consul-enterprise/${_VERSION}/consul-enterprise_${_VERSION}+ent_linux_amd64.zip
@@ -77,7 +74,6 @@ presign_ent_url () {
     return 1
   fi
 
-  echo "_S3_URL: ${_S3_URL}"
   echo "$(AWS_SECRET_ACCESS_KEY=${_AWS_SECRET_ACCESS_KEY} \
     AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID} \
     aws s3 presign \
@@ -85,25 +81,7 @@ presign_ent_url () {
     ${_S3_URL} )"
 }
 
-build () {
-  if [ -z ${RELEASE_VERSION} ]; then
-    # Set RELEASE_VERSION to the current git branch if not specified so it's not empty
-    export RELEASE_VERSION=${GIT_BRANCH}
-  fi
-
-  if [ -z ${USER_TRIGGER+x} ]; then
-    export VCS_NAME="Manual"
-  else
-    export VCS_NAME=${GIT_BRANCH}
-  fi
-
-  echo "Starting build from ${GIT_BRANCH}"
-  echo "RELEASE_VERSION: ${RELEASE_VERSION}"
-  echo "VCS_NAME: ${VCS_NAME}"
-  echo "Building Consul version: ${CONSUL_VERSION}"
-  echo "Building Vault version: ${VAULT_VERSION}"
-  echo "Building Nomad version: ${NOMAD_VERSION}"
-
+prepare_ent_urls () {
   if [[ ${CONSUL_VERSION} == *"ent"* ]]; then
     export CONSUL_VERSION_STRIPPED=${CONSUL_VERSION/"-ent"/}
     export CONSUL_ENT_URL=$(presign_ent_url consul ${CONSUL_VERSION_STRIPPED})
@@ -142,6 +120,26 @@ build () {
     # export NOMAD_VERSION=${NOMAD_VERSION/'+'/'-'}
     echo "NOMAD_VERSION: ${NOMAD_VERSION}"
   fi
+}
+
+build () {
+  if [ -z ${RELEASE_VERSION} ]; then
+    # Set RELEASE_VERSION to the current git branch if not specified so it's not empty
+    export RELEASE_VERSION=${GIT_BRANCH}
+  fi
+
+  if [ -z ${USER_TRIGGER+x} ]; then
+    export VCS_NAME="Manual"
+  else
+    export VCS_NAME=${GIT_BRANCH}
+  fi
+
+  echo "Starting build from ${GIT_BRANCH}"
+  echo "RELEASE_VERSION: ${RELEASE_VERSION}"
+  echo "VCS_NAME: ${VCS_NAME}"
+  echo "Building Consul version: ${CONSUL_VERSION}"
+  echo "Building Vault version: ${VAULT_VERSION}"
+  echo "Building Nomad version: ${NOMAD_VERSION}"
 
   for TEMPLATE in $*; do
     echo "cd into ${TEMPLATE} directory"
