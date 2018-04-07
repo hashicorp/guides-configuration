@@ -87,11 +87,6 @@ prepare_ent_urls () {
     export CONSUL_ENT_URL=$(presign_ent_url consul ${CONSUL_VERSION_STRIPPED})
     echo "CONSUL_VERSION_STRIPPED: ${CONSUL_VERSION_STRIPPED}"
     echo "CONSUL_ENT_URL: ${CONSUL_ENT_URL}"
-    # export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION_STRIPPED}/consul-enterprise_${CONSUL_VERSION}_linux_amd64.zip)
-
-    # Replacing '+' with '-' as '+' is an invalid character for the AMI name and
-    # the version isn't used during the install when 'CONSUL_ENT_URL' is populated
-    # export CONSUL_VERSION=${CONSUL_VERSION/'+'/'-'}
     echo "CONSUL_VERSION: ${CONSUL_VERSION}"
   fi
 
@@ -100,11 +95,6 @@ prepare_ent_urls () {
     export VAULT_ENT_URL=$(presign_ent_url vault ${VAULT_VERSION_STRIPPED})
     echo "VAULT_VERSION_STRIPPED: ${VAULT_VERSION_STRIPPED}"
     echo "VAULT_ENT_URL: ${VAULT_ENT_URL}"
-    # export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/vault-enterprise/${VAULT_VERSION_STRIPPED}/vault-enterprise_${VAULT_VERSION_STRIPPED}_linux_amd64.zip)
-
-    # Replacing '+' with '-' as '+' is an invalid character for the AMI name and
-    # the version isn't used during the install when 'VAULT_ENT_URL' is populated
-    # export VAULT_VERSION=${VAULT_VERSION/'+'/'-'}
     echo "VAULT_VERSION: ${VAULT_VERSION}"
   fi
 
@@ -113,11 +103,6 @@ prepare_ent_urls () {
     export NOMAD_ENT_URL=$(presign_ent_url nomad ${NOMAD_VERSION_STRIPPED})
     echo "NOMAD_VERSION_STRIPPED: ${NOMAD_VERSION_STRIPPED}"
     echo "NOMAD_ENT_URL: ${NOMAD_ENT_URL}"
-    # export NOMAD_ENT_URL=$(AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY_BINARY | base64 -d | gpg -d -) AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_BINARY} aws s3 presign --region="us-east-1" s3://${S3BUCKET}/vault-enterprise/${NOMAD_VERSION_STRIPPED}/vault-enterprise_${NOMAD_VERSION_STRIPPED}_linux_amd64.zip)
-
-    # Replacing '+' with '-' as '+' is an invalid character for the AMI name and
-    # the version isn't used during the install when 'NOMAD_ENT_URL' is populated
-    # export NOMAD_VERSION=${NOMAD_VERSION/'+'/'-'}
     echo "NOMAD_VERSION: ${NOMAD_VERSION}"
   fi
 }
