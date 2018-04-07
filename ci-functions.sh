@@ -105,7 +105,7 @@ build () {
   echo "Building Nomad version: ${NOMAD_VERSION}"
 
   if [[ ${CONSUL_VERSION} == *"ent"* ]]; then
-    export CONSUL_VERSION_STRIPPED=${CONSUL_VERSION/"+ent"/}
+    export CONSUL_VERSION_STRIPPED=${CONSUL_VERSION/"-ent"/}
     export CONSUL_ENT_URL=$(presign_ent_url consul ${CONSUL_VERSION_STRIPPED})
     echo "CONSUL_VERSION_STRIPPED: ${CONSUL_VERSION_STRIPPED}"
     echo "CONSUL_ENT_URL: ${CONSUL_ENT_URL}"
@@ -113,12 +113,12 @@ build () {
 
     # Replacing '+' with '-' as '+' is an invalid character for the AMI name and
     # the version isn't used during the install when 'CONSUL_ENT_URL' is populated
-    export CONSUL_VERSION=${CONSUL_VERSION/'+'/'-'}
+    # export CONSUL_VERSION=${CONSUL_VERSION/'+'/'-'}
     echo "CONSUL_VERSION: ${CONSUL_VERSION}"
   fi
 
   if [[ ${VAULT_VERSION} == *"ent"* ]]; then
-    export VAULT_VERSION_STRIPPED=${VAULT_VERSION/"+ent"/}
+    export VAULT_VERSION_STRIPPED=${VAULT_VERSION/"-ent"/}
     export VAULT_ENT_URL=$(presign_ent_url vault ${VAULT_VERSION_STRIPPED})
     echo "VAULT_VERSION_STRIPPED: ${VAULT_VERSION_STRIPPED}"
     echo "VAULT_ENT_URL: ${VAULT_ENT_URL}"
@@ -126,12 +126,12 @@ build () {
 
     # Replacing '+' with '-' as '+' is an invalid character for the AMI name and
     # the version isn't used during the install when 'VAULT_ENT_URL' is populated
-    export VAULT_VERSION=${VAULT_VERSION/'+'/'-'}
+    # export VAULT_VERSION=${VAULT_VERSION/'+'/'-'}
     echo "VAULT_VERSION: ${VAULT_VERSION}"
   fi
 
   if [[ ${NOMAD_VERSION} == *"ent"* ]]; then
-    export NOMAD_VERSION_STRIPPED=${NOMAD_VERSION/"+ent"/}
+    export NOMAD_VERSION_STRIPPED=${NOMAD_VERSION/"-ent"/}
     export NOMAD_ENT_URL=$(presign_ent_url nomad ${NOMAD_VERSION_STRIPPED})
     echo "NOMAD_VERSION_STRIPPED: ${NOMAD_VERSION_STRIPPED}"
     echo "NOMAD_ENT_URL: ${NOMAD_ENT_URL}"
@@ -139,7 +139,7 @@ build () {
 
     # Replacing '+' with '-' as '+' is an invalid character for the AMI name and
     # the version isn't used during the install when 'NOMAD_ENT_URL' is populated
-    export NOMAD_VERSION=${NOMAD_VERSION/'+'/'-'}
+    # export NOMAD_VERSION=${NOMAD_VERSION/'+'/'-'}
     echo "NOMAD_VERSION: ${NOMAD_VERSION}"
   fi
 

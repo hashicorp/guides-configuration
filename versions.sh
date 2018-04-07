@@ -2,14 +2,14 @@
 
 ## DON'T FORGET TO UPDATE the README with any version bumps ##
 
-# X.Y.Z or X.Y.Z+ent for Enterprise binary (e.g. 0.9.2 or 0.9.2+ent)
-export CONSUL_VERSION="1.0.6+ent"
+# X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 1.0.6 or 1.0.6-ent)
+export CONSUL_VERSION="1.0.6-ent"
 
-# X.Y.Z or X.Y.Z+ent for Enterprise binary (e.g. 0.8.1 or 0.8.1+ent)
-export VAULT_VERSION="0.9.6+ent"
+# X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 0.9.6 or 0.9.6-ent)
+export VAULT_VERSION="0.9.6-ent"
 
-# X.Y.Z (e.g. 0.6.2)
-export NOMAD_VERSION="0.7.1+ent"
+# X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 0.7.1 or 0.7.1-ent)
+export NOMAD_VERSION="0.7.1-ent"
 
 # X.Y.Z (e.g. 0.12.3)
 export PACKER_VERSION="1.1.3"
