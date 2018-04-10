@@ -65,7 +65,7 @@ cat <<DNSMASQ | sudo tee /etc/dnsmasq.d/consul
 server=/consul/127.0.0.1#8600
 DNSMASQ
 
-echo "Enable and rsetart dnsmasq"
+echo "Enable and restart dnsmasq"
 sudo systemctl enable dnsmasq
 sudo systemctl restart dnsmasq
 
