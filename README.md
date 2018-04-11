@@ -3,7 +3,7 @@ This repo contains Packer templates used for modules in hashicorp-modules
 
 ---
 
-## HashiStack  
+## HashiStack
 Contains provider specific templates that installs HashiCorp software on a single node (Consul, Nomad, Vault, consul-template and envconsul).
 
 Example HashiStack build command:
@@ -88,7 +88,7 @@ AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT=
 
 ---
 
-## Nomad  
+## Nomad
 Contains Nomad specific installation scripts, configuration files.  Also has Packer templates specific to Nomad usage.
 
 
@@ -100,7 +100,7 @@ AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" NOMAD_VERSION="0.5.6" CON
 
 ---
 
-## Vault    
+## Vault
 Contains Vault specific installation scripts, configuration files.  Also has Packer templates specific to Vault usage.
 
 Example Vault (including Consul) build command:
@@ -148,16 +148,17 @@ fi
 
 ## Hashistack Version Tables:
 
-| Nomad | Consul | Vault |
-|-------|--------|-------|
-| 0.5.6 | 0.8.4  | 0.7.3 |
-| 0.6.0 | 0.8.4  | 0.7.3 |
-| 0.6.0 | 0.8.4  | 0.8.0 |
-| 0.6.0 | 0.9.2  | 0.8.0 |
-| 0.6.0 | 0.9.2  | 0.8.1 |
-| 0.6.2 | 0.9.2  | 0.8.1 |
-| 0.6.3 | 0.9.2  | 0.8.3 |
-| 0.7.0 | 1.0.0  | 0.8.3 |
-| 0.7.1 | 1.0.2  | 0.9.1 |
-| 0.7.1 | 1.0.2  | 0.9.5 |
-| 0.7.1 | 1.0.6  | 0.9.5 |
+| Nomad | Consul | Vault  |
+|-------|--------|--------|
+| 0.5.6 | 0.8.4  | 0.7.3  |
+| 0.6.0 | 0.8.4  | 0.7.3  |
+| 0.6.0 | 0.8.4  | 0.8.0  |
+| 0.6.0 | 0.9.2  | 0.8.0  |
+| 0.6.0 | 0.9.2  | 0.8.1  |
+| 0.6.2 | 0.9.2  | 0.8.1  |
+| 0.6.3 | 0.9.2  | 0.8.3  |
+| 0.7.0 | 1.0.0  | 0.8.3  |
+| 0.7.1 | 1.0.2  | 0.9.1  |
+| 0.7.1 | 1.0.2  | 0.9.5  |
+| 0.7.1 | 1.0.6  | 0.9.5  |
+| 0.7.1 | 1.0.6  | 0.10.0 |
