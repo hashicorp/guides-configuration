@@ -38,6 +38,7 @@
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Consul Server {{ user `consul_version` }}",
       "ami_name": "{{ user `environment` }}-consul-server-{{ user `consul_release` }}-{{ user `distribution` }}-RHEL_7.3",
+      "ami_regions": ["us-west-2"],
       "tags": {
         "Name": "Consul Server {{ user `consul_version` }}",
         "System": "Consul",
@@ -75,6 +76,7 @@
       "ami_virtualization_type": "hvm",
       "ami_description": "HashiCorp Consul Server {{ user `consul_version` }}",
       "ami_name": "{{ user `environment` }}-consul-server-{{ user `consul_release` }}-{{ user `distribution` }}-Ubuntu_16.04",
+      "ami_regions": ["us-west-2"],
       "tags": {
         "Name": "Consul Server {{ user `consul_version` }}",
         "System": "Consul",
