@@ -50,7 +50,6 @@ APT_GET=$(which apt-get 2>/dev/null)
 if [[ ! -z ${YUM} ]]; then
   echo "Installing dnsmasq via yum"
   sudo yum install -q -y dnsmasq
-  sudo sed -i '1i nameserver 127.0.0.1\n' /etc/resolv.conf
 elif [[ ! -z ${APT_GET} ]]; then
   echo "Installing dnsmasq via apt-get"
   sudo apt-get -qq -y update
@@ -59,6 +58,9 @@ else
   echo "Dnsmasq not installed due to OS detection failure"
   exit 1;
 fi
+
+echo "Update resolv.conf"
+sudo sed -i '1i nameserver 127.0.0.1\n' /etc/resolv.conf
 
 echo "Configuring dnsmasq to forward .consul requests to consul port 8600"
 cat <<DNSMASQ | sudo tee /etc/dnsmasq.d/consul
