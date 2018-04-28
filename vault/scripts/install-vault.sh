@@ -28,7 +28,7 @@ sudo mkdir -pm 0755 ${VAULT_CONFIG_DIR} ${VAULT_DATA_DIR} ${VAULT_TLS_DIR}
 
 echo "Start Vault in -dev mode"
 cat <<ENVVARS | sudo tee ${VAULT_ENV_VARS}
-FLAGS=-dev -dev-ha -dev-transactional -dev-root-token-id=root
+FLAGS=-dev -dev-ha -dev-transactional -dev-root-token-id=root -dev-listen-address=0.0.0.0:8200
 ENVVARS
 
 echo "Update directory permissions"
