@@ -24,5 +24,5 @@ export TERRAFORM_VERSION="0.11.1"
 export RELEASE_VERSION="0.1.0"
 
 # Force build or run on feature branch
-export RUN_BUILD=true
+export RUN_BUILD=false
 export RUN_PUBLISH=false
