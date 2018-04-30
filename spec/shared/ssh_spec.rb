@@ -1,4 +1,9 @@
 describe service('sshd') do
   it { should be_enabled }
-  it { should be_running }
+end
+
+if host_inventory['ec2']['ami-id']
+  describe service('sshd') do
+    it { should be_running }
+  end
 end

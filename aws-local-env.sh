@@ -1,105 +1,78 @@
-  #!/bin/bash
-  # aws-local-env.sh
-  #
-  # Disclaimer: Building AWS Packer images locally has not been tested. The Azure process has.
-  #
-  # Variables you'll need to trigger Packer image builds locally
-  # If you have an ~/.aws/credentials file, you'll need to override that with
-  # the credentials given to you via this repo: https://github.com/hashicorp/licensing-binaries
-  # and this job: https://tfe.hashicorp.engineering/terraform/licensing/environments/binaries/changes/runs
-  #
-  # The procedure for getting your binary credentials is documented in the [SE Handbook](https://docs.google.com/document/d/1lRYgJMIGejYbaxTpZmc3hnbj7aWRg7dFXCN3_x87mYQ/edit#heading=h.6blw4fxx8vz1)
-  #
-  # Below is one example of how to use it
-  #
-  #
-  ## Example usage:
-  #
-  # $ cd /root/of/this/repository
-  # $ source aws-local-env.sh
-  # $ cd hashistack # or cd into any dir containing an AWS Packer build file
-  # $ packer build hashistack.json
-  #
-  # TODO: See if we need a separate set of variables for the binary downloads
-  # so we're not conflicting with the credentials being used to build the image.
-
-  # Source versions from this repository
-  source versions.sh
-
-  if [ -z ${S3BUCKET} ]; then
-    read -p $'\033[1;32mPlease enter an S3 bucket name for enterprise binary download: \033[0m' S3BUCKET
-    export S3BUCKET="${S3BUCKET}"
-  else
-    export S3BUCKET="${S3BUCKET}"
-  fi
-
-  if [ -z ${AWS_ACCESS_KEY_ID} ]; then
-    read -p $'\033[1;32mPlease enter an AWS access key ID for enterprise binary download: \033[0m' AWS_ACCESS_KEY_ID
-    export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
-  else
-    export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
-  fi
-
-  if [ -z ${AWS_SECRET_ACCESS_KEY} ]; then
-    read -p $'\033[1;32mPlease enter an AWS secret access key for enterprise binary download: \033[0m' AWS_SECRET_ACCESS_KEY
-    export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
-  else
-    export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
-  fi
-
-# The below variables may need to be set for AWS and may need different names - untested
-#  if [ -z ${AZURE_RESOURCE_GROUP} ]; then
-#    read -p $'\033[1;32mPlease enter an Azure resource group for image creation and storage: \033[0m' AZURE_RESOURCE_GROUP
-#    export AZURE_RESOURCE_GROUP="${AZURE_RESOURCE_GROUP}"
-#  else
-#    export AZURE_RESOURCE_GROUP="${AZURE_RESOURCE_GROUP}"
-#  fi
+#!/bin/bash
+# aws-local-env.sh
 #
-#  if [ -z ${AZURE_LOCATION} ]; then
-#    read -p $'\033[1;32mPlease enter an Azure location for image creation: \033[0m' AZURE_LOCATION
-#    export AZURE_LOCATION="${AZURE_LOCATION}"
-#  else
-#    export AZURE_LOCATION="${AZURE_LOCATION}"
-#  fi
+# Disclaimer: Building AWS Packer images locally has not been tested. The Azure process has.
+#
+# Variables you'll need to trigger Packer image builds locally
+# If you have an ~/.aws/credentials file, you'll need to override that with
+# the credentials given to you via this repo: https://github.com/hashicorp/licensing-binaries
+# and this job: https://tfe.hashicorp.engineering/terraform/licensing/environments/binaries/changes/runs
+#
+# The procedure for getting your binary credentials is documented in the [SE Handbook](https://docs.google.com/document/d/1lRYgJMIGejYbaxTpZmc3hnbj7aWRg7dFXCN3_x87mYQ/edit#heading=h.6blw4fxx8vz1)
+#
+# Below is one example of how to use it
+#
+#
+## Example usage:
+#
+# $ cd /root/of/this/repository
+# $ source aws-local-env.sh
+# $ cd hashistack # or cd into any dir containing an AWS Packer build file
+# $ packer build hashistack.json
+#
+# TODO: See if we need a separate set of variables for the binary downloads
+# so we're not conflicting with the credentials being used to build the image.
 
-  if [ -z ${PACKER_ENVIRONMENT} ]; then
-    read -p $'\033[1;32mPlease enter an environment tag for your image: \033[0m' PACKER_ENVIRONMENT
-    export PACKER_ENVIRONMENT="${PACKER_ENVIRONMENT}"
-  else
-    export PACKER_ENVIRONMENT="${PACKER_ENVIRONMENT}"
-  fi
+# Source versions from this repository
+source versions.sh
 
-  export CONSUL_RELEASE="${CONSUL_VERSION}"
-  export NOMAD_RELEASE="${NOMAD_VERSION}"
-  export VAULT_RELEASE="${VAULT_VERSION}"
-  export CONSUL_VERSION="${CONSUL_VERSION}"
-  export NOMAD_VERSION="${NOMAD_VERSION}"
-  export VAULT_VERSION="${VAULT_VERSION}"
-  export DISTRIBUTION="ent"
-  export CONSUL_VERSION="${CONSUL_RELEASE}"
-  export VAULT_VERSION="${VAULT_RELEASE}"
-  export NOMAD_VERSION="${NOMAD_RELEASE}"
-  # Re-source this file for every Packer run to re-generate URLs
-  # They are set to expire after 10 minutes
-  export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
-    AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
-    aws s3 presign \
-    --region="us-east-1" \
-    s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip \
-    --expires-in 600)
-  export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
-    AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
-    aws s3 presign \
-    --region="us-east-1" \
-    s3://${S3BUCKET}/vault/prem/${VAULT_VERSION}/vault-enterprise_${VAULT_VERSION}+prem_linux_amd64.zip \
-    --expires-in 600) 
-  export NOMAD_ENT_URL=$(AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
-    AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
-    aws s3 presign \
-    --region="us-east-1" \
-    s3://${S3BUCKET}/nomad-enterprise/${NOMAD_VERSION}/nomad-enterprise_${NOMAD_VERSION}+ent_linux_amd64.zip \
-    --expires-in 600)
+if [ -z ${S3BUCKET} ]; then
+  read -p $'\033[1;32mPlease enter an S3 bucket name for enterprise binary download: \033[0m' S3BUCKET
+  export S3BUCKET="${S3BUCKET}"
+else
+  export S3BUCKET="${S3BUCKET}"
+fi
 
-  # Feel free to comment out the below reminder if you're familiar with this process
-  echo -e "\n\033[0;32mBinary downloads generated by this script expire in 10 minutes."
-  echo -e "Make sure to re-source this file to regenerate URLs for every Packer build."
+if [ -z ${AWS_ACCESS_KEY_ID} ]; then
+  read -p $'\033[1;32mPlease enter an AWS access key ID for enterprise binary download: \033[0m' AWS_ACCESS_KEY_ID
+  export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
+else
+  export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
+fi
+
+if [ -z ${AWS_SECRET_ACCESS_KEY} ]; then
+  read -p $'\033[1;32mPlease enter an AWS secret access key for enterprise binary download: \033[0m' AWS_SECRET_ACCESS_KEY
+  export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
+else
+  export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
+fi
+
+export VCS_NAME="local"
+export RELEASE_VERSION="${RELEASE_VERSION}"
+export CONSUL_VERSION="${CONSUL_VERSION}"
+export VAULT_VERSION="${VAULT_VERSION}"
+export NOMAD_VERSION="${NOMAD_VERSION}"
+# Re-source this file for every Packer run to re-generate URLs
+# They are set to expire after 10 minutes
+export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
+  AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
+  aws s3 presign \
+  --region="us-east-1" \
+  s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip \
+  --expires-in 600)
+export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
+  AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
+  aws s3 presign \
+  --region="us-east-1" \
+  s3://${S3BUCKET}/vault/prem/${VAULT_VERSION}/vault-enterprise_${VAULT_VERSION}+prem_linux_amd64.zip \
+  --expires-in 600)
+export NOMAD_ENT_URL=$(AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
+  AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
+  aws s3 presign \
+  --region="us-east-1" \
+  s3://${S3BUCKET}/nomad-enterprise/${NOMAD_VERSION}/nomad-enterprise_${NOMAD_VERSION}+ent_linux_amd64.zip \
+  --expires-in 600)
+
+# Feel free to comment out the below reminder if you're familiar with this process
+echo -e "\n\033[0;32mBinary downloads generated by this script expire in 10 minutes."
+echo -e "Make sure to re-source this file to regenerate URLs for every Packer build."

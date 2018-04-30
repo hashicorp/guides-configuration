@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
 set -x
 
-logger() {
-  DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT $0: $1"
-}
+echo "Running"
 
-logger "Running"
-
+GROUP="${GROUP:-}"
 USER="${USER:-}"
 COMMENT="${COMMENT:-}"
-GROUP="${GROUP:-}"
 HOME="${HOME:-}"
 
 # Detect package management system.
@@ -55,14 +50,19 @@ user_ubuntu() {
 }
 
 if [[ ! -z ${YUM} ]]; then
-  logger "Setting up user ${USER} for RHEL/CentOS"
+  echo "Setting up user ${USER} for RHEL/CentOS"
   user_rhel
 elif [[ ! -z ${APT_GET} ]]; then
-  logger "Setting up user ${USER} for Debian/Ubuntu"
+  echo "Setting up user ${USER} for Debian/Ubuntu"
   user_ubuntu
 else
-  logger "${USER} user not created due to OS detection failure"
+  echo "${USER} user not created due to OS detection failure"
   exit 1;
 fi
 
-logger "Complete"
+# Create & set permissions on HOME directory
+sudo mkdir -pm 0755 ${HOME}
+sudo chown -R ${USER}:${GROUP} ${HOME}
+sudo chmod -R 0755 ${HOME}
+
+echo "Complete"

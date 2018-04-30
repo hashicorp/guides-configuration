@@ -1,11 +1,6 @@
 #!/bin/bash
 set -x
 
-logger() {
-  DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT $0: $1"
-}
-
 download_jdk() {
   local JDK_VERSION="$1"
   local EXT="$2"
@@ -19,7 +14,7 @@ download_jdk() {
   readonly URL="http://www.oracle.com"
   readonly JDK_DOWNLOAD_URL1="${URL}/technetwork/java/javase/downloads/index.html"
   readonly JDK_DOWNLOAD_URL2=$(${curl_cmd} ${JDK_DOWNLOAD_URL1} | egrep -o "\/technetwork\/java/\javase\/downloads\/jdk${JDK_VERSION}-downloads-.+?\.html" | head -1 | cut -d '"' -f 1)
-  [[ -z "${JDK_DOWNLOAD_URL2}" ]] && logger "Could not get jdk download url - ${JDK_DOWNLOAD_URL1}" && exit 1
+  [[ -z "${JDK_DOWNLOAD_URL2}" ]] && echo "Could not get jdk download url - ${JDK_DOWNLOAD_URL1}" && exit 1
   readonly JDK_DOWNLOAD_URL3="${URL}${JDK_DOWNLOAD_URL2}"
   readonly JDK_DOWNLOAD_URL4=$(${curl_cmd} ${JDK_DOWNLOAD_URL3} | egrep -o "http\:\/\/download.oracle\.com\/otn-pub\/java\/jdk\/[7-8]u[0-9]+\-(.*)+\/jdk-[7-8]u[0-9]+(.*)linux-x64.${EXT}" | tail -1)
   for DL_URL in "${JDK_DOWNLOAD_URL4[@]}"; do
@@ -27,20 +22,20 @@ download_jdk() {
   done
 }
 
-logger "Running"
+echo "Running"
 
-logger "Installing Oracle JDK"
+echo "Installing Oracle JDK"
 
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
 
 if [[ ! -z ${YUM} ]]; then
-  logger "RHEL/CentOS system detected"
+  echo "RHEL/CentOS system detected"
   download_jdk 8 rpm
   sudo rpm -Uvh jdk-*-linux-x64.rpm
 elif [[ ! -z ${APT_GET} ]]; then
-  logger "Debian/Ubuntu system detected"
+  echo "Debian/Ubuntu system detected"
   download_jdk 8 tar.gz
   sudo mkdir -p /opt/jdk
   sudo tar xf jdk-*-linux-x64.tar.gz -C /opt/jdk
@@ -52,8 +47,8 @@ elif [[ ! -z ${APT_GET} ]]; then
   update-alternatives --display javac
   update-alternatives --display jar
 else
-  logger "Oracle JDK not installed due to OS detection failure"
+  echo "Oracle JDK not installed due to OS detection failure"
   exit 1;
 fi
 
-logger "Complete"
+echo "Complete"

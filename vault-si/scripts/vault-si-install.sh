@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 set -x
 
-logger() {
-  DT=$(date '+%Y/%m/%d %H:%M:%S')
-  echo "$DT install-vault-si.sh: $1"
-}
-
-logger "Running"
+echo "Running"
 
 VAULT_SI_VERSION=${VERSION:-"0.18.2"}
 VAULT_SI_ZIP="vault-si_${VAULT_SI_VERSION}_linux_amd64.zip"
@@ -17,21 +12,21 @@ CONFIG_DIR="/etc/vault-si.d"
 DATA_DIR="/opt/vault-si/data"
 DOWNLOAD_DIR="/tmp"
 
-logger "Downloading vault-si ${VAULT_SI_VERSION}"
+echo "Downloading vault-si ${VAULT_SI_VERSION}"
 curl --silent --output ${DOWNLOAD_DIR}/${VAULT_SI_ZIP} ${VAULT_SI_URL}
 
-logger "Installing vault-si"
+echo "Installing vault-si"
 sudo unzip -o ${DOWNLOAD_DIR}/${VAULT_SI_ZIP} -d /usr/local/bin/
 sudo chmod 0755 /usr/local/bin/vault-si
 sudo chown ${VAULT_SI_USER}:${VAULT_SI_GROUP} /usr/local/bin/vault-si
 
-logger "/usr/local/bin/vault-si --version: $(/usr/local/bin/vault-si --version)"
+echo "/usr/local/bin/vault-si --version: $(/usr/local/bin/vault-si --version)"
 
-logger "Configuring vault-si"
+echo "Configuring vault-si"
 sudo mkdir -pm 0755 ${CONFIG_DIR} ${DATA_DIR}
 sudo cp /tmp/vault-si/config/vault-si.hcl ${CONFIG_DIR}
 
 sudo chown -R ${VAULT_SI_USER}:${VAULT_SI_GROUP} ${CONFIG_DIR} ${DATA_DIR}
 sudo chmod -R 0644 ${CONFIG_DIR}/*
 
-logger "Complete"
+echo "Complete"

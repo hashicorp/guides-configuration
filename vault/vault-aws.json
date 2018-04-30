@@ -3,16 +3,20 @@
     "aws_access_key_id": "{{ env `AWS_ACCESS_KEY_ID` }}",
     "aws_secret_access_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
     "aws_region": "{{ env `AWS_REGION` }}",
-    "aws_owner": "{{ env `AWS_OWNER` }}",
-    "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+    "release_version": "{{ env `RELEASE_VERSION` }}",
     "vcs_name": "{{ env `VCS_NAME` }}",
     "consul_version": "{{ env `CONSUL_VERSION` }}",
-    "consul_release": "{{ env `CONSUL_RELEASE` }}",
     "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "consul_group": "consul",
+    "consul_user": "consul",
+    "consul_comment": "Consul",
+    "consul_home": "/srv/consul",
     "vault_version": "{{ env `VAULT_VERSION` }}",
-    "vault_release": "{{ env `VAULT_RELEASE` }}",
     "vault_ent_url": "{{ env `VAULT_ENT_URL` }}",
-    "distribution": "{{ env `DISTRIBUTION` }}"
+    "vault_group": "vault",
+    "vault_user": "vault",
+    "vault_comment": "Vault",
+    "vault_home": "/srv/vault"
   },
   "builders": [
     {
@@ -39,17 +43,18 @@
       "ssh_username": "ec2-user",
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "HashiCorp Vault Server {{ user `vault_version` }}",
-      "ami_name": "{{ user `environment` }}-vault-server-{{ user `vault_release` }}-{{ user `distribution` }}-RHEL_7.3",
-      "ami_regions": ["us-west-2"],
+      "ami_name": "vault-image_{{ user `release_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
+      "ami_description": "HashiCorp Vault Image {{ user `release_version` }}",
+      "ami_regions": ["us-east-1", "us-west-2", "eu-west-2", "ap-southeast-2"],
       "tags": {
-        "Name": "Vault Server {{ user `vault_version` }}",
+        "Name": "Vault RHEL 7.3 Image {{ user `release_version` }}: Vault v{{ user `vault_version` }} Consul v{{ user `consul_version` }}",
         "System": "Vault",
         "Product": "Vault",
-        "Environment": "{{ user `environment` }}",
         "Built-By": "{{ user `vcs_name` }}",
-        "Product-Version": "{{ user `vault_version` }}",
-        "OS": "RHEL",
+        "Release-Version": "{{ user `release_version` }}",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Vault-Version": "{{ user `vault_version` }}",
+        "OS": "rhel",
         "OS-Version": "7.3"
       }
     },
@@ -77,17 +82,18 @@
       "ssh_username": "ubuntu",
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
-      "ami_description": "HashiCorp Vault Server {{ user `vault_version` }}",
-      "ami_name": "{{ user `environment` }}-vault-server-{{ user `vault_release` }}-{{ user `distribution` }}-Ubuntu_16.04",
-      "ami_regions": ["us-west-2"],
+      "ami_name": "vault-image_{{ user `release_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
+      "ami_description": "HashiCorp Vault Image {{ user `release_version` }}",
+      "ami_regions": ["us-east-1", "us-west-2", "eu-west-2", "ap-southeast-2"],
       "tags": {
-        "Name": "Vault Server {{ user `vault_version` }}",
+        "Name": "Vault Ubuntu 16.04 Image {{ user `release_version` }}: Vault v{{ user `vault_version` }} Consul v{{ user `consul_version` }}",
         "System": "Vault",
         "Product": "Vault",
-        "Environment": "{{ user `environment` }}",
         "Built-By": "{{ user `vcs_name` }}",
-        "Product-Version": "{{ user `vault_version` }}",
-        "OS": "Ubuntu",
+        "Release-Version": "{{ user `release_version` }}",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Vault-Version": "{{ user `vault_version` }}",
+        "OS": "ubuntu",
         "OS-Version": "16.04"
       }
     }
@@ -114,10 +120,10 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=consul",
-        "GROUP=consul",
-        "COMMENT=Consul",
-        "HOME=/srv/consul"
+        "GROUP={{ user `consul_group` }}",
+        "USER={{ user `consul_user` }}",
+        "COMMENT={{ user `consul_comment` }}",
+        "HOME={{ user `consul_home` }}"
       ],
       "inline": [
         "bash /tmp/shared/scripts/setup-user.sh"
@@ -127,7 +133,9 @@
       "type": "shell",
       "environment_vars": [
         "VERSION={{ user `consul_version` }}",
-        "URL={{ user `consul_ent_url` }}"
+        "URL={{ user `consul_ent_url` }}",
+        "USER={{ user `consul_user` }}",
+        "GROUP={{ user `consul_group` }}"
       ],
       "inline": [
         "bash /tmp/consul/scripts/install-consul.sh"
@@ -143,10 +151,10 @@
     {
       "type": "shell",
       "environment_vars": [
-        "USER=vault",
-        "GROUP=vault",
-        "COMMENT=Vault",
-        "HOME=/srv/vault"
+        "GROUP={{ user `vault_group` }}",
+        "USER={{ user `vault_user` }}",
+        "COMMENT={{ user `vault_comment` }}",
+        "HOME={{ user `vault_home` }}"
       ],
       "inline": [
         "bash /tmp/shared/scripts/setup-user.sh"
@@ -156,7 +164,9 @@
       "type": "shell",
       "environment_vars": [
         "VERSION={{ user `vault_version` }}",
-        "URL={{ user `vault_ent_url` }}"
+        "URL={{ user `vault_ent_url` }}",
+        "USER={{ user `vault_user` }}",
+        "GROUP={{ user `vault_group` }}"
       ],
       "inline": [
         "bash /tmp/vault/scripts/install-vault.sh"
@@ -173,7 +183,7 @@
       "type": "shell",
       "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "inline": [
-        "cd /tmp/shared/scripts/ && bash /tmp/shared/scripts/setup-testing.sh",
+        "cd /tmp/shared/scripts && bash /tmp/shared/scripts/setup-testing.sh",
         "cd /tmp && rake vault:spec"
       ]
     },

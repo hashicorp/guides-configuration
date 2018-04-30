@@ -1,31 +1,22 @@
-# Intro
-This repo contains Packer templates used for modules in hashicorp-modules
+# Guides Configuration
 
----
-
-## HashiStack
-Contains provider specific templates that installs HashiCorp software on a single node (Consul, Nomad, Vault, consul-template and envconsul).
-
-Example HashiStack build command:
-
-```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" NOMAD_VERSION="0.5.6" VAULT_VERSION="0.7.3" packer build hashistack.json
-```
+This repo contains Packer templates used by HashiCorp Terraform modules in the [hashicorp-modules](https://github.com/hashicorp-modules/) GitHub Org.
 
 ### Building HashiStack images locally (outside of the CI pipeline)
-This is a workflow that's designed to allow you to trigger local builds of enterprise or OSS Packer images. This functionality is currently under development. The Azure example below is all that's been tested.
 
-This is particularly useful for customers using Azure, as it's not possible to share machine images with them.
+This is a workflow that's designed to allow you to trigger local builds of enterprise or OSS Packer images. This functionality is currently under development.
+
+This is particularly useful for customers using Azure, as it's not possible to share machine images.
 
 #### Prerequisites
-- If you don't already have credentials to access HashiCorp enterprise binaries, add an appropriate entry for yourself (if you're an employee) in the [licensing binaries repository](https://github.com/hashicorp/licensing-binaries).
-- After adding yourself, you can find your credentials in the output of this [terraform job](https://tfe.hashicorp.engineering/terraform/licensing/environments/binaries/changes/runs).
-  - The above procedure for getting your binary credentials is documented in the [SE Handbook](https://docs.google.com/document/d/1lRYgJMIGejYbaxTpZmc3hnbj7aWRg7dFXCN3_x87mYQ/edit#heading=h.6blw4fxx8vz1).
-- If you are building Azure images, you'll need to follow the steps at the below links to set up and authenticate with an Azure account.
+
+- Access HashiCorp enterprise binaries
+- If you are building Azure images, you'll need to follow the steps at the below links to set up and authenticate with an Azure account
   - [Azure setup instructions](https://github.com/tdsacilowski/azure-consul/blob/master/README.md#deployment-prerequisites)
-  - This [Azure RM setup guide](https://www.terraform.io/docs/providers/azurerm/index.html) is linked in the above documentation.
+  - [Azure RM setup guide](https://www.terraform.io/docs/providers/azurerm/index.html)
 
 #### An example using Packer to build images on Azure
+
 After authenticating (see above) with Azure, perform the following steps.
 
 - Authenticate with Azure using the [Azure setup instructions](https://github.com/tdsacilowski/azure-consul/blob/master/README.md#deployment-prerequisites).
@@ -53,7 +44,6 @@ After authenticating (see above) with Azure, perform the following steps.
   source env.sh
   ```
 
-
 - With the root of this repo as your working directory, run the following before each packer build:
   ```
   # Source azure-local-env.sh before each packer build to regenerate URLs,
@@ -64,54 +54,82 @@ After authenticating (see above) with Azure, perform the following steps.
   $ packer build hashistack-azure.json
   ```
 
-***Notes:***
-- Right now using the [hashistack-azure](https://github.com/hashicorp-guides/hashistack/tree/chad_hashistack_azure/terraform-azure) and an image resulting from the above, it's possible to deploy a HashiStack cluster (some functional tests pending) on Ubuntu and RHEL. You may need to start Vault on RHEL.
-- Make sure to source `azure-local-env.sh` or `aws-local-env.sh` before each packer build as the AWS enterprise download URLs expire after 10 minutes.
-- If someone has time to test this process on an AWS build, it would help. Mainly, I suspect the AWS credential variables to download binaries will conflict with local AWS credential environment variables.
-
 ---
 
 ## Consul
-Contains Consul specific installation scripts, configuration files.  Also has Packer templates specific to Consul usage.
 
-Example Consul build command (AWS):
+Contains Consul specific installation scripts, configuration files. Also has Packer templates specific to Consul usage.
 
-```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" CONSUL_VERSION="0.9.2" packer build consul-aws.json
-```
-
-Example Consul build command (Azure):
+Example AWS Consul build command:
 
 ```
+source aws-local-env.sh
+AWS_REGION="us-west-1" packer build consul-aws.json
+```
+
+Example Azure Consul build command:
+
+```
+source azure-local-env.sh
 AZURE_RESOURCE_GROUP="PackerImages" AZURE_LOCATION="West US" PACKER_ENVIRONMENT="dev" CONSUL_VERSION="0.9.2" packer build consul-azure.json
 ```
 
 ---
 
-## Nomad
-Contains Nomad specific installation scripts, configuration files.  Also has Packer templates specific to Nomad usage.
+## Vault
 
+Contains Vault specific installation scripts, configuration files. Also has Packer templates specific to Vault usage.
 
-Example Nomad (including Consul) build command:
+Example AWS Vault (including Consul) build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" NOMAD_VERSION="0.5.6" CONSUL_VERSION="0.9.2" packer build nomad.json
+source aws-local-env.sh
+AWS_REGION="us-west-1" packer build vault-aws.json
 ```
 
 ---
 
-## Vault
-Contains Vault specific installation scripts, configuration files.  Also has Packer templates specific to Vault usage.
+## Nomad
+Contains Nomad specific installation scripts, configuration files. Also has Packer templates specific to Nomad usage.
 
-Example Vault (including Consul) build command:
+
+Example AWS Nomad (including Consul) build command:
 
 ```
-AWS_REGION="us-west-1" PACKER_ENVIRONMENT="production" VAULT_VERSION="0.7.3" CONSUL_VERSION="0.9.2" packer build vault.json
+source aws-local-env.sh
+AWS_REGION="us-west-1" packer build nomad-aws.json
+```
+
+---
+
+## HashiStack
+Contains provider specific templates that installs HashiCorp software on a single node (Consul, Nomad, Vault, consul-template and envconsul).
+
+Example AWS HashiStack build command:
+
+```
+source aws-local-env.sh
+AWS_REGION="us-west-1" packer build hashistack-aws.json
+```
+
+Example Azure HashiStack build command:
+
+```
+source azure-local-env.sh
+VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.0.6" VAULT_VERSION="0.9.5" NOMAD_VERSION="0.7.1" packer build hashistack-azure.json
+```
+
+Example GCP HashiStack build command:
+
+```
+source gcp-local-env.sh
+VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.0.6" VAULT_VERSION="0.9.5" NOMAD_VERSION="0.7.1" packer build hashistack-gcp.json
 ```
 
 ## Continuous Integration
-Product versions for the builds are set on the versions.sh file. This file should be sourced at the start of the CI Build process.
-The ci-functions.sh file should be sourced at the start of the CI Build process and introduces three functions:
+
+Product versions for the builds are set on the versions.sh file. This file should be sourced at the start of the CI Build process. The ci-functions.sh file should be sourced at the start of the CI Build process and introduces three functions:
+
 - prepare() will download the ${PACKER_VERSION}
 - validate() will run packer validate on the packer templates, for a set of arguments (like consul nomad vault hashistack)
 - build() will build and deploy the images
@@ -148,17 +166,7 @@ fi
 
 ## Hashistack Version Tables:
 
-| Nomad | Consul | Vault  |
-|-------|--------|--------|
-| 0.5.6 | 0.8.4  | 0.7.3  |
-| 0.6.0 | 0.8.4  | 0.7.3  |
-| 0.6.0 | 0.8.4  | 0.8.0  |
-| 0.6.0 | 0.9.2  | 0.8.0  |
-| 0.6.0 | 0.9.2  | 0.8.1  |
-| 0.6.2 | 0.9.2  | 0.8.1  |
-| 0.6.3 | 0.9.2  | 0.8.3  |
-| 0.7.0 | 1.0.0  | 0.8.3  |
-| 0.7.1 | 1.0.2  | 0.9.1  |
-| 0.7.1 | 1.0.2  | 0.9.5  |
-| 0.7.1 | 1.0.6  | 0.9.5  |
-| 0.7.1 | 1.0.6  | 0.10.0 |
+|   Consul    |   Vault     |   Nomad     |   Release   |
+|-------------|-------------|-------------|-------------|
+| 1.0.6       | 0.10.0      | 0.8.0       | 0.1.0       |
+| 1.0.6-ent   | 0.10.0-ent  | 0.8.0-ent   | 0.1.0       |

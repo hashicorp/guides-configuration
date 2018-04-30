@@ -1,9 +1,9 @@
-export GCP_ACCOUNT_FILE_JSON="/home/ehron/.gcloud/ekg-image-test.json"
+export GCP_ACCOUNT_FILE_JSON="~/.gcloud/example.json"
 export GCP_ZONE="us-east1-b"
 export GCP_PROJECT_ID="ekg-image-test"
 
+export VCS_NAME="local"
 export PACKER_ENVIRONMENT="test"
-export VCS_NAME="norhe"
 export CONSUL_VERSION="0.9.2"
 export CONSUL_ENT_URL="not_used"
 export VAULT_VERSION="0.8.3"
