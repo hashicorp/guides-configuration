@@ -28,7 +28,7 @@ sudo mkdir -pm 0755 ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_TLS_DIR}
 
 echo "Start Consul in -dev mode"
 cat <<ENVVARS | sudo tee ${CONSUL_ENV_VARS}
-FLAGS=-dev -ui
+FLAGS=-dev -ui -client "0.0.0.0"
 CONSUL_HTTP_ADDR=http://127.0.0.1:8500
 ENVVARS
 
