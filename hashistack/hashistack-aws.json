@@ -212,7 +212,7 @@
     },
      {
       "type": "shell",
-      "only": ["amazon-ebs-ubuntu-16.04-systemd"],
+      "only": ["amazon-ebs-rhel-7.3-systemd", "amazon-ebs-ubuntu-16.04-systemd"],
       "inline": [
         "bash /tmp/nomad/scripts/install-docker.sh"
       ]
