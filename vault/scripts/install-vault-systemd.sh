@@ -18,10 +18,10 @@ else
   exit 1;
 fi
 
-sudo curl -o ${SYSTEMD_DIR}/vault.service https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/vault/init/systemd/vault.service
-sudo curl -o ${SYSTEMD_DIR}/consul-online.service https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/init/systemd/consul-online.service
-sudo curl -o ${SYSTEMD_DIR}/consul-online.target https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/init/systemd/consul-online.target
-sudo curl -o ${SYSTEMD_DIR}/consul-online.sh https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/init/systemd/consul-online.sh
+sudo curl -o ${SYSTEMD_DIR}/vault.service https://raw.githubusercontent.com/hashicorp/guides-configuration/master/vault/init/systemd/vault.service
+sudo curl -o ${SYSTEMD_DIR}/consul-online.service https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul-online.service
+sudo curl -o ${SYSTEMD_DIR}/consul-online.target https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul-online.target
+sudo curl -o ${SYSTEMD_DIR}/consul-online.sh https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul-online.sh
 sudo chmod 0664 ${SYSTEMD_DIR}/{vault*,consul*}
 
 sudo systemctl enable consul
