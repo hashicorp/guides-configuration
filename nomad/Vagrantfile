@@ -77,14 +77,14 @@ Vagrant.configure("2") do |config|
   config.vm.provision "file", source: "../shared", destination: "/tmp"
 
   # Bootstrap the vm
-  config.vm.provision "shell", inline: "bash /tmp/shared/scripts/base.sh"
+  config.vm.provision "shell", inline: "bash /tmp/scripts/base.sh"
 
   if (consul_install)
     # Forward Consul port
     config.vm.network :forwarded_port, guest: 8500, host: consul_host_port, auto_correct: true
 
     # Setup Consul user
-    config.vm.provision "shell", inline: "bash /tmp/shared/scripts/setup-user.sh",
+    config.vm.provision "shell", inline: "bash /tmp/scripts/setup-user.sh",
       env: {
         "GROUP" => consul_group,
         "USER" => consul_user,
@@ -93,7 +93,7 @@ Vagrant.configure("2") do |config|
       }
 
     # Install Consul
-    config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-consul.sh",
+    config.vm.provision "shell", inline: "bash /tmp/scripts/install-consul.sh",
       env: {
         "VERSION" => consul_version,
         "URL" => consul_ent_url,
@@ -101,7 +101,7 @@ Vagrant.configure("2") do |config|
         "GROUP" => consul_group,
       }
 
-    config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-consul-systemd.sh"
+    config.vm.provision "shell", inline: "bash /tmp/scripts/install-consul-systemd.sh"
   end
 
   if (vault_install)
@@ -109,7 +109,7 @@ Vagrant.configure("2") do |config|
     config.vm.network :forwarded_port, guest: 8200, host: vault_host_port, auto_correct: true
 
     # Setup Vault user
-    config.vm.provision "shell", inline: "bash /tmp/shared/scripts/setup-user.sh",
+    config.vm.provision "shell", inline: "bash /tmp/scripts/setup-user.sh",
       env: {
         "GROUP" => vault_group,
         "USER" => vault_user,
@@ -118,7 +118,7 @@ Vagrant.configure("2") do |config|
       }
 
     # Install Vault
-    config.vm.provision "shell", inline: "bash /tmp/vault/scripts/install-vault.sh",
+    config.vm.provision "shell", inline: "bash /tmp/scripts/install-vault.sh",
       env: {
         "VERSION" => vault_version,
         "URL" => vault_ent_url,
@@ -126,14 +126,14 @@ Vagrant.configure("2") do |config|
         "GROUP" => vault_group,
       }
 
-    config.vm.provision "shell", inline: "bash /tmp/vault/scripts/install-vault-systemd.sh"
+    config.vm.provision "shell", inline: "bash /tmp/scripts/install-vault-systemd.sh"
   end
 
   # Forward Nomad port
   config.vm.network :forwarded_port, guest: 4646, host: nomad_host_port, auto_correct: true
 
   # Install Nomad
-  config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-nomad.sh",
+  config.vm.provision "shell", inline: "bash /tmp/scripts/install-nomad.sh",
     env: {
       "VERSION" => nomad_version,
       "URL" => nomad_ent_url,
@@ -141,19 +141,19 @@ Vagrant.configure("2") do |config|
       "GROUP" => nomad_group,
     }
 
-  config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
+  config.vm.provision "shell", inline: "bash /tmp/scripts/install-nomad-systemd.sh"
   config.vm.provision "shell", inline: $nomad_setup, privileged: false
 
   if (docker_install)
-    config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-docker.sh"
+    config.vm.provision "shell", inline: "bash /tmp/scripts/install-docker.sh"
   end
 
   if (java_install)
-    config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-java.sh"
+    config.vm.provision "shell", inline: "bash /tmp/scripts/install-java.sh"
   end
 
   # Setup tests
-  config.vm.provision "shell", inline: "bash /tmp/shared/scripts/setup-testing.sh"
+  config.vm.provision "shell", inline: "bash /tmp/scripts/setup-testing.sh"
 
   # Run tests if `RUN_TESTS` env var is provided
   if (run_tests)
@@ -162,7 +162,7 @@ Vagrant.configure("2") do |config|
 
   # Cleanup if `CLEANUP` env var is provided
   if (cleanup)
-    config.vm.provision "shell", inline: "bash /tmp/shared/scripts/cleanup.sh"
+    config.vm.provision "shell", inline: "bash /tmp/scripts/cleanup.sh"
   end
 
   # Increase memory for Parallels Desktop
@@ -213,8 +213,8 @@ You can interact with Nomad using any of the CLI (https://www.nomadproject.io/do
   $ curl -X GET http://127.0.0.1:4646/v1/jobs | jq '.' # Check that the job is stopped
 
 Visit the Nomad UI: http://#{private_ip}:#{nomad_host_port}
-#{consul_install ? 'Visit the Consul UI: http://'+ private_ip + ':' + consul_host_port : ''}
-#{vault_install ? 'Visit the Vault UI: http://' + private_ip + ':' + vault_host_port : ''}
+#{consul_install ? 'Visit the Consul UI: http://'+ private_ip + ':' + consul_host_port.to_s : ''}
+#{vault_install ? 'Visit the Vault UI: http://' + private_ip + ':' + vault_host_port.to_s : ''}
 
 Don't forget to tear your VM down after.
 
