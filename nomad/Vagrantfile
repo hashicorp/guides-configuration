@@ -41,8 +41,6 @@ run_tests = ENV['RUN_TESTS']
 cleanup = ENV['CLEANUP']
 
 $nomad_setup = <<SCRIPT
-LOCAL_IP=$(ip route | grep eth1 | awk '{print $NF;exit}')
-
 echo "Set hostname's IP to make advertisement work"
 sudo sed -i -e "s/.*nomad.*/$(ip route get 1 | awk '{print $NF;exit}')       nomad/" /etc/hosts
 
@@ -51,11 +49,13 @@ cat <<CONFIG | sudo tee /etc/nomad.d/default.hcl
 bind_addr = "0.0.0.0"
 
 advertise {
-  http = "$LOCAL_IP:4646"
-  rpc  = "$LOCAL_IP:4647"
-  serf = "$LOCAL_IP:4648"
+  http = "#{private_ip}:4646"
+  rpc  = "#{private_ip}:4647"
+  serf = "#{private_ip}:4648"
 }
 CONFIG
+
+sudo systemctl restart nomad
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -133,7 +133,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, guest: 4646, host: nomad_host_port, auto_correct: true
 
   # Install Nomad
-  config.vm.provision "shell", inline: "bash /tmp/vault/scripts/install-nomad.sh",
+  config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-nomad.sh",
     env: {
       "VERSION" => nomad_version,
       "URL" => nomad_ent_url,
@@ -141,15 +141,15 @@ Vagrant.configure("2") do |config|
       "GROUP" => nomad_group,
     }
 
-  config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-nomad-systemd.sh"
+  config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
   config.vm.provision "shell", inline: $nomad_setup, privileged: false
 
   if (docker_install)
-    config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-docker.sh"
+    config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-docker.sh"
   end
 
   if (java_install)
-    config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-java.sh"
+    config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-java.sh"
   end
 
   # Setup tests
@@ -212,8 +212,9 @@ You can interact with Nomad using any of the CLI (https://www.nomadproject.io/do
   $ curl -X DELETE http://127.0.0.1:4646/v1/job/example | jq '.' # Stop the example job
   $ curl -X GET http://127.0.0.1:4646/v1/jobs | jq '.' # Check that the job is stopped
 
-Visit the Consul UI: http://#{private_ip}:#{consul_host_port}/
-Visit the Nomad UI: http://#{private_ip}:#{nomad_host_port}/
+Visit the Nomad UI: http://#{private_ip}:#{nomad_host_port}
+#{consul_install ? 'Visit the Consul UI: http://'+ private_ip + ':' + consul_host_port : ''}
+#{vault_install ? 'Visit the Vault UI: http://' + private_ip + ':' + vault_host_port : ''}
 
 Don't forget to tear your VM down after.
 

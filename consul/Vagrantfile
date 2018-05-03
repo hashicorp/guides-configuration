@@ -111,7 +111,7 @@ You can now interact with Consul using any of the CLI (https://www.consul.io/doc
   $ curl -X PUT -d '{\"bar=baz\"}' http://127.0.0.1:8500/v1/kv/api | jq '.'
   $ curl http://127.0.0.1:8500/v1/kv/api | jq '.'
 
-Visit the Consul UI: http://#{private_ip}:#{consul_host_port}/
+Visit the Consul UI: http://#{private_ip}:#{consul_host_port}
 
 Don't forget to tear your VM down after.
 
