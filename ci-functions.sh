@@ -41,6 +41,11 @@ gpg_import () {
   echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
 }
 
+gpg_cleanup () {
+  echo "Cleaning up GPG Keyring..."
+  rm -rf .gnupg
+}
+
 presign_ent_url () {
   if [ $# -eq 0 ]; then
     echo -e "\033[31m\033[1m[FAIL - no variables provided]\033[0m"
@@ -140,13 +145,7 @@ build () {
 
     cd -
   done
-
-  echo "Cleaning up GPG Keyring..."
-  gpg --fingerprint --with-colons ${PGP_SECRET_ID} |\
-    grep "^fpr" |\
-    sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' |\
-    xargs gpg --batch --delete-secret-keys
-
+  
   echo "Completed build from ${GIT_BRANCH}"
 }
 
