@@ -1,0 +1,126 @@
+{
+  "variables": {
+    "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+    "consul_version": "{{ env `CONSUL_VERSION` }}",
+    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "nomad_version": "{{ env `NOMAD_VERSION` }}",
+    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
+    "project_id": "{{ env `PROJECT_ID`}}",
+    "zone": "{{ env `ZONE`}}"
+  },
+  "builders": [
+    {
+      "name": "Ubuntu",
+      "image_name": "google-ubuntu-1604-{{timestamp}}",
+      "ssh_username": "ubuntu",
+      "type": "googlecompute",
+      "account_file": "google_creds.json",
+      "project_id": "{{ user `project_id`}}",
+      "zone": "{{ user `zone`}}",
+      "machine_type": "n1-standard-1",
+      "source_image_family": "ubuntu-1604-lts"
+    },
+    {
+      "name": "Rhel-7",
+      "image_name": "google-rhel-7-{{timestamp}}",
+      "ssh_username": "ec2-user",
+      "type": "googlecompute",
+      "account_file": "google_creds.json",
+      "project_id": "{{ user `project_id`}}",
+      "zone": "{{ user `zone`}}",
+      "machine_type": "n1-standard-1",
+      "source_image_family": "rhel-7"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../shared",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../consul",
+      "destination": "/tmp"
+    },
+    {
+      "type": "file",
+      "source": "../nomad",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/base.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/base-aws.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "USER=consul",
+        "GROUP=consul",
+        "COMMENT=Consul",
+        "HOME=/srv/consul"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/nomad/scripts/install-docker.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/nomad/scripts/install-oracle-jdk.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `consul_version` }}",
+        "URL={{ user `consul_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `nomad_version` }}",
+        "URL={{ user `nomad_ent_url` }}"
+      ],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
