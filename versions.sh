@@ -3,7 +3,7 @@
 ## DON'T FORGET TO UPDATE the README with any version bumps ##
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 1.0.6 or 1.0.6-ent)
-export CONSUL_VERSION="1.0.7"
+export CONSUL_VERSION="1.1.0"
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 0.10.0 or 0.10.0-ent)
 export VAULT_VERSION="0.10.1"
