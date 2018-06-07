@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 # Networking
-private_ip = ENV['PRIVATE_IP'] || "192.168.50.151"
+private_ip = ENV['PRIVATE_IP'] || "192.168.50.161"
 
 # Base box selection
 base_box = ENV['BASE_BOX'] || "bento/ubuntu-16.04"
@@ -17,8 +17,8 @@ consul_comment = "Consul"
 consul_home = "/srv/consul"
 
 # Tests & cleanup
-run_tests = ENV['RUN_TESTS']
-cleanup = ENV['CLEANUP']
+run_tests = ["true", "1"].include?((ENV['RUN_TESTS'] || true).to_s.downcase)
+cleanup = ["true", "1"].include?((ENV['CLEANUP'] || true).to_s.downcase)
 
 Vagrant.configure("2") do |config|
   # Use vagrant insecure public key, comment this out to restrict access
@@ -99,7 +99,8 @@ To SSH into the Consul host, run the below command.
 
   $ vagrant ssh
 
-You can now interact with Consul using any of the CLI (https://www.consul.io/docs/commands/index.html) or API (https://www.consul.io/api/index.html) commands.
+You can now interact with Consul using any of the CLI (https://www.consul.io/docs/commands/index.html)
+or API (https://www.consul.io/api/index.html) commands.
 
   # Use the CLI to retrieve the Consul members, write a key/value, and read that key/value
   $ consul members
