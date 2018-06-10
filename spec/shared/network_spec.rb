@@ -1,4 +1,4 @@
-if !host_inventory['user']['vagrant']['name']
+if !host_inventory['user']['vagrant']
   describe interface('eth0') do
     it { should be_up }
   end
