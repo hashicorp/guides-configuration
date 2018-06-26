@@ -201,23 +201,5 @@
         "bash /tmp/shared/scripts/cleanup.sh"
       ]
     }
-  ],
-  "post-processors" : [
-    {
-      "type": "googlecompute-export",
-      "only": ["gcp-ubuntu-16.04-systemd"],
-      "paths": [
-        "gs://hc-se-image-store/{{ user `environment` }}/consul-{{ user `consul_version`}}-nomad-{{ user `nomad_version`}}-vault-{{ user `vault_version`}}/hashistack-server-ubuntu-16-04.tar.gz"
-      ],
-      "keep_input_artifact": false
-    },
-    {
-      "type": "googlecompute-export",
-      "only": ["gcp-rhel-7.3-systemd"],
-      "paths": [
-        "gs://hc-se-image-store/{{ user `environment` }}/consul-{{ user `consul_version`}}-nomad-{{ user `nomad_version`}}-vault-{{ user `vault_version`}}/hashistack-server-rhel-7-3.tar.gz"
-      ],
-      "keep_input_artifact": false
-    }
   ]
 }
