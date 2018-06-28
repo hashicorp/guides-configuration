@@ -3,13 +3,13 @@
 ## DON'T FORGET TO UPDATE the README with any version bumps ##
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 1.0.6 or 1.0.6-ent)
-export CONSUL_VERSION="1.2.0"
+export CONSUL_VERSION="1.2.0-ent"
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 0.10.0 or 0.10.0-ent)
-export VAULT_VERSION="0.10.3"
+export VAULT_VERSION="0.10.3-ent"
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 0.8.0 or 0.8.0-ent)
-export NOMAD_VERSION="0.8.4"
+export NOMAD_VERSION="0.8.4-ent"
 
 # X.Y.Z (e.g. 0.12.3)
 export PACKER_VERSION="1.1.3"
