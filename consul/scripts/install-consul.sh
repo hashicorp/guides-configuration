@@ -26,6 +26,15 @@ echo "$(${CONSUL_PATH} --version)"
 echo "Configuring Consul ${CONSUL_VERSION}"
 sudo mkdir -pm 0755 ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_TLS_DIR}
 
+if [[ ! -z ${LICENSE} ]]; then
+  echo "Installing Consul license"
+  cat <<LICENSE | sudo tee ${CONSUL_CONFIG_DIR}/license
+${LICENSE}
+LICENSE
+else
+  echo "No Consul license to install"
+fi
+
 echo "Start Consul in -dev mode"
 cat <<ENVVARS | sudo tee ${CONSUL_ENV_VARS}
 FLAGS=-dev -ui -client 0.0.0.0

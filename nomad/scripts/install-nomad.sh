@@ -26,6 +26,15 @@ echo "$(${NOMAD_PATH} --version)"
 echo "Configuring Nomad ${NOMAD_VERSION}"
 sudo mkdir -pm 0755 ${NOMAD_CONFIG_DIR} ${NOMAD_DATA_DIR} ${NOMAD_TLS_DIR}
 
+if [[ ! -z ${LICENSE} ]]; then
+  echo "Installing Nomad license"
+  cat <<LICENSE | sudo tee ${NOMAD_CONFIG_DIR}/license
+${LICENSE}
+LICENSE
+else
+  echo "No Nomad license to install"
+fi
+
 echo "Start Nomad in -dev mode"
 cat <<ENVVARS | sudo tee ${NOMAD_ENV_VARS}
 FLAGS=-dev
