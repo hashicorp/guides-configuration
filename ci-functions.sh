@@ -69,7 +69,7 @@ presign_ent_url () {
   _VERSION=$2
 
   if [ ${_PRODUCT} = "consul" ]; then
-    _S3_URL=s3://${S3BUCKET}/consul/prem/${_VERSION}/consul-enterprise_${_VERSION}+prem_linux_amd64.zip
+    _S3_URL=s3://${S3BUCKET}/consul/prem/${_VERSION}/consul-enterprise_${_VERSION}+ent_linux_amd64.zip
   elif [ ${_PRODUCT} = "vault" ]; then
     _S3_URL=s3://${S3BUCKET}/vault/prem/${_VERSION}/vault-enterprise_${_VERSION}+prem_linux_amd64.zip
   elif [ ${_PRODUCT} = "nomad" ]; then
