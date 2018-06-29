@@ -39,7 +39,6 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "consul-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
       "ami_description": "HashiCorp Consul Image {{ user `release_version` }}",
-      "ami_regions": ["us-east-1", "us-west-2", "eu-west-2", "ap-southeast-2"],
       "tags": {
         "Name": "Consul RHEL 7.3 Image {{ user `release_version` }}: Consul v{{ user `consul_version` }}",
         "System": "Consul",
@@ -79,7 +78,6 @@
       "ami_virtualization_type": "hvm",
       "ami_name": "consul-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp Consul Image {{ user `release_version` }}",
-      "ami_regions": ["us-east-1", "us-west-2", "eu-west-2", "ap-southeast-2"],
       "tags": {
         "Name": "Consul Ubuntu 16.04 Image {{ user `release_version` }}: Consul v{{ user `consul_version` }}",
         "System": "Consul",
