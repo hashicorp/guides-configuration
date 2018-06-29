@@ -54,6 +54,7 @@
         "Release-Version": "{{ user `release_version` }}",
         "Consul-Version": "{{ user `consul_version` }}",
         "Vault-Version": "{{ user `vault_version` }}",
+        "Nomad-Version": "nil",
         "OS": "rhel",
         "OS-Version": "7.3"
       }
@@ -93,6 +94,7 @@
         "Release-Version": "{{ user `release_version` }}",
         "Consul-Version": "{{ user `consul_version` }}",
         "Vault-Version": "{{ user `vault_version` }}",
+        "Nomad-Version": "nil",
         "OS": "ubuntu",
         "OS-Version": "16.04"
       }

@@ -52,6 +52,7 @@
         "Built-By": "{{ user `vcs_name` }}",
         "Release-Version": "{{ user `release_version` }}",
         "Consul-Version": "{{ user `consul_version` }}",
+        "Vault-Version": "nil",
         "Nomad-Version": "{{ user `nomad_version` }}",
         "OS": "rhel",
         "OS-Version": "7.3"
@@ -91,6 +92,7 @@
         "Built-By": "{{ user `vcs_name` }}",
         "Release-Version": "{{ user `release_version` }}",
         "Consul-Version": "{{ user `consul_version` }}",
+        "Vault-Version": "nil",
         "Nomad-Version": "{{ user `nomad_version` }}",
         "OS": "ubuntu",
         "OS-Version": "16.04"

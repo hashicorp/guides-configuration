@@ -47,7 +47,7 @@
       "ssh_username": "ec2-user",
       "ssh_timeout": "5m",
       "ami_virtualization_type": "hvm",
-      "ami_name": "hashistack-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_vault_{{ user `vault_version` }}_nomad_{{ user `nomad_version` }}_rhel_7.3",
+      "ami_name": "hashistack-image_{{ user `release_version` }}_nomad_{{ user `nomad_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_rhel_7.3",
       "ami_description": "HashiCorp HashiStack Image {{ user `release_version` }}",
       "ami_regions": ["us-east-1", "us-west-2", "eu-west-2", "ap-southeast-2"],
       "tags": {
@@ -87,7 +87,7 @@
       "ssh_username": "ubuntu",
       "ssh_timeout": "10m",
       "ami_virtualization_type": "hvm",
-      "ami_name": "hashistack-image_{{ user `release_version` }}_consul_{{ user `consul_version` }}_vault_{{ user `vault_version` }}_nomad_{{ user `nomad_version` }}_ubuntu_16.04",
+      "ami_name": "hashistack-image_{{ user `release_version` }}_nomad_{{ user `nomad_version` }}_vault_{{ user `vault_version` }}_consul_{{ user `consul_version` }}_ubuntu_16.04",
       "ami_description": "HashiCorp HashiStack Image {{ user `release_version` }}",
       "ami_regions": ["us-east-1", "us-west-2", "eu-west-2", "ap-southeast-2"],
       "tags": {
