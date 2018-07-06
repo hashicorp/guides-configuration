@@ -25,4 +25,4 @@ export RELEASE_VERSION="0.1.1"
 
 # Force build or run on feature branch
 export RUN_BUILD=false
-export RUN_PUBLISH=false
+export RUN_PUBLISH=true
