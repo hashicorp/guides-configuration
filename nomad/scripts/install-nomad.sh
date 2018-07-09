@@ -15,7 +15,7 @@ NOMAD_ENV_VARS=${NOMAD_CONFIG_DIR}/nomad.conf
 NOMAD_PROFILE_SCRIPT=/etc/profile.d/nomad.sh
 
 echo "Downloading Nomad ${NOMAD_VERSION}"
-[200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${NOMAD_ZIP} ${NOMAD_URL})] && exit 1
+[ 200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${NOMAD_ZIP} ${NOMAD_URL}) ] && exit 1
 
 echo "Installing Nomad"
 sudo unzip -o /tmp/${NOMAD_ZIP} -d ${NOMAD_DIR}
