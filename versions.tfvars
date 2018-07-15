@@ -1,6 +1,6 @@
 release_versions = [
-  "0.1.0",
-  "0.1.1",
+  \"0.1.0\",
+  \"0.1.1\",
 ]
 
 consul_versions = [
