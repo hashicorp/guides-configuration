@@ -170,8 +170,8 @@ publish () {
   # ./tfe-cli/bin/tfe pushvars -hcl-var ${VAULT_VERSIONS} -overwrite vault_versions
   # ./tfe-cli/bin/tfe pushvars -hcl-var ${NOMAD_VERSIONS} -overwrite nomad_versions
 
-  echo "Copy versions.tfvars"
-  cp ../versions.tfvars ./versions.tfvars
+  echo "Move versions.tfvars"
+  mv ../versions.tfvars ./versions.tfvars
 
   echo "View versions.tfvars"
   cat ./versions.tfvars
