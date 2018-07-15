@@ -173,14 +173,14 @@ publish () {
   ls -la ../.
   echo "View tfvars"
   cat ../versions.tfvars
-  chmod 777 ../versions.tfvars
+  cp ../versions.tfvars ./versions.tfvars
 
   echo "Push variables"
   ./tfe-cli/bin/tfe pushvars -var-file versions.tfvars \
     -overwrite release_versions \
     -overwrite consul_versions \
     -overwrite vault_versions \
-    -overwrite nomad_versions ../.
+    -overwrite nomad_versions
 
   echo "Push config"
   ./tfe-cli/bin/tfe pushconfig
