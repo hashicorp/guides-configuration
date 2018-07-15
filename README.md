@@ -116,14 +116,14 @@ Example Azure HashiStack build command:
 
 ```
 source azure-local-env.sh
-VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.2.0" VAULT_VERSION="0.9.5" NOMAD_VERSION="0.7.1" packer build hashistack-azure.json
+VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.2.0" VAULT_VERSION="0.10.3" NOMAD_VERSION="0.8.4" packer build hashistack-azure.json
 ```
 
 Example GCP HashiStack build command:
 
 ```
 source gcp-local-env.sh
-VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.2.0" VAULT_VERSION="0.9.5" NOMAD_VERSION="0.7.1" packer build hashistack-gcp.json
+VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.2.0" VAULT_VERSION="0.10.3" NOMAD_VERSION="0.8.4" packer build hashistack-gcp.json
 ```
 
 ## Continuous Integration
