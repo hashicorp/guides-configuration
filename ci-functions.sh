@@ -170,12 +170,12 @@ publish () {
   # ./tfe-cli/bin/tfe pushvars -hcl-var ${VAULT_VERSIONS} -overwrite vault_versions
   # ./tfe-cli/bin/tfe pushvars -hcl-var ${NOMAD_VERSIONS} -overwrite nomad_versions
   echo "Verify directory contents"
-  ls -la ./.
   ls -la ../.
-  ls -la ../../.
+  echo "View tfvars"
+  cat ../versions.tfvars
 
   echo "Push tfvars variables"
-  ./tfe-cli/bin/tfe pushvars -var-file ./versions.tfvars \
+  ./tfe-cli/bin/tfe pushvars -var-file ../versions.tfvars \
     -overwrite release_versions \
     -overwrite consul_versions \
     -overwrite vault_versions \
