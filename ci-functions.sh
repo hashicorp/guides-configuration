@@ -171,13 +171,13 @@ publish () {
   # ./tfe-cli/bin/tfe pushvars -hcl-var ${NOMAD_VERSIONS} -overwrite nomad_versions
 
   echo "Move versions.tfvars"
-  mv ../versions.tfvars ./versions.tfvars
+  mv ../versions.tfvars ./terraform.tfvars
 
   echo "View versions.tfvars"
-  cat ./versions.tfvars
+  cat ./terraform.tfvars
 
   echo "Push variables"
-  ./tfe-cli/bin/tfe pushvars -var-file versions.tfvars \
+  ./tfe-cli/bin/tfe pushvars -var-file terraform.tfvars \
     -overwrite release_versions \
     -overwrite consul_versions \
     -overwrite vault_versions \
