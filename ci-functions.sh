@@ -175,7 +175,7 @@ publish () {
   cat ../versions.tfvars
 
   echo "Push variables"
-  ./tfe-cli/bin/tfe pushvars -var-file ./../versions.tfvars \
+  ./tfe-cli/bin/tfe pushvars -var-file ../versions.tfvars . \
     -overwrite release_versions \
     -overwrite consul_versions \
     -overwrite vault_versions \
