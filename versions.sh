@@ -3,7 +3,7 @@
 # X.Y.Z (e.g. 0.12.3)
 export PACKER_VERSION="1.1.3"
 
-# X.Y.Z (e.g. 0.10.0)
+# X.Y.Z (e.g. 0.11.1)
 export TERRAFORM_VERSION="0.11.1"
 
 ## DON'T FORGET TO UPDATE the _VERSIONS env vars
