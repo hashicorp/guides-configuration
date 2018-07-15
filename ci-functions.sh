@@ -165,9 +165,14 @@ publish () {
   cd tf-se-ami-permissions
 
   /tmp/terraform init
-  ./tfe-cli/bin/tfe pushvars -var "release_versions=${RELEASE_VERSIONS}" -overwrite release_versions
-  ./tfe-cli/bin/tfe pushvars -var "consul_versions=${CONSUL_VERSIONS}" -overwrite consul_versions
-  ./tfe-cli/bin/tfe pushvars -var "vault_versions=${VAULT_VERSIONS}" -overwrite vault_versions
-  ./tfe-cli/bin/tfe pushvars -var "nomad_versions=${NOMAD_VERSIONS}" -overwrite nomad_versions
+  # ./tfe-cli/bin/tfe pushvars -hcl-var ${RELEASE_VERSIONS} -overwrite release_versions
+  # ./tfe-cli/bin/tfe pushvars -hcl-var ${CONSUL_VERSIONS} -overwrite consul_versions
+  # ./tfe-cli/bin/tfe pushvars -hcl-var ${VAULT_VERSIONS} -overwrite vault_versions
+  # ./tfe-cli/bin/tfe pushvars -hcl-var ${NOMAD_VERSIONS} -overwrite nomad_versions
+  ./tfe-cli/bin/tfe pushvars -var-file ../versions.tfvars \
+    -overwrite release_versions \
+    -overwrite consul_versions \
+    -overwrite vault_versions \
+    -overwrite nomad_versions
   ./tfe-cli/bin/tfe pushconfig
 }
