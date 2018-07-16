@@ -185,6 +185,9 @@ publish () {
   #   -overwrite vault_versions \
   #   -overwrite nomad_versions
 
+  echo "Remove modules"
+  rm -rf .terraform/modules/
+
   echo "Push config"
   ./tfe-cli/bin/tfe pushconfig
 }
