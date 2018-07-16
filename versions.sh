@@ -40,4 +40,4 @@ export NOMAD_VERSIONS='nomad_versions=["0.8.4","0.8.4-ent",]'
 
 # Force build or run on feature branch
 export RUN_BUILD=false
-export RUN_PUBLISH=true
+export RUN_PUBLISH=false
