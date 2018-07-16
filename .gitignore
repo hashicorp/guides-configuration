@@ -9,9 +9,9 @@ packer_cache/
 # Compiled files
 *.tfstate
 *.tfstate.backup
-*.tfvars
 
 # Module directory
+*/.terraform/modules/
 .terraform/
 
 ### Vagrant ###

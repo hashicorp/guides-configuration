@@ -165,8 +165,16 @@ publish () {
   cd tf-se-ami-permissions
 
   /tmp/terraform init
-  ./tfe-cli/bin/tfe pushvars -var "consul_version=${CONSUL_VERSION}" -overwrite consul_version
-  ./tfe-cli/bin/tfe pushvars -var "nomad_version=${NOMAD_VERSION}" -overwrite nomad_version
-  ./tfe-cli/bin/tfe pushvars -var "vault_version=${VAULT_VERSION}" -overwrite vault_version
+
+  echo "Push variables"
+  ./tfe-cli/bin/tfe pushvars -hcl-var ${RELEASE_VERSIONS} -overwrite release_versions
+  ./tfe-cli/bin/tfe pushvars -hcl-var ${CONSUL_VERSIONS} -overwrite consul_versions
+  ./tfe-cli/bin/tfe pushvars -hcl-var ${VAULT_VERSIONS} -overwrite vault_versions
+  ./tfe-cli/bin/tfe pushvars -hcl-var ${NOMAD_VERSIONS} -overwrite nomad_versions
+
+  echo "Remove downloaded Terraform modules to prevent TFE error"
+  rm -rf .terraform/modules/
+
+  echo "Push config"
   ./tfe-cli/bin/tfe pushconfig
 }
