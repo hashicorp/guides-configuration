@@ -39,5 +39,5 @@ export VAULT_VERSIONS='vault_versions=["0.10.3","0.10.3-ent","0.10.3",]'
 export NOMAD_VERSIONS='nomad_versions=["0.8.4","0.8.4-ent","0.8.4",]'
 
 # Force build or run on feature branch
-export RUN_BUILD=true
-export RUN_PUBLISH=true
+export RUN_BUILD=false
+export RUN_PUBLISH=false
