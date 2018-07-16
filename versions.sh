@@ -33,10 +33,10 @@ export NOMAD_VERSION="0.8.4-ent"
 # https://github.com/hashicorp/guides-configuration#hashistack-version-tables.
 # Every time a product version is updated, the RELEASE_VERSION must be bumped
 # as well.
-# export RELEASE_VERSIONS='release_versions=["0.1.0","0.1.1",]'
-# export CONSUL_VERSIONS='consul_versions=["1.2.0","1.2.0-ent",]'
-# export VAULT_VERSIONS='vault_versions=["0.10.3","0.10.3-ent",]'
-# export NOMAD_VERSIONS='nomad_versions=["0.8.4","0.8.4-ent",]'
+export RELEASE_VERSIONS='release_versions=["0.1.0","0.1.1",]'
+export CONSUL_VERSIONS='consul_versions=["1.2.0","1.2.0-ent",]'
+export VAULT_VERSIONS='vault_versions=["0.10.3","0.10.3-ent",]'
+export NOMAD_VERSIONS='nomad_versions=["0.8.4","0.8.4-ent",]'
 
 # Force build or run on feature branch
 export RUN_BUILD=false
