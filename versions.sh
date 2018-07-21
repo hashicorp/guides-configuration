@@ -27,12 +27,17 @@ export NOMAD_VERSION="0.8.4-ent"
 # The below are aggregate lists of product versions to be published. Any
 # time a product version above is updated, that new version _must_ be
 # added to the appropriate list below to be published. Each *_VERSIONS list
-# _must_ have the same number of items. If a product isn't being updated
-# to a newer version, just duplicate the existing version to maintain an
-# equivalent number of items in each of these lists. These lists should match
-# https://github.com/hashicorp/guides-configuration#hashistack-version-tables.
-# Every time a product version is updated, the RELEASE_VERSION must be bumped
+# _must_ have the same number of items.
+
+# If a product _isn't_ being updated to a newer version, just duplicate the
+# existing version to maintain an equivalent number of items in each of these
+# lists. These lists should match https://github.com/hashicorp/guides-configuration#hashistack-version-tables.
+#  Every time a product version is updated, the RELEASE_VERSION must be bumped
 # as well.
+
+# To make a `release_versions` images public, set the version map value to
+# `true` or `false`. Enterprise images will _not_ be set to public even if
+# `true` is set.
 export RELEASE_VERSIONS='release_versions=[{"0.1.0"=true},{"0.1.1"=false},{"0.1.2"=true},{"0.1.3"=false},]'
 export CONSUL_VERSIONS='consul_versions=["1.2.0","1.2.0-ent","1.2.1","1.2.1-ent",]'
 export VAULT_VERSIONS='vault_versions=["0.10.3","0.10.3-ent","0.10.3","0.10.3-ent",]'
