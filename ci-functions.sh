@@ -160,9 +160,9 @@ publish () {
   fi
 
   export PATH=$PATH:/tmp
-  rm -rf tf-se-ami-permissions
-  git clone --recurse-submodules https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp/tf-se-ami-permissions
-  cd tf-se-ami-permissions
+  rm -rf guides-image-permissions
+  git clone --recurse-submodules https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp/guides-image-permissions
+  cd guides-image-permissions
 
   /tmp/terraform init
 
