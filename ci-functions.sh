@@ -167,10 +167,10 @@ publish () {
   /tmp/terraform init
 
   echo "Push variables"
-  ./tfe-cli/bin/tfe pushvars -hcl-var ${RELEASE_VERSIONS} -overwrite release_versions
-  ./tfe-cli/bin/tfe pushvars -hcl-var ${CONSUL_VERSIONS} -overwrite consul_versions
-  ./tfe-cli/bin/tfe pushvars -hcl-var ${VAULT_VERSIONS} -overwrite vault_versions
-  ./tfe-cli/bin/tfe pushvars -hcl-var ${NOMAD_VERSIONS} -overwrite nomad_versions
+  ../tfe-cli/bin/tfe pushvars -hcl-var ${RELEASE_VERSIONS} -overwrite release_versions
+  ../tfe-cli/bin/tfe pushvars -hcl-var ${CONSUL_VERSIONS} -overwrite consul_versions
+  ../tfe-cli/bin/tfe pushvars -hcl-var ${VAULT_VERSIONS} -overwrite vault_versions
+  ../tfe-cli/bin/tfe pushvars -hcl-var ${NOMAD_VERSIONS} -overwrite nomad_versions
 
   echo "Remove downloaded Terraform modules to prevent TFE error"
   rm -rf .terraform/modules/
