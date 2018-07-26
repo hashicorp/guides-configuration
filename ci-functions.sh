@@ -176,5 +176,5 @@ publish () {
   rm -rf .terraform/modules/
 
   echo "Push config"
-  ./tfe-cli/bin/tfe pushconfig
+  ../tfe-cli/bin/tfe pushconfig
 }
