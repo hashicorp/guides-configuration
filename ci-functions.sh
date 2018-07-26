@@ -154,11 +154,6 @@ publish () {
   echo "GIT_BRANCH: ${GIT_BRANCH}"
   echo "RUN_PUBLISH: ${RUN_PUBLISH}"
 
-  if ! [[ ${GIT_BRANCH} == *"master"* ]] && ! [ ${RUN_PUBLISH} == true ] && ! [ ${RUN_PUBLISH} == 1 ]; then
-    echo "Do not publish, exit early"
-    exit 0
-  fi
-
   export PATH=$PATH:/tmp
   rm -rf guides-image-permissions
   git clone --recurse-submodules https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp/guides-image-permissions
