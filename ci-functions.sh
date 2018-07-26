@@ -162,19 +162,19 @@ publish () {
   export PATH=$PATH:/tmp
   rm -rf guides-image-permissions
   git clone --recurse-submodules https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp/guides-image-permissions
-  cd guides-image-permissions
+  cd guides-image-permissions/aws-images
 
   /tmp/terraform init
 
   echo "Push variables"
-  ./tfe-cli/bin/tfe pushvars -hcl-var ${RELEASE_VERSIONS} -overwrite release_versions
-  ./tfe-cli/bin/tfe pushvars -hcl-var ${CONSUL_VERSIONS} -overwrite consul_versions
-  ./tfe-cli/bin/tfe pushvars -hcl-var ${VAULT_VERSIONS} -overwrite vault_versions
-  ./tfe-cli/bin/tfe pushvars -hcl-var ${NOMAD_VERSIONS} -overwrite nomad_versions
+  ../tfe-cli/bin/tfe pushvars -hcl-var ${RELEASE_VERSIONS} -overwrite release_versions
+  ../tfe-cli/bin/tfe pushvars -hcl-var ${CONSUL_VERSIONS} -overwrite consul_versions
+  ../tfe-cli/bin/tfe pushvars -hcl-var ${VAULT_VERSIONS} -overwrite vault_versions
+  ../tfe-cli/bin/tfe pushvars -hcl-var ${NOMAD_VERSIONS} -overwrite nomad_versions
 
   echo "Remove downloaded Terraform modules to prevent TFE error"
   rm -rf .terraform/modules/
 
   echo "Push config"
-  ./tfe-cli/bin/tfe pushconfig
+  ../tfe-cli/bin/tfe pushconfig
 }
