@@ -19,6 +19,10 @@
     "vault_home": "/srv/vault",
     "nomad_version": "{{ env `NOMAD_VERSION` }}",
     "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
+    "wetty_group": "wetty",
+    "wetty_user": "wetty",
+    "wetty_password": "{{ env `WETTY_PASSWORD` }}",
+    "wetty_comment": "Wetty Web Terminal SSH user",
     "nomad_group": "root",
     "nomad_user": "root"
   },
@@ -219,6 +223,24 @@
       "type": "shell",
       "inline": [
         "bash /tmp/nomad/scripts/install-java.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/web-terminal.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "GROUP={{ user `wetty_group` }}",
+        "USER={{ user `wetty_user` }}",
+        "PASSWORD={{ user `wetty_password` }}",
+        "COMMENT={{ user `wetty_comment` }}"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-ssh-user.sh"
       ]
     },
     {
