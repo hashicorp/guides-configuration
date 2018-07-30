@@ -21,14 +21,14 @@ if [[ ! -z ${YUM} ]]; then
   sudo yum-config-manager --enable rhui-REGION-rhel-server-supplementary
   sudo yum-config-manager --enable rhui-REGION-rhel-server-extras
   sudo yum -y check-update
-  sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp git ca-certificates
+  sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp git ca-certificates nodejs-legacy npm nginx
   sudo systemctl start ntpd.service
   sudo systemctl enable ntpd.service
 elif [[ ! -z ${APT_GET} ]]; then
   echo "Debian/Ubuntu system detected"
   echo "Performing updates and installing prerequisites"
   sudo apt-get -qq -y update
-  sudo apt-get install -qq -y wget unzip dnsutils ruby rubygems ntp git
+  sudo apt-get install -qq -y wget unzip dnsutils ruby rubygems ntp git nodejs-legacy npm nginx
   sudo systemctl start ntp.service
   sudo systemctl enable ntp.service
   echo "Disable reverse dns lookup in SSH"
@@ -38,5 +38,8 @@ else
   echo "Prerequisites not installed due to OS detection failure"
   exit 1;
 fi
+
+echo "Installing Wetty"
+sudo curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/web-terminal.sh | bash
 
 echo "Complete"
