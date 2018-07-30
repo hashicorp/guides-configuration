@@ -224,6 +224,12 @@
     {
       "type": "shell",
       "inline": [
+        "bash /tmp/shared/scripts/web-terminal.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
         "cd /tmp/shared/scripts && bash /tmp/shared/scripts/setup-testing.sh",
         "cd /tmp && rake hashistack:spec"
       ]
