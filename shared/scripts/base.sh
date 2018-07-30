@@ -21,7 +21,17 @@ if [[ ! -z ${YUM} ]]; then
   sudo yum-config-manager --enable rhui-REGION-rhel-server-supplementary
   sudo yum-config-manager --enable rhui-REGION-rhel-server-extras
   sudo yum -y check-update
-  sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp git ca-certificates nodejs-legacy npm nginx
+
+  echo "Add node.js yum repository"
+  sudo yum install -q -y gcc-c++ make
+  curl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -
+
+  echo "Add nginx yum repository"
+  sudo wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  sudo yum install -q -y ./epel-release-latest-*.noarch.rpm
+
+  echo "Install packages"
+  sudo yum install -q -y wget unzip bind-utils ruby rubygems ntp git ca-certificates nodejs nginx
   sudo systemctl start ntpd.service
   sudo systemctl enable ntpd.service
 elif [[ ! -z ${APT_GET} ]]; then
@@ -38,8 +48,5 @@ else
   echo "Prerequisites not installed due to OS detection failure"
   exit 1;
 fi
-
-echo "Installing Wetty"
-sudo curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/web-terminal.sh | bash
 
 echo "Complete"
