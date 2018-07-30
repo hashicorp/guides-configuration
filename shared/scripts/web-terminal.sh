@@ -2,9 +2,11 @@
 set -e
 
 echo "--> Installing Wetty web terminal"
-git clone https://github.com/krishnasrinivas/wetty /opt/wetty
+sudo rm -rf /opt/wetty
+sudo git clone https://github.com/krishnasrinivas/wetty /opt/wetty
+sudo chmod 0755 /opt/wetty
 cd /opt/wetty
-npm install
+sudo npm install
 
 echo "--> Configuring Nginx proxy for Wetty web terminal"
 sudo tee /etc/nginx/nginx.conf > /dev/null <<"EOF"
