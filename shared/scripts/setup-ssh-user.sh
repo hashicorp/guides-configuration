@@ -47,15 +47,14 @@ user_ubuntu() {
   if ! getent passwd ${USER} >/dev/null
   then
     echo "Add user ${USER}"
-    sudo adduser \
-      --ingroup ${GROUP} \
-      --gecos "${COMMENT}" \
+    sudo useradd "${USER}" \
       --shell /bin/bash \
-      ${USER}  >/dev/null
+      --create-home  >/dev/null
   else
     echo "User ${USER} already created"
   fi
 
+  sudo usermod -a -G ${GROUP} "${USER}"
   sudo usermod -a -G sudo "${USER}"
 }
 
