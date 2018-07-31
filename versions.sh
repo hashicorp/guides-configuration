@@ -13,16 +13,16 @@ export TERRAFORM_VERSION="0.11.1"
 # Release candidate: X.Y.Z-rcX (e.g. 0.1.0-rc1)
 # Beta release: X.Y.Z-betaX (e.g. 0.1.0-beta1)
 # Development branch: X.Y.Z-f-branch (e.g. 0.1.0-f-branch)
-export RELEASE_VERSION="0.1.3"
+export RELEASE_VERSION="0.1.0"
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 1.0.6 or 1.0.6-ent)
-export CONSUL_VERSION="1.2.1-ent"
+export CONSUL_VERSION="1.2.0"
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 0.10.0 or 0.10.0-ent)
-export VAULT_VERSION="0.10.3-ent"
+export VAULT_VERSION="0.10.3"
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 0.8.0 or 0.8.0-ent)
-export NOMAD_VERSION="0.8.4-ent"
+export NOMAD_VERSION="0.8.4"
 
 # The below are aggregate lists of product versions to be published. Any
 # time a product version above is updated, that new version _must_ be
@@ -44,5 +44,5 @@ export VAULT_VERSIONS='vault_versions=["0.10.3","0.10.3-ent","0.10.3","0.10.3-en
 export NOMAD_VERSIONS='nomad_versions=["0.8.4","0.8.4-ent","0.8.4","0.8.4-ent",]'
 
 # Force build or run on feature branch
-export RUN_BUILD=false
-export RUN_PUBLISH=false
+export RUN_BUILD=true
+export RUN_PUBLISH=true
