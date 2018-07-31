@@ -48,14 +48,12 @@ user_ubuntu() {
   then
     echo "Add user ${USER}"
     sudo useradd "${USER}" \
+      --gid ${GROUP} \
       --shell /bin/bash \
       --create-home  >/dev/null
   else
     echo "User ${USER} already created"
   fi
-
-  sudo usermod -a -G ${GROUP} "${USER}"
-  sudo usermod -a -G sudo "${USER}"
 }
 
 if [[ ! -z ${YUM} ]]; then
