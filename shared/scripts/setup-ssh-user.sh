@@ -54,6 +54,8 @@ user_ubuntu() {
   else
     echo "User ${USER} already created"
   fi
+
+  sudo usermod -a -G sudo "${USER}"
 }
 
 if [[ ! -z ${YUM} ]]; then
