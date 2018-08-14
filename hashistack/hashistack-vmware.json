@@ -1,0 +1,223 @@
+{
+  "variables": {
+    "vm_name": "centos-7.5-vmware",
+    "iso_url": "http://mirrors.mit.edu/centos/7.5.1804/isos/x86_64/CentOS-7-x86_64-DVD-1804.iso",
+    "iso_sha256": "506e4e06abf778c3435b4e5745df13e79ebfc86565d7ea1e128067ef6b5a6345",
+    "release_version": "{{ env `RELEASE_VERSION` }}",
+    "vcs_name": "{{ env `VCS_NAME` }}",
+    "consul_version": "{{ env `CONSUL_VERSION` }}",
+    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "consul_group": "consul",
+    "consul_user": "consul",
+    "consul_comment": "Consul",
+    "consul_home": "/srv/consul",
+    "vault_version": "{{ env `VAULT_VERSION` }}",
+    "vault_ent_url": "{{ env `VAULT_ENT_URL` }}",
+    "vault_group": "vault",
+    "vault_user": "vault",
+    "vault_comment": "Vault",
+    "vault_home": "/srv/vault",
+    "nomad_version": "{{ env `NOMAD_VERSION` }}",
+    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
+    "wetty_group": "wetty",
+    "wetty_user": "wetty",
+    "wetty_password": "{{ env `WETTY_PASSWORD` }}",
+    "wetty_comment": "Wetty Web Terminal SSH user",
+    "nomad_group": "root",
+    "nomad_user": "root"
+  },
+  "builders": [
+    {
+      "name": "vmware-iso-centos-7.5-systemd",
+      "headless": true,
+      "type": "vmware-iso",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 81920,
+      "guest_os_type": "centos-64",
+      "http_directory": "http",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "{{user `iso_sha256`}}",
+      "ssh_username": "vagrant",
+      "ssh_private_key_file": "vagrant_rsa",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "1800s",
+      "shutdown_command": "echo '/sbin/halt -h -p' > /tmp/shutdown.sh; echo 'vagrant'|sudo -S sh '/tmp/shutdown.sh'",
+      "vmx_data": {
+        "memsize": "8192",
+        "numvcpus": "1",
+        "cpuid.coresPerSocket": "1"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/base.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["vmware-iso-centos-7.5-systemd"],
+      "inline": [
+        "bash /tmp/shared/scripts/base-aws.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "GROUP={{ user `consul_group` }}",
+        "USER={{ user `consul_user` }}",
+        "COMMENT={{ user `consul_comment` }}",
+        "HOME={{ user `consul_home` }}"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `consul_version` }}",
+        "URL={{ user `consul_ent_url` }}",
+        "USER={{ user `consul_user` }}",
+        "GROUP={{ user `consul_group` }}"
+      ],
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/consul-template/scripts/install-consul-template.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["vmware-iso-centos-7.5-systemd"],
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "GROUP={{ user `vault_group` }}",
+        "USER={{ user `vault_user` }}",
+        "COMMENT={{ user `vault_comment` }}",
+        "HOME={{ user `vault_home` }}"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `vault_version` }}",
+        "URL={{ user `vault_ent_url` }}",
+        "USER={{ user `vault_user` }}",
+        "GROUP={{ user `vault_group` }}"
+      ],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["vmware-iso-centos-7.5-systemd"],
+      "inline": [
+        "bash /tmp/vault/scripts/install-vault-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `nomad_version` }}",
+        "URL={{ user `nomad_ent_url` }}",
+        "USER={{ user `nomad_user` }}",
+        "GROUP={{ user `nomad_group` }}"
+      ],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["vmware-iso-centos-7.5-systemd"],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
+      ]
+    },
+     {
+      "type": "shell",
+      "only": ["vmware-iso-centos-7.5-systemd"],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-docker.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/nomad/scripts/install-java.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/web-terminal.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "GROUP={{ user `wetty_group` }}",
+        "USER={{ user `wetty_user` }}",
+        "PASSWORD={{ user `wetty_password` }}",
+        "COMMENT={{ user `wetty_comment` }}"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-ssh-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "cd /tmp/shared/scripts && bash /tmp/shared/scripts/setup-testing.sh",
+        "cd /tmp && rake hashistack:spec"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["vmware-iso-centos-7.5-systemd"],
+      "inline": [
+        "cd /tmp/shared/scripts && bash setup-testing.sh",
+        "cd /tmp/hashistack && rake spec"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["vmware-iso-centos-7.5-systemd"],
+      "inline": [
+        "bash /tmp/shared/scripts/cleanup-aws.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/cleanup.sh"
+      ]
+    }
+  ]
+ 
+}
