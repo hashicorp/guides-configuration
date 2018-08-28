@@ -16,13 +16,13 @@ export TERRAFORM_VERSION="0.11.1"
 export RELEASE_VERSION="0.1.3"
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 1.0.6 or 1.0.6-ent)
-export CONSUL_VERSION="1.2.1-ent"
+export CONSUL_VERSION="1.2.2"
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 0.10.0 or 0.10.0-ent)
-export VAULT_VERSION="0.10.3-ent"
+export VAULT_VERSION="0.11.0"
 
 # X.Y.Z or X.Y.Z-ent for Enterprise binary (e.g. 0.8.0 or 0.8.0-ent)
-export NOMAD_VERSION="0.8.4-ent"
+export NOMAD_VERSION="0.8.4"
 
 # The below are aggregate lists of product versions to be published. Any
 # time a product version above is updated, that new version _must_ be

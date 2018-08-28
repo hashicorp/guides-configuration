@@ -1,0 +1,148 @@
+{
+  "variables": {
+    "azure_client_id": "{{ env `ARM_CLIENT_ID` }}",
+    "azure_client_secret": "{{ env `ARM_CLIENT_SECRET` }}",
+    "azure_subscription_id": "{{ env `ARM_SUBSCRIPTION_ID` }}",
+    "azure_resource_group": "{{ env `AZURE_RESOURCE_GROUP` }}",
+    "azure_location": "{{ env `AZURE_LOCATION` }}",
+    "environment": "{{ env `PACKER_ENVIRONMENT` }}",
+    "vcs_name": "{{ env `VCS_NAME` }}",
+    "consul_version": "{{ env `CONSUL_VERSION` }}",
+    "consul_ent_url": "{{ env `CONSUL_ENT_URL` }}",
+    "consul_group": "consul",
+    "consul_user": "consul",
+    "consul_comment": "Consul",
+    "consul_home": "/srv/consul",
+    "nomad_version": "{{ env `NOMAD_VERSION` }}",
+    "nomad_release": "{{ env `NOMAD_RELEASE` }}",
+    "nomad_ent_url": "{{ env `NOMAD_ENT_URL` }}",
+    "nomad_group": "root",
+    "nomad_user": "root"
+  },
+  "builders": [
+    {
+      "name": "azure-managed-image-ubuntu-16.04-systemd",
+      "type": "azure-arm",
+      "client_id": "{{ user `azure_client_id` }}",
+      "client_secret": "{{ user `azure_client_secret` }}",
+      "subscription_id": "{{ user `azure_subscription_id` }}",
+      "managed_image_resource_group_name": "{{ user `azure_resource_group` }}",
+      "location": "{{ user `azure_location` }}",
+      "image_publisher": "Canonical",
+      "image_offer": "UbuntuServer",
+      "image_sku": "16.04-LTS",
+      "os_type": "Linux",
+      "ssh_username": "packer",
+      "managed_image_name": "{{ user `environment` }}-nomad-server-{{ user `nomad_version` }}-Ubuntu_16.04",
+      "azure_tags": {
+        "Name": "Nomad Ubuntu 16.04 Image {{ user `release_version` }}: Nomad v{{ user `nomad_version` }} Consul v{{ user `consul_version` }}",
+        "System": "Nomad",
+        "Product": "Nomad",
+        "Built-By": "{{ user `vcs_name` }}",
+        "Release-Version": "{{ user `release_version` }}",
+        "Consul-Version": "{{ user `consul_version` }}",
+        "Vault-Version": "nil",
+        "Nomad-Version": "{{ user `nomad_version` }}",
+        "OS": "ubuntu",
+        "OS-Version": "16.04"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/base.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/shared/scripts/base-azure.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "GROUP={{ user `consul_group` }}",
+        "USER={{ user `consul_user` }}",
+        "COMMENT={{ user `consul_comment` }}",
+        "HOME={{ user `consul_home` }}"
+      ],
+      "inline": [
+        "bash /tmp/shared/scripts/setup-user.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `consul_version` }}",
+        "URL={{ user `consul_ent_url` }}",
+        "USER={{ user `consul_user` }}",
+        "GROUP={{ user `consul_group` }}"
+      ],
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/consul/scripts/install-consul-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "VERSION={{ user `nomad_version` }}",
+        "URL={{ user `nomad_ent_url` }}",
+        "USER={{ user `nomad_user` }}",
+        "GROUP={{ user `nomad_group` }}"
+      ],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-nomad-systemd.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "bash /tmp/nomad/scripts/install-docker.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/nomad/scripts/install-java.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "only": ["azure-managed-image-ubuntu-16.04-systemd"],
+      "inline": [
+        "cd /tmp/shared/scripts && bash /tmp/shared/scripts/setup-testing.sh",
+        "cd /tmp && rake nomad:spec"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "bash /tmp/shared/scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
