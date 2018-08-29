@@ -28,7 +28,7 @@ sudo mkdir -pm 0755 ${NOMAD_CONFIG_DIR} ${NOMAD_DATA_DIR} ${NOMAD_TLS_DIR}
 
 echo "Start Nomad in -dev mode"
 cat <<ENVVARS | sudo tee ${NOMAD_ENV_VARS}
-FLAGS=-dev
+FLAGS=-bind 0.0.0.0 -dev
 ENVVARS
 
 echo "Update directory permissions"
