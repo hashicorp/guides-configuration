@@ -38,11 +38,11 @@ export NOMAD_VERSION="0.8.4"
 # To make a `release_versions` images public, set the version map value to
 # `true` or `false`. Enterprise images will _not_ be set to public even if
 # `true` is set.
-export RELEASE_VERSIONS='release_versions=[{"0.1.0"=true},{"0.1.1"=false},{"0.1.2"=true},{"0.1.3"=false},{"0.1.4"=false},]'
+export RELEASE_VERSIONS='release_versions=[{"0.1.0"=true},{"0.1.1"=false},{"0.1.2"=true},{"0.1.3"=false},{"0.1.4"=true},]'
 export CONSUL_VERSIONS='consul_versions=["1.2.0","1.2.0-ent","1.2.1","1.2.1-ent","1.2.2",]'
 export VAULT_VERSIONS='vault_versions=["0.10.3","0.10.3-ent","0.10.3","0.10.3-ent","0.11.0",]'
 export NOMAD_VERSIONS='nomad_versions=["0.8.4","0.8.4-ent","0.8.4","0.8.4-ent","0.8.4"]'
 
 # Force build or run on feature branch
-export RUN_BUILD=false
+export RUN_BUILD=true
 export RUN_PUBLISH=false
