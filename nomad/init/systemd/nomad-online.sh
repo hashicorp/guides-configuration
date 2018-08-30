@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 NOMAD_ADDRESS=${1:-"127.0.0.1:4646"}
 
