@@ -27,7 +27,7 @@ echo "Configuring Nomad ${NOMAD_VERSION}"
 sudo mkdir -pm 0755 ${NOMAD_CONFIG_DIR} ${NOMAD_DATA_DIR} ${NOMAD_TLS_DIR}
 
 echo "Start Nomad in -dev mode"
-cat <<ENVVARS | sudo tee ${NOMAD_ENV_VARS}
+sudo tee ${NOMAD_ENV_VARS} > /dev/null <<ENVVARS
 FLAGS=-bind 0.0.0.0 -dev
 ENVVARS
 
@@ -36,7 +36,7 @@ sudo chown -R ${USER}:${GROUP} ${NOMAD_CONFIG_DIR} ${NOMAD_DATA_DIR} ${NOMAD_TLS
 sudo chmod -R 0644 ${NOMAD_CONFIG_DIR}/*
 
 echo "Set Nomad profile script"
-cat <<PROFILE | sudo tee ${NOMAD_PROFILE_SCRIPT}
+sudo tee ${NOMAD_PROFILE_SCRIPT} > /dev/null <<PROFILE
 export NOMAD_ADDR=http://127.0.0.1:4646
 PROFILE
 
