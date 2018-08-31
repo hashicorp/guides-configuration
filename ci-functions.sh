@@ -67,6 +67,7 @@ validate () {
 }
 
 up () {
+  ls -la /tmp
   distros=( "bento/ubuntu-16.04" "bento/centos-7.4" )
 
   for PRODUCT in $*; do
