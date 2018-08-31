@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# X.Y.Z (e.g. 2.1.4)
+export VAGRANT_VERSION="2.1.4"
+
 # X.Y.Z (e.g. 0.12.3)
 export PACKER_VERSION="1.1.3"
 

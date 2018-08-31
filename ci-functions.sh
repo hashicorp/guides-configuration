@@ -1,11 +1,17 @@
 #!/bin/bash
 
-# This script includes a set of generic CI functions to test Packer Builds.
+# This script includes a set of generic CI functions to test Vagrantfiles & Packer Builds.
 prepare () {
+  rm -rf /tmp/vagrant
+  curl -o /tmp/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
+  unzip /tmp/vagrant.zip -d /tmp
+  chmod +x /tmp/vagrant
+
   rm -rf /tmp/packer
   curl -o /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
   unzip /tmp/packer.zip -d /tmp
   chmod +x /tmp/packer
+
   rm -rf /tmp/terraform
   curl -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
   unzip /tmp/terraform.zip -d /tmp
@@ -35,6 +41,23 @@ validate () {
     echo -e "\033[31m\033[1m[FAIL]\033[0m"
     return 1
   fi
+}
+
+vagrant () {
+  for PRODUCT in $*; do
+    echo "cd into ${PRODUCT} directory"
+    cd ${BUILDDIR}/${PRODUCT}
+    echo "Testing ${PRODUCT} Vagrantfile..."
+
+    if /tmp/vagrant up; then
+      echo -e "\033[32m\033[1m[PASS]\033[0m"
+    else
+      echo -e "\033[31m\033[1m[FAIL]\033[0m"
+      return 1
+    fi
+
+    cd -
+  done
 }
 
 gpg_import () {
