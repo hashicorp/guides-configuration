@@ -2,13 +2,14 @@
 
 # This script includes a set of generic CI functions to test Vagrantfiles & Packer Builds.
 prepare () {
-  rm -rf /tmp/vagrant
-  curl -o /tmp/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
-  unzip /tmp/vagrant.zip -d /tmp
-  chmod +x /tmp/vagrant
+  mkdir /foo
+  rm -rf /foo/vagrant
+  curl -o /foo/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
+  unzip /foo/vagrant.zip -d /tmp
+  chmod +x /foo/vagrant
   ls -la /tmp
 
-  if /tmp/vagrant --version; then
+  if /foo/vagrant --version; then
     echo -e "\033[32m\033[1m[PASS]\033[0m"
   else
     echo -e "\033[31m\033[1m[FAIL]\033[0m"
@@ -76,14 +77,14 @@ up () {
       cd ${BUILDDIR}/${PRODUCT}
 
       echo "Testing ${PRODUCT} Vagrantfile for $distro..."
-      if BASE_BOX="$distro" /tmp/vagrant validate; then
+      if BASE_BOX="$distro" /foo/vagrant validate; then
         echo -e "\033[32m\033[1m[PASS]\033[0m"
       else
         echo -e "\033[31m\033[1m[FAIL]\033[0m"
         return 1
       fi
 
-      if BASE_BOX="$distro" RUN_TESTS="true" CLEANUP="true" /tmp/vagrant up; then
+      if BASE_BOX="$distro" RUN_TESTS="true" CLEANUP="true" /foo/vagrant up; then
         echo -e "\033[32m\033[1m[PASS]\033[0m"
       else
         echo -e "\033[31m\033[1m[FAIL]\033[0m"
