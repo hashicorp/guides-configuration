@@ -38,7 +38,7 @@ sudo chmod -R 0644 ${CONSUL_CONFIG_DIR}/*
 
 echo "Set Consul profile script"
 cat <<PROFILE | sudo tee ${CONSUL_PROFILE_SCRIPT}
-export CONSUL_ADDR=http://127.0.0.1:8500
+export CONSUL_HTTP_ADDR=http://127.0.0.1:8500
 PROFILE
 
 echo "Give consul user shell access for remote exec"
