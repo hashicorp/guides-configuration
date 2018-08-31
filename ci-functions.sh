@@ -65,21 +65,16 @@ validate () {
   fi
 }
 
-vagrant () {
+up () {
   distros=( "bento/ubuntu-16.04" "bento/centos-7.4" )
-  echo "Vagrant version: $(/tmp/vagrant --version)"
 
-  for distro in "${distros[@]}"
-  do
-    echo $distro
-    for PRODUCT in $*; do
+  for PRODUCT in $*; do
+    for distro in "${distros[@]}"; do
       echo "cd into ${PRODUCT} directory"
       cd ${BUILDDIR}/${PRODUCT}
 
       echo "Testing ${PRODUCT} Vagrantfile for $distro..."
-      echo "Vagrant version: $(/tmp/vagrant --version)"
-
-      if /tmp/vagrant validate; then
+      if BASE_BOX="$distro" /tmp/vagrant validate; then
         echo -e "\033[32m\033[1m[PASS]\033[0m"
       else
         echo -e "\033[31m\033[1m[FAIL]\033[0m"
