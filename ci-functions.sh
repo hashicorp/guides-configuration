@@ -66,33 +66,33 @@ validate () {
   fi
 }
 
-up () {
-  distros=( "bento/ubuntu-16.04" "bento/centos-7.4" )
-
-  for PRODUCT in $*; do
-    for distro in "${distros[@]}"; do
-      echo "cd into ${PRODUCT} directory"
-      cd ${BUILDDIR}/${PRODUCT}
-
-      echo "Testing ${PRODUCT} Vagrantfile for $distro..."
-      if BASE_BOX="$distro" /tmp/vagrant validate; then
-        echo -e "\033[32m\033[1m[PASS]\033[0m"
-      else
-        echo -e "\033[31m\033[1m[FAIL]\033[0m"
-        return 1
-      fi
-
-      if BASE_BOX="$distro" RUN_TESTS="true" CLEANUP="true" /tmp/vagrant up; then
-        echo -e "\033[32m\033[1m[PASS]\033[0m"
-      else
-        echo -e "\033[31m\033[1m[FAIL]\033[0m"
-        return 1
-      fi
-
-      cd -
-    done
-  done
-}
+# up () {
+#   distros=( "bento/ubuntu-16.04" "bento/centos-7.4" )
+#
+#   for PRODUCT in $*; do
+#     for distro in "${distros[@]}"; do
+#       echo "cd into ${PRODUCT} directory"
+#       cd ${BUILDDIR}/${PRODUCT}
+#
+#       echo "Testing ${PRODUCT} Vagrantfile for $distro..."
+#       if BASE_BOX="$distro" /tmp/vagrant validate; then
+#         echo -e "\033[32m\033[1m[PASS]\033[0m"
+#       else
+#         echo -e "\033[31m\033[1m[FAIL]\033[0m"
+#         return 1
+#       fi
+#
+#       if BASE_BOX="$distro" RUN_TESTS="true" CLEANUP="true" /tmp/vagrant up; then
+#         echo -e "\033[32m\033[1m[PASS]\033[0m"
+#       else
+#         echo -e "\033[31m\033[1m[FAIL]\033[0m"
+#         return 1
+#       fi
+#
+#       cd -
+#     done
+#   done
+# }
 
 gpg_import () {
   echo ${PGP_SECRET_KEY} | base64 -d | gpg --import
