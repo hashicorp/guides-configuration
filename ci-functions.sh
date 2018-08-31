@@ -2,11 +2,12 @@
 
 # This script includes a set of generic CI functions to test Vagrantfiles & Packer Builds.
 prepare () {
-  rm -rf /tmp/*
+  ls -la /tmp
   rm -rf /tmp/vagrant
   curl -o /tmp/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
   unzip /tmp/vagrant.zip -d /tmp
   chmod +x /tmp/vagrant
+  ls -la /tmp
 
   if /tmp/vagrant --version; then
     echo -e "\033[32m\033[1m[PASS]\033[0m"
