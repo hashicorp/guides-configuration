@@ -50,7 +50,7 @@ cleanup = ["true", "1"].include?((ENV['CLEANUP'] || true).to_s.downcase)
 
 $nomad_setup = <<SCRIPT
 echo "Minimal configuration for Nomad UI"
-cat <<CONFIG | sudo tee /etc/nomad.d/default.hcl
+sudo tee /etc/nomad.d/default.hcl > /dev/null <<CONFIG
 bind_addr = "0.0.0.0"
 
 advertise {

@@ -79,7 +79,7 @@ Group=root
 WantedBy=multi-user.target
 SERVICE
 
-cat <<ENVVARS | sudo tee /opt/wetty/wetty.conf
+sudo tee /opt/wetty/wetty.conf > /dev/null <<ENVVARS
 FLAGS=-p 3030 --host 127.0.0.1
 ENVVARS
 
