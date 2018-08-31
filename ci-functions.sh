@@ -7,21 +7,43 @@ prepare () {
   unzip /tmp/vagrant.zip -d /tmp
   chmod +x /tmp/vagrant
 
+  if /tmp/vagrant --version; then
+    echo -e "\033[32m\033[1m[PASS]\033[0m"
+  else
+    echo -e "\033[31m\033[1m[FAIL]\033[0m"
+    return 1
+  fi
+
   rm -rf /tmp/packer
   curl -o /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
   unzip /tmp/packer.zip -d /tmp
   chmod +x /tmp/packer
 
+  if /tmp/packer --version; then
+    echo -e "\033[32m\033[1m[PASS]\033[0m"
+  else
+    echo -e "\033[31m\033[1m[FAIL]\033[0m"
+    return 1
+  fi
+
   rm -rf /tmp/terraform
   curl -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
   unzip /tmp/terraform.zip -d /tmp
   chmod +x /tmp/terraform
+
+  if /tmp/terraform --version; then
+    echo -e "\033[32m\033[1m[PASS]\033[0m"
+  else
+    echo -e "\033[31m\033[1m[FAIL]\033[0m"
+    return 1
+  fi
 }
 
 validate () {
   for TEMPLATE in $*; do
     echo "cd into ${TEMPLATE} directory"
     cd ${BUILDDIR}/$(echo ${TEMPLATE} | sed 's/-.*//')
+
     echo "Reviewing ${TEMPLATE}.json template..."
 
     if /tmp/packer validate ${TEMPLATE}.json; then
@@ -44,19 +66,35 @@ validate () {
 }
 
 vagrant () {
-  for PRODUCT in $*; do
-    echo "cd into ${PRODUCT} directory"
-    cd ${BUILDDIR}/${PRODUCT}
-    echo "Testing ${PRODUCT} Vagrantfile..."
+  distros=( "bento/ubuntu-16.04" "bento/centos-7.4" )
+  echo "Vagrant version: $(/tmp/vagrant --version)"
 
-    if /tmp/vagrant up; then
-      echo -e "\033[32m\033[1m[PASS]\033[0m"
-    else
-      echo -e "\033[31m\033[1m[FAIL]\033[0m"
-      return 1
-    fi
+  for distro in "${distros[@]}"
+  do
+    echo $distro
+    for PRODUCT in $*; do
+      echo "cd into ${PRODUCT} directory"
+      cd ${BUILDDIR}/${PRODUCT}
 
-    cd -
+      echo "Testing ${PRODUCT} Vagrantfile for $distro..."
+      echo "Vagrant version: $(/tmp/vagrant --version)"
+
+      if /tmp/vagrant validate; then
+        echo -e "\033[32m\033[1m[PASS]\033[0m"
+      else
+        echo -e "\033[31m\033[1m[FAIL]\033[0m"
+        return 1
+      fi
+
+      if BASE_BOX="$distro" RUN_TESTS="true" CLEANUP="true" /tmp/vagrant up; then
+        echo -e "\033[32m\033[1m[PASS]\033[0m"
+      else
+        echo -e "\033[31m\033[1m[FAIL]\033[0m"
+        return 1
+      fi
+
+      cd -
+    done
   done
 }
 
