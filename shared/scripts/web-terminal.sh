@@ -21,7 +21,7 @@ else
 fi
 
 echo "--> Configuring Nginx proxy for Wetty web terminal"
-sudo tee /etc/nginx/nginx.conf > /dev/null <<EOF
+sudo tee /etc/nginx/nginx.conf > /dev/null <<"EOF"
 user www-data;
 worker_processes auto;
 pid /run/nginx.pid;
@@ -60,7 +60,7 @@ http {
 EOF
 
 echo "--> Installing systemd script for Wetty web terminal"
-sudo tee /etc/systemd/system/wetty.service > /dev/null <<SERVICE
+sudo tee /etc/systemd/system/wetty.service > /dev/null <<"SERVICE"
 [Unit]
 Description=Wetty Web Terminal
 Requires=network-online.target
