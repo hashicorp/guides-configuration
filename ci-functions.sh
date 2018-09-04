@@ -2,14 +2,13 @@
 
 # This script includes a set of generic CI functions to test Vagrantfiles & Packer Builds.
 prepare () {
-  mkdir -p /tmp/test
-  rm -rf /tmp/test/vagrant
-  curl -o /tmp/test/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
-  unzip /tmp/test/vagrant.zip -d /tmp/test
-  chmod +x /tmp/test/vagrant
-  ls -la /tmp/test
+  # rm -rf /tmp/vagrant
+  # curl -o /tmp/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
+  # unzip /tmp/vagrant.zip -d /tmp
+  # chmod +x /tmp/vagrant
+  # ls -la /tmp
 
-  if /tmp/test/vagrant --version; then
+  if vagrant --version; then
     echo -e "\033[32m\033[1m[PASS]\033[0m"
   else
     echo -e "\033[31m\033[1m[FAIL]\033[0m"
@@ -68,7 +67,7 @@ validate () {
 }
 
 up () {
-  ls -la /tmp/test
+  ls -la /tmp
   distros=( "bento/ubuntu-16.04" "bento/centos-7.4" )
 
   for PRODUCT in $*; do
@@ -77,14 +76,14 @@ up () {
       cd ${BUILDDIR}/${PRODUCT}
 
       echo "Testing ${PRODUCT} Vagrantfile for $distro..."
-      if BASE_BOX="$distro" /tmp/test/vagrant validate; then
+      if BASE_BOX="$distro" vagrant validate; then
         echo -e "\033[32m\033[1m[PASS]\033[0m"
       else
         echo -e "\033[31m\033[1m[FAIL]\033[0m"
         return 1
       fi
 
-      if BASE_BOX="$distro" RUN_TESTS="true" CLEANUP="true" /tmp/test/vagrant up; then
+      if BASE_BOX="$distro" RUN_TESTS="true" CLEANUP="true" vagrant up; then
         echo -e "\033[32m\033[1m[PASS]\033[0m"
       else
         echo -e "\033[31m\033[1m[FAIL]\033[0m"
