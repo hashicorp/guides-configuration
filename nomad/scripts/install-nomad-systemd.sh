@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -x
 
 echo "Running"
@@ -18,10 +18,10 @@ else
   exit 1;
 fi
 
-sudo curl -o ${SYSTEMD_DIR}/nomad.service https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/init/systemd/nomad.service
-sudo curl -o ${SYSTEMD_DIR}/consul-online.service https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul-online.service
-sudo curl -o ${SYSTEMD_DIR}/consul-online.target https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul-online.target
-sudo curl -o ${SYSTEMD_DIR}/consul-online.sh https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul-online.sh
+sudo curl --silent -Lo ${SYSTEMD_DIR}/nomad.service https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/init/systemd/nomad.service
+sudo curl --silent -Lo ${SYSTEMD_DIR}/consul-online.service https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul-online.service
+sudo curl --silent -Lo ${SYSTEMD_DIR}/consul-online.target https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul-online.target
+sudo curl --silent -Lo ${SYSTEMD_DIR}/consul-online.sh https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul-online.sh
 sudo chmod 0664 ${SYSTEMD_DIR}/{nomad*,consul*}
 
 sudo systemctl enable nomad

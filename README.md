@@ -116,14 +116,14 @@ Example Azure HashiStack build command:
 
 ```
 source azure-local-env.sh
-VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.0.6" VAULT_VERSION="0.9.5" NOMAD_VERSION="0.7.1" packer build hashistack-azure.json
+VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.2.0" VAULT_VERSION="0.10.3" NOMAD_VERSION="0.8.4" packer build hashistack-azure.json
 ```
 
 Example GCP HashiStack build command:
 
 ```
 source gcp-local-env.sh
-VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.0.6" VAULT_VERSION="0.9.5" NOMAD_VERSION="0.7.1" packer build hashistack-gcp.json
+VCS_NAME="local" PACKER_ENVIRONMENT="production" CONSUL_VERSION="1.2.0" VAULT_VERSION="0.10.3" NOMAD_VERSION="0.8.4" packer build hashistack-gcp.json
 ```
 
 ## Continuous Integration
@@ -166,7 +166,9 @@ fi
 
 ## Image Version Table:
 
-|   Consul    |   Vault     |   Nomad     |   Release   |
+|   Release   |   Consul    |   Vault     |   Nomad     |
 |-------------|-------------|-------------|-------------|
-| 1.2.0       | 0.10.3      | 0.8.4       | 0.1.0       |
-| 1.2.0-ent   | 0.10.3-ent  | 0.8.4-ent   | 0.1.1       |
+| 0.1.0       | 1.2.0       | 0.10.3      | 0.8.4       |
+| 0.1.1       | 1.2.0-ent   | 0.10.3-ent  | 0.8.4-ent   |
+| 0.1.2       | 1.2.1       | 0.10.3      | 0.8.4       |
+| 0.1.3       | 1.2.1-ent   | 0.10.3-ent  | 0.8.4-ent   |

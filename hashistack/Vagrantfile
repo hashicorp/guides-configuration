@@ -9,7 +9,7 @@ base_box = ENV['BASE_BOX'] || "bento/ubuntu-16.04"
 
 # Consul variables
 consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
-consul_version = ENV['CONSUL_VERSION'] || "1.0.6"
+consul_version = ENV['CONSUL_VERSION'] || "1.2.0"
 consul_ent_url = ENV['CONSUL_ENT_URL']
 consul_group = "consul"
 consul_user = "consul"
@@ -18,7 +18,7 @@ consul_home = "/srv/consul"
 
 # Vault variables
 vault_host_port = ENV['VAULT_HOST_PORT'] || 8200
-vault_version = ENV['VAULT_VERSION'] || "0.10.0"
+vault_version = ENV['VAULT_VERSION'] || "0.10.3"
 vault_ent_url = ENV['VAULT_ENT_URL']
 vault_group = "vault"
 vault_user = "vault"
@@ -27,12 +27,20 @@ vault_home = "/srv/vault"
 
 # Nomad variables
 nomad_host_port = ENV['NOMAD_HOST_PORT'] || 4646
-nomad_version = ENV['NOMAD_VERSION'] || "0.8.0"
+nomad_version = ENV['NOMAD_VERSION'] || "0.8.4"
 nomad_ent_url = ENV['NOMAD_ENT_URL']
 nomad_group = "root"
 nomad_user = "root"
 docker_install = ["true", "1"].include?((ENV['DOCKER_INSTALL'] || true).to_s.downcase)
 java_install = ["true", "1"].include?((ENV['JAVA_INSTALL'] || true).to_s.downcase)
+
+# Wetty variables
+wetty_host_port = ENV['WETTY_HOST_PORT'] || 3030
+wetty_install = ["true", "1"].include?((ENV['WETTY_INSTALL'] || true).to_s.downcase)
+wetty_group = ENV['WETTY_GROUP'] || "wetty"
+wetty_user = ENV['WETTY_USER'] || "wetty"
+wetty_password = ENV['WETTY_PASSWORD'] || "wetty"
+wetty_comment = "Wetty Web Terminal SSH user"
 
 # Tests & cleanup
 run_tests = ["true", "1"].include?((ENV['RUN_TESTS'] || false).to_s.downcase)
@@ -40,7 +48,7 @@ cleanup = ["true", "1"].include?((ENV['CLEANUP'] || true).to_s.downcase)
 
 $nomad_setup = <<SCRIPT
 echo "Minimal configuration for Nomad UI"
-cat <<CONFIG | sudo tee /etc/nomad.d/default.hcl
+sudo tee /etc/nomad.d/default.hcl > /dev/null <<CONFIG
 bind_addr = "0.0.0.0"
 
 advertise {
@@ -140,6 +148,21 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", inline: "bash /tmp/nomad/scripts/install-java.sh"
   end
 
+  if (wetty_install)
+    # Forward Wetty port
+    config.vm.network :forwarded_port, guest: 3030, host: wetty_host_port, auto_correct: true
+
+    # Install Wetty
+    config.vm.provision "shell", inline: "bash /tmp/shared/scripts/web-terminal.sh"
+    config.vm.provision "shell", inline: "bash /tmp/shared/scripts/setup-ssh-user.sh",
+      env: {
+        "GROUP" => wetty_group,
+        "USER" => wetty_user,
+        "PASSWORD" => wetty_password,
+        "COMMENT" => wetty_comment,
+      }
+  end
+
   # Run tests if `RUN_TESTS` env var is provided
   if (run_tests)
     config.vm.provision "shell", inline: "cd /tmp && bash /tmp/shared/scripts/setup-testing.sh"
@@ -231,6 +254,7 @@ or API (https://www.nomadproject.io/api/index.html) commands.
 Visit the Consul UI: http://#{private_ip}:#{consul_host_port}/
 Visit the Vault UI: http://#{private_ip}:#{vault_host_port}/
 Visit the Nomad UI: http://#{private_ip}:#{nomad_host_port}/
+#{wetty_install ? 'Visit the Web Terminal (u: ' + wetty_user + '/p: ' + wetty_password + '): http://' + private_ip + ':' + wetty_host_port.to_s : ''}
 
 Don't forget to tear your VM down after.
 

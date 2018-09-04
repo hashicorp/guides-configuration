@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -x
 
 echo "Running"
@@ -27,7 +27,7 @@ echo "Configuring Consul ${CONSUL_VERSION}"
 sudo mkdir -pm 0755 ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_TLS_DIR}
 
 echo "Start Consul in -dev mode"
-cat <<ENVVARS | sudo tee ${CONSUL_ENV_VARS}
+sudo tee ${CONSUL_ENV_VARS} > /dev/null <<ENVVARS
 FLAGS=-dev -ui -client 0.0.0.0
 CONSUL_HTTP_ADDR=http://127.0.0.1:8500
 ENVVARS
@@ -37,15 +37,15 @@ sudo chown -R ${USER}:${GROUP} ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_
 sudo chmod -R 0644 ${CONSUL_CONFIG_DIR}/*
 
 echo "Set Consul profile script"
-cat <<PROFILE | sudo tee ${CONSUL_PROFILE_SCRIPT}
-export CONSUL_ADDR=http://127.0.0.1:8500
+sudo tee ${CONSUL_PROFILE_SCRIPT} > /dev/null <<PROFILE
+export CONSUL_HTTP_ADDR=http://127.0.0.1:8500
 PROFILE
 
 echo "Give consul user shell access for remote exec"
 sudo /usr/sbin/usermod --shell /bin/bash ${USER} >/dev/null
 
 echo "Allow consul sudo access for echo, tee, cat, sed, and systemctl"
-cat <<SUDOERS | sudo tee /etc/sudoers.d/consul
+sudo tee /etc/sudoers.d/consul > /dev/null <<SUDOERS
 consul ALL=(ALL) NOPASSWD: /usr/bin/echo, /usr/bin/tee, /usr/bin/cat, /usr/bin/sed, /usr/bin/systemctl
 SUDOERS
 
@@ -69,7 +69,7 @@ echo "Update resolv.conf"
 sudo sed -i '1i nameserver 127.0.0.1\n' /etc/resolv.conf
 
 echo "Configuring dnsmasq to forward .consul requests to consul port 8600"
-cat <<DNSMASQ | sudo tee /etc/dnsmasq.d/consul
+sudo tee /etc/dnsmasq.d/consul > /dev/null <<DNSMASQ
 server=/consul/127.0.0.1#8600
 DNSMASQ
 

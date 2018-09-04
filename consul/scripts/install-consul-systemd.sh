@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -x
 
 echo "Running"
@@ -18,7 +18,7 @@ else
   exit 1;
 fi
 
-sudo curl -o ${SYSTEMD_DIR}/consul.service https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul.service
+sudo curl --silent -Lo ${SYSTEMD_DIR}/consul.service https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/init/systemd/consul.service
 sudo chmod 0664 ${SYSTEMD_DIR}/consul.service
 
 sudo systemctl enable consul

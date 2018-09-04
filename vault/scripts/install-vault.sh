@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -x
 
 echo "Running"
@@ -27,7 +27,7 @@ echo "Configuring Vault ${VAULT_VERSION}"
 sudo mkdir -pm 0755 ${VAULT_CONFIG_DIR} ${VAULT_DATA_DIR} ${VAULT_TLS_DIR}
 
 echo "Start Vault in -dev mode"
-cat <<ENVVARS | sudo tee ${VAULT_ENV_VARS}
+sudo tee ${VAULT_ENV_VARS} > /dev/null <<ENVVARS
 FLAGS=-dev -dev-ha -dev-transactional -dev-root-token-id=root -dev-listen-address=0.0.0.0:8200
 ENVVARS
 
@@ -36,7 +36,7 @@ sudo chown -R ${USER}:${GROUP} ${VAULT_CONFIG_DIR} ${VAULT_DATA_DIR} ${VAULT_TLS
 sudo chmod -R 0644 ${VAULT_CONFIG_DIR}/*
 
 echo "Set Vault profile script"
-cat <<PROFILE | sudo tee ${VAULT_PROFILE_SCRIPT}
+sudo tee ${VAULT_PROFILE_SCRIPT} > /dev/null <<PROFILE
 export VAULT_ADDR=http://127.0.0.1:8200
 export VAULT_TOKEN=root
 PROFILE

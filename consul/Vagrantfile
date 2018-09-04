@@ -9,12 +9,20 @@ base_box = ENV['BASE_BOX'] || "bento/ubuntu-16.04"
 
 # Consul variables
 consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
-consul_version = ENV['CONSUL_VERSION'] || "1.0.6"
+consul_version = ENV['CONSUL_VERSION'] || "1.2.0"
 consul_ent_url = ENV['CONSUL_ENT_URL']
 consul_group = "consul"
 consul_user = "consul"
 consul_comment = "Consul"
 consul_home = "/srv/consul"
+
+# Wetty variables
+wetty_host_port = ENV['WETTY_HOST_PORT'] || 3030
+wetty_install = ["true", "1"].include?((ENV['WETTY_INSTALL'] || true).to_s.downcase)
+wetty_group = ENV['WETTY_GROUP'] || "wetty"
+wetty_user = ENV['WETTY_USER'] || "wetty"
+wetty_password = ENV['WETTY_PASSWORD'] || "wetty"
+wetty_comment = "Wetty Web Terminal SSH user"
 
 # Tests & cleanup
 run_tests = ["true", "1"].include?((ENV['RUN_TESTS'] || false).to_s.downcase)
@@ -60,6 +68,21 @@ Vagrant.configure("2") do |config|
     }
 
   config.vm.provision "shell", inline: "bash /tmp/consul/scripts/install-consul-systemd.sh"
+
+  if (wetty_install)
+    # Forward Wetty port
+    config.vm.network :forwarded_port, guest: 3030, host: wetty_host_port, auto_correct: true
+
+    # Install Wetty
+    config.vm.provision "shell", inline: "bash /tmp/shared/scripts/web-terminal.sh"
+    config.vm.provision "shell", inline: "bash /tmp/shared/scripts/setup-ssh-user.sh",
+      env: {
+        "GROUP" => wetty_group,
+        "USER" => wetty_user,
+        "PASSWORD" => wetty_password,
+        "COMMENT" => wetty_comment,
+      }
+  end
 
   # Run tests if `RUN_TESTS` env var is provided
   if (run_tests)
@@ -110,6 +133,7 @@ or API (https://www.consul.io/api/index.html) commands.
   $ curl http://127.0.0.1:8500/v1/kv/api | jq '.'
 
 Visit the Consul UI: http://#{private_ip}:#{consul_host_port}
+#{wetty_install ? 'Visit the Web Terminal (u: ' + wetty_user + '/p: ' + wetty_password + '): http://' + private_ip + ':' + wetty_host_port.to_s : ''}
 
 Don't forget to tear your VM down after.
 
