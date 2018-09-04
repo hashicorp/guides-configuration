@@ -2,7 +2,7 @@
 
 # This script includes a set of generic CI functions to test Vagrantfiles & Packer Builds.
 prepare () {
-  sudo mkdir -p /tmp/test
+  mkdir -p /tmp/test
   rm -rf /tmp/test/vagrant
   curl -o /tmp/test/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
   unzip /tmp/test/vagrant.zip -d /tmp/test
