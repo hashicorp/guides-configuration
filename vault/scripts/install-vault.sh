@@ -15,7 +15,7 @@ VAULT_ENV_VARS=${VAULT_CONFIG_DIR}/vault.conf
 VAULT_PROFILE_SCRIPT=/etc/profile.d/vault.sh
 
 echo "Downloading Vault ${VAULT_VERSION}"
-[200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${VAULT_ZIP} ${VAULT_URL})] && exit 1
+[ 200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${VAULT_ZIP} ${VAULT_URL}) ] && exit 1
 
 echo "Installing Vault"
 sudo unzip -o /tmp/${VAULT_ZIP} -d ${VAULT_DIR}
