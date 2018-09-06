@@ -40,6 +40,8 @@ prepare () {
 }
 
 vagrant_validate () {
+  # Fixes Vagrant error, can remove once fixed
+  export TMPDIR=/tmp
   distros=( "bento/ubuntu-16.04" "bento/centos-7.4" )
 
   for PRODUCT in $*; do
