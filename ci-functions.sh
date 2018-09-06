@@ -6,7 +6,6 @@ prepare () {
   curl -o /tmp/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
   unzip /tmp/vagrant.zip -d /tmp
   chmod +x /tmp/vagrant
-  ls -la /tmp
 
   if /tmp/vagrant --version; then
     echo -e "\033[32m\033[1m[PASS]\033[0m"
@@ -40,34 +39,7 @@ prepare () {
   fi
 }
 
-validate () {
-  for TEMPLATE in $*; do
-    echo "cd into ${TEMPLATE} directory"
-    cd ${BUILDDIR}/$(echo ${TEMPLATE} | sed 's/-.*//')
-
-    echo "Reviewing ${TEMPLATE}.json template..."
-
-    if /tmp/packer validate ${TEMPLATE}.json; then
-      echo -e "\033[32m\033[1m[PASS]\033[0m"
-    else
-      echo -e "\033[31m\033[1m[FAIL]\033[0m"
-      return 1
-    fi
-
-    cd -
-  done
-
-  echo "Reviewing shell scripts..."
-  if find . -iname \*.sh -exec bash -n {} \; > /dev/null; then
-    echo -e "\033[32m\033[1m[PASS]\033[0m"
-  else
-    echo -e "\033[31m\033[1m[FAIL]\033[0m"
-    return 1
-  fi
-}
-
-up () {
-  ls -la /tmp
+vagrant_validate () {
   distros=( "bento/ubuntu-16.04" "bento/centos-7.4" )
 
   for PRODUCT in $*; do
@@ -93,6 +65,32 @@ up () {
       cd -
     done
   done
+}
+
+packer_validate () {
+  for TEMPLATE in $*; do
+    echo "cd into ${TEMPLATE} directory"
+    cd ${BUILDDIR}/$(echo ${TEMPLATE} | sed 's/-.*//')
+
+    echo "Reviewing ${TEMPLATE}.json template..."
+
+    if /tmp/packer validate ${TEMPLATE}.json; then
+      echo -e "\033[32m\033[1m[PASS]\033[0m"
+    else
+      echo -e "\033[31m\033[1m[FAIL]\033[0m"
+      return 1
+    fi
+
+    cd -
+  done
+
+  echo "Reviewing shell scripts..."
+  if find . -iname \*.sh -exec bash -n {} \; > /dev/null; then
+    echo -e "\033[32m\033[1m[PASS]\033[0m"
+  else
+    echo -e "\033[31m\033[1m[FAIL]\033[0m"
+    return 1
+  fi
 }
 
 gpg_import () {
@@ -170,7 +168,7 @@ prepare_ent_urls () {
   fi
 }
 
-build () {
+packer_build () {
   if [ -z ${RELEASE_VERSION} ]; then
     # Set RELEASE_VERSION to the current git branch if not specified so it's not empty
     export RELEASE_VERSION=${GIT_BRANCH}
@@ -207,7 +205,7 @@ build () {
   echo "Completed build from ${GIT_BRANCH}"
 }
 
-publish () {
+image_publish () {
   # Exit early if not on master branch or RUN_PUBLISH env var not passed
   echo "GIT_BRANCH: ${GIT_BRANCH}"
   echo "RUN_PUBLISH: ${RUN_PUBLISH}"
