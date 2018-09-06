@@ -55,14 +55,14 @@ vagrant_validate () {
       cd ${BUILDDIR}/${PRODUCT}
 
       echo "Testing ${PRODUCT} Vagrantfile for $distro..."
-      if BASE_BOX="$distro" /tmp/vagrant validate; then
+      if BASE_BOX="$distro" /tmp/vagrant validate --provider=docker; then
         echo -e "\033[32m\033[1m[PASS]\033[0m"
       else
         echo -e "\033[31m\033[1m[FAIL]\033[0m"
         return 1
       fi
 
-      if BASE_BOX="$distro" RUN_TESTS="true" CLEANUP="true" /tmp/vagrant up; then
+      if BASE_BOX="$distro" RUN_TESTS="true" CLEANUP="true" /tmp/vagrant up --provider=docker; then
         echo -e "\033[32m\033[1m[PASS]\033[0m"
       else
         echo -e "\033[31m\033[1m[FAIL]\033[0m"
