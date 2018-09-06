@@ -2,6 +2,11 @@
 
 # This script includes a set of generic CI functions to test Vagrantfiles & Packer Builds.
 prepare () {
+  echo "Install Virtualbox"
+  sudo apt-get update
+  sudo apt-get install virtualbox-5.2
+
+  echo "Install Vagrant"
   rm -rf /tmp/vagrant
   curl -o /tmp/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
   unzip /tmp/vagrant.zip -d /tmp
@@ -14,6 +19,7 @@ prepare () {
     return 1
   fi
 
+  echo "Install Packer"
   rm -rf /tmp/packer
   curl -o /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
   unzip /tmp/packer.zip -d /tmp
@@ -26,6 +32,7 @@ prepare () {
     return 1
   fi
 
+  echo "Install Terraform"
   rm -rf /tmp/terraform
   curl -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
   unzip /tmp/terraform.zip -d /tmp
