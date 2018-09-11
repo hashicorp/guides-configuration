@@ -2,10 +2,6 @@
 
 # This script includes a set of generic CI functions to test Vagrantfiles & Packer Builds.
 prepare () {
-  echo "Install Virtualbox"
-  apt-get update
-  apt-get install virtualbox-5.2
-
   echo "Install Vagrant"
   rm -rf /tmp/vagrant
   curl -o /tmp/vagrant.zip https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
