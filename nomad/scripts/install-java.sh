@@ -5,6 +5,7 @@ download_jdk() {
   local JDK_VERSION="$1"
   local EXT="$2"
   local curl_cmd="curl \
+    -L \
     --silent \
     --connect-timeout 5 \
     --max-time 10 \
