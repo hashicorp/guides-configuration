@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -x
 
 echo "Running"
@@ -73,7 +73,7 @@ echo "Set password"
 echo "${USER}:${PASSWORD}" | sudo chpasswd
 
 echo "Add /etc/sudoers.d/${USER}"
-sudo tee "/etc/sudoers.d/${USER}" > /dev/null <<"EOF"
+sudo tee "/etc/sudoers.d/${USER}" > /dev/null <<EOF
 ${USER} ALL=(ALL) NOPASSWD:ALL
 EOF
 
