@@ -6,6 +6,7 @@ echo "Running"
 # Detect package management system.
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
+set -e
 
 if [[ ! -z ${YUM} ]]; then
   SYSTEMD_DIR="/etc/systemd/system"
