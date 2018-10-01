@@ -3,6 +3,11 @@ set -x
 
 echo "Running"
 
+APK=$(which apk 2>/dev/null)
+if [[ ! -z ${APK} ]]; then
+  apk add --no-cache gcompat
+fi
+
 NOMAD_VERSION=${VERSION}
 NOMAD_ZIP=nomad_${NOMAD_VERSION}_linux_amd64.zip
 NOMAD_URL=${URL:-https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/${NOMAD_ZIP}}
