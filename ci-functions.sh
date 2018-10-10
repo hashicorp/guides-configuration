@@ -157,7 +157,10 @@ publish () {
   export PATH=$PATH:/tmp
   rm -rf guides-image-permissions
   git clone --recurse-submodules https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/hashicorp/guides-image-permissions
-  cd guides-image-permissions/aws-images
+  cd guides-image-permissions
+  git pull
+  git checkout f-expose-public-ami-ids
+  cd aws-images
 
   /tmp/terraform init
 
