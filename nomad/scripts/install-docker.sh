@@ -18,8 +18,8 @@ if [[ ! -z ${YUM} ]]; then
 
   # Pinning Docker version as the above does not work at the moment
   sudo yum install -y --setopt=obsoletes=0 \
-   docker-ce-17.03.3.ce-1.el7.centos.x86_64 \
-   docker-ce-selinux-17.03.3.ce-1.el7.centos.noarch
+   docker-ce-17.03.3.ce-1.el7.x86_64 \
+   docker-ce-selinux-17.03.3.ce-1.el7.noarch
 elif [[ ! -z ${APT_GET} ]]; then
   echo "Installing Docker"
   curl -sSL https://get.docker.com/ | sudo sh
