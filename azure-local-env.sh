@@ -125,7 +125,7 @@ export CONSUL_ENT_URL=$(AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
   AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
   aws s3 presign \
   --region="us-east-1" \
-  s3://${S3BUCKET}/consul-enterprise/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip \
+  s3://${S3BUCKET}/consul/ent/${CONSUL_VERSION}/consul-enterprise_${CONSUL_VERSION}+ent_linux_amd64.zip \
   --expires-in 600)
 export VAULT_ENT_URL=$(AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
   AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \

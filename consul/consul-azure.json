@@ -12,7 +12,7 @@
     },
     "builders": [
         {
-            "name": "azure-manaaged-image-ubuntu-16.04-systemd",
+            "name": "azure-managed-image-ubuntu-16.04-systemd",
             "type": "azure-arm",
             "client_id": "{{ user `azure_client_id` }}",
             "client_secret": "{{ user `azure_client_secret` }}",
@@ -57,7 +57,7 @@
         {
             "type": "shell",
             "only": [
-                "azure-manaaged-image-ubuntu-16.04-systemd"
+                "azure-managed-image-ubuntu-16.04-systemd"
             ],
             "inline": [
                 "bash /tmp/shared/scripts/base-azure.sh"
@@ -88,7 +88,7 @@
         {
             "type": "shell",
             "only": [
-                "azure-manaaged-image-ubuntu-16.04-systemd"
+                "azure-managed-image-ubuntu-16.04-systemd"
             ],
             "inline": [
                 "bash /tmp/consul/scripts/install-consul-systemd.sh"
@@ -97,7 +97,7 @@
         {
             "type": "shell",
             "only": [
-                "azure-manaaged-image-ubuntu-16.04-systemd"
+                "azure-managed-image-ubuntu-16.04-systemd"
             ],
             "inline": [
                 "cd /tmp/shared/scripts && bash setup-testing.sh",
