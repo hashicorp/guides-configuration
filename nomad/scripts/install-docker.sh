@@ -3,6 +3,7 @@ set -x
 
 YUM=$(which yum 2>/dev/null)
 APT_GET=$(which apt-get 2>/dev/null)
+set -e
 
 echo "Running"
 
