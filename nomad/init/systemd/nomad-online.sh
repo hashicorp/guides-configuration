@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 
 NOMAD_ADDRESS=${1:-"127.0.0.1:4646"}
 

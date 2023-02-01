@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 require 'serverspec'
 require 'serverspec_extended_types'
 require 'specinfra'
