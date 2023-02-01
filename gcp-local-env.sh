@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 export GCP_ACCOUNT_FILE_JSON="~/.gcloud/example.json"
 export GCP_ZONE="us-east1-b"
 export GCP_PROJECT_ID="ekg-image-test"

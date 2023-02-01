@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 
 # X.Y.Z (e.g. 0.12.3)
 export PACKER_VERSION="1.1.3"

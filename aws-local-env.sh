@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # aws-local-env.sh
 #
 # Disclaimer: Building AWS Packer images locally has not been tested. The Azure process has.
