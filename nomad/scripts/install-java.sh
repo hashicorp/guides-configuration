@@ -17,7 +17,7 @@ download_jdk() {
   readonly JDK_DOWNLOAD_URL2=$(${curl_cmd} ${JDK_DOWNLOAD_URL1} | egrep -o "\/technetwork\/java/\javase\/downloads\/jdk${JDK_VERSION}-downloads-.+?\.html" | head -1 | cut -d '"' -f 1)
   [[ -z "${JDK_DOWNLOAD_URL2}" ]] && echo "Could not get jdk download url - ${JDK_DOWNLOAD_URL1}" && exit 1
   readonly JDK_DOWNLOAD_URL3="${URL}${JDK_DOWNLOAD_URL2}"
-  readonly JDK_DOWNLOAD_URL4=$(${curl_cmd} ${JDK_DOWNLOAD_URL3} | egrep -o "http\:\/\/download.oracle\.com\/otn-pub\/java\/jdk\/[7-8]u[0-9]+\-(.*)+\/jdk-[7-8]u[0-9]+(.*)linux-x64.${EXT}" | tail -1)
+  readonly JDK_DOWNLOAD_URL4=$(${curl_cmd} ${JDK_DOWNLOAD_URL3} | egrep -o "https?\:\/\/download.oracle\.com\/otn-pub\/java\/jdk\/[7-8]u[0-9]+\-.*+\/jdk-[7-8]u[0-9]+.*linux-x64\.${EXT}" | tail -1)
   for DL_URL in "${JDK_DOWNLOAD_URL4[@]}"; do
     wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" -N ${DL_URL}
   done
