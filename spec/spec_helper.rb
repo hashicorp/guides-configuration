@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 require 'serverspec'
 require 'serverspec_extended_types'
 require 'specinfra'

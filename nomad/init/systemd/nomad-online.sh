@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 
 NOMAD_ADDRESS=${1:-"127.0.0.1:4646"}
 

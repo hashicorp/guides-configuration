@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 require 'spec_helper'
 
 describe file('/usr/local/bin/nomad') do

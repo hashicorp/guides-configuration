@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 describe package('ntp') do
   it { should be_installed }
 end

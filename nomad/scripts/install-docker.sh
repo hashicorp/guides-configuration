@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 set -x
 
 YUM=$(which yum 2>/dev/null)
