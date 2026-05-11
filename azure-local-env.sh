@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 # azure-local-env.sh
 #
 # Variables you'll need to trigger Packer image builds locally

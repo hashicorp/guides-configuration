@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 # aws-local-env.sh
 #
 # Disclaimer: Building AWS Packer images locally has not been tested. The Azure process has.

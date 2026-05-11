@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 
 # X.Y.Z (e.g. 0.12.3)
 export PACKER_VERSION="1.1.3"
